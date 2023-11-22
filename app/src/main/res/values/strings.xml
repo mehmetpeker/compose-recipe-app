@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Recipe</string>
+    <string name="a_error">A</string>
+    <string name="b_error">B</string>
+    <string name="c_error">C</string>
+    <string name="d_error">D</string>
+    <string name="e_error">E</string>
+    <string name="f_error">F</string>
+    <string name="g_error">G</string>
+    <string name="h_error">H</string>
+    <string name="x_error">X</string>
+    <string name="y_error">Y</string>
+    <string name="z_error">Z</string>
+</resources>
