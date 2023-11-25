@@ -17,17 +17,20 @@ class TokenInterceptor : Interceptor, KoinComponent {
         val response = chain.proceed(newRequestWithAccessToken(accessToken, request))
 
         if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            val newAccessToken = sessionManager.getAccessToken()
-            if (newAccessToken != accessToken) {
-                return chain.proceed(newRequestWithAccessToken(accessToken, request))
-            } else {
-                accessToken = refreshToken()
-                if (accessToken.isNullOrBlank()) {
-                    sessionManager.logout()
-                    return response
+            synchronized(KtorClient.client) {
+                val newAccessToken = sessionManager.getAccessToken()
+                if (newAccessToken != accessToken) {
+                    return chain.proceed(newRequestWithAccessToken(accessToken, request))
+                } else {
+                    accessToken = refreshToken()
+                    if (accessToken.isNullOrBlank()) {
+                        sessionManager.logout()
+                        return response
+                    }
+                    return chain.proceed(newRequestWithAccessToken(accessToken, request))
                 }
-                return chain.proceed(newRequestWithAccessToken(accessToken, request))
             }
+
         }
 
         return response
