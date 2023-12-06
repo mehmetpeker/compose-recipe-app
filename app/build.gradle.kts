@@ -51,6 +51,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.5")
     val koinVersion = "3.5.0"
     val ktorVersion = "2.3.6"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -63,6 +64,9 @@ dependencies {
     implementation("io.insert-koin:koin-android:$koinVersion")
 
     implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.collection:collection-ktx:1.3.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.1")
     implementation(platform("androidx.compose:compose-bom:2023.10.01"))

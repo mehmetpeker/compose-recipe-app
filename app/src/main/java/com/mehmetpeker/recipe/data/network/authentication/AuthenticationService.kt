@@ -6,58 +6,16 @@ import com.mehmetpeker.recipe.data.entity.authentication.register.RegisterReques
 import com.mehmetpeker.recipe.data.entity.authentication.register.RegisterResponse
 import com.mehmetpeker.recipe.data.entity.authentication.resetPassword.ResetPasswordRequest
 import com.mehmetpeker.recipe.data.entity.authentication.updatePassword.UpdatePasswordRequest
-import com.mehmetpeker.recipe.network.KtorClient
-import io.ktor.client.call.body
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.request.url
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
+import com.mehmetpeker.recipe.util.ApiResult
 
-class AuthenticationService {
-    suspend fun login(body: LoginRequest): LoginResponse {
-        val loginResponse = KtorClient.client.post {
-            url("/api/account/login")
-            setBody(body)
+interface AuthenticationService {
 
-        }.body<LoginResponse>()
-        return loginResponse
-    }
+    suspend fun login(body: LoginRequest): ApiResult<LoginResponse>
 
-    suspend fun register(body: RegisterRequest): RegisterResponse {
-        val registerResponse = KtorClient.client.post {
-            url("/api/account/register")
-            setBody(body)
+    suspend fun register(body: RegisterRequest): ApiResult<RegisterResponse>
 
-        }.body<RegisterResponse>()
-        return registerResponse
-    }
+    suspend fun forgotPassword(email: String): ApiResult<String>
 
-    suspend fun forgotPassword(email: String): String {
-        val forgotPasswordResponse = KtorClient.client.post {
-            contentType(ContentType.Text.Plain)
-            url("/api/account/forgot_password")
-            setBody(email)
-
-        }.body<String>()
-        return forgotPasswordResponse
-    }
-
-    suspend fun resetPassword(body: ResetPasswordRequest): String {
-        val resetPasswordResponse = KtorClient.client.post {
-            url("/api/account/reset_password")
-            setBody(body)
-
-        }.body<String>()
-        return resetPasswordResponse
-    }
-
-    suspend fun updatePassword(body: UpdatePasswordRequest): String {
-        val updatePasswordResponse = KtorClient.client.post {
-            url("/api/account/update_password")
-            setBody(body)
-
-        }.body<String>()
-        return updatePasswordResponse
-    }
+    suspend fun resetPassword(body: ResetPasswordRequest): ApiResult<String>
+    suspend fun updatePassword(body: UpdatePasswordRequest): ApiResult<String>
 }

@@ -2,31 +2,34 @@ package com.mehmetpeker.recipe.util
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.request
-import kotlinx.serialization.SerializationException
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.isSuccess
 
-suspend inline fun <reified T, reified E> HttpClient.safeRequest(
+suspend inline fun <reified T : Any> HttpClient.safeRequest(
     block: HttpRequestBuilder.() -> Unit,
-): ApiResponse<T, E> =
+): ApiResult<T> =
     try {
         val response = request { block() }
-        ApiResponse.Success(response.body())
-    } catch (exception: ClientRequestException) {
-        ApiResponse.Error.HttpError(
-            code = exception.response.status.value,
-            errorBody = exception.response.body(),
-            errorMessage = "Status Code: ${exception.response.status.value} - API Key Missing",
-        )
+        if (response.status.isSuccess()) {
+            ApiSuccess(response.body())
+        } else {
+            ApiError(
+                code = response.status.value,
+                message = response.bodyAsText(),
+                errorBody = response.bodyAsText()
+            )
+        }
     } catch (exception: HttpExceptions) {
-        ApiResponse.Error.HttpError(
-            code = exception.response.status.value,
-            errorBody = exception.response.body(),
-            errorMessage = exception.message,
+        ApiError(
+            exception.response.status.value,
+            exception.message,
+            exception.errorStringResourceId,
+            exception.response.bodyAsText()
         )
-    } catch (e: SerializationException) {
-        ApiResponse.Error.SerializationError(e.message)
     } catch (e: Exception) {
-        ApiResponse.Error.GenericError(e.message)
+        ApiError(throwable = e)
+    } catch (e: Throwable) {
+        ApiError(throwable = e)
     }
