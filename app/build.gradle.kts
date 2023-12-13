@@ -41,7 +41,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
@@ -54,6 +54,9 @@ dependencies {
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.5")
     val koinVersion = "3.5.0"
     val ktorVersion = "2.3.6"
+    val nav_version = "2.7.5"
+
+    implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-logging:$ktorVersion")
