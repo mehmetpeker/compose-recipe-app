@@ -65,6 +65,8 @@ val md_theme_dark_shadow = Color(0xFF000000)
 val md_theme_dark_surfaceTint = Color(0xFFCDBDFF)
 val md_theme_dark_outlineVariant = Color(0xFF48454E)
 val md_theme_dark_scrim = Color(0xFF000000)
+val cd_theme_textfield_container_color = Color(0xffF1F4FA)
+val cd_theme_textfield_hint_color = Color(0xff1C2439)
 val seed = Color(0xFF6B46D2)
 
 val ColorScheme.primaryRoundedCornerButtonBackground

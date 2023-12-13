@@ -12,4 +12,5 @@
     <string name="x_error">X</string>
     <string name="y_error">Y</string>
     <string name="z_error">Z</string>
+    <string name="log_in">Log in</string>
 </resources>

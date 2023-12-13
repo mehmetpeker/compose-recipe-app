@@ -31,14 +31,14 @@ import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.common.RecipeRoundedButton
 import com.mehmetpeker.recipe.common.RecipeRoundedButtonType
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
+import com.mehmetpeker.recipe.ui.theme.TransparentSystemBars
 
 @Composable
 fun OnboardingScreen() {
-
+    TransparentSystemBars()
     BaseScreen(viewModel = OnBoardingViewModel(), navController = rememberNavController()) {
         OnboardingContent()
     }
-
 }
 
 @Composable

@@ -8,14 +8,13 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mehmetpeker.recipe.designsystem.theme.RecipeTypography
 
@@ -105,11 +104,8 @@ fun RecipeTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = Color.Transparent.toArgb()
-            window.navigationBarColor = colorScheme.surfaceColorAtElevation(4.dp).toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
-            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars =
-                !darkTheme
+            window.statusBarColor = colorScheme.primary.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
     MaterialTheme(
@@ -117,4 +113,30 @@ fun RecipeTheme(
         typography = RecipeTypography,
         content = content
     )
+}
+
+@Composable
+fun TransparentSystemBars() {
+    val view = LocalView.current
+    val darkTheme = isSystemInDarkTheme()
+    val colorScheme = MaterialTheme.colorScheme
+    val window = (view.context as Activity).window
+    val insetsController = WindowCompat.getInsetsController(window, view)
+
+    SideEffect {
+        window.statusBarColor = Color.Transparent.toArgb()
+        window.navigationBarColor = Color.Transparent.toArgb()
+
+        insetsController.let {
+            it.isAppearanceLightStatusBars = darkTheme
+            it.isAppearanceLightNavigationBars = darkTheme
+        }
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            window.statusBarColor = colorScheme.primary.toArgb()
+            insetsController.isAppearanceLightStatusBars = !darkTheme
+            insetsController.isAppearanceLightNavigationBars = !darkTheme
+        }
+    }
 }
