@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -77,7 +78,10 @@ fun LoginScreenContent(
                 titleRes = R.string.log_in,
                 navigationIcon = Icons.Default.ArrowBack,
                 navigationIconContentDescription = "Navigation icon",
-                onNavigationClick = onNavigationClick
+                onNavigationClick = onNavigationClick,
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White),
+                navigationTint = Color.Black,
+                textColor = Color.Black
             )
         }
     ) {
@@ -123,7 +127,8 @@ fun LoginScreenContent(
                     text = stringResource(id = R.string.log_in).uppercase(),
                     fontFamily = RecipeFontFamily.poppinsFamily,
                     fontWeight = FontWeight.Medium,
-                    fontSize = 15.scaledSp
+                    fontSize = 15.scaledSp,
+                    color = Color.White
                 )
             }
             24.verticalSpace()

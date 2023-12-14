@@ -11,14 +11,13 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
-import com.mehmetpeker.recipe.designsystem.theme.RecipeTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +29,9 @@ fun RecipeTopAppBar(
     actionIcon: ImageVector? = null,
     actionIconContentDescription: String? = null,
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    textColor: Color? = null,
+    navigationTint: Color? = null,
+    actionTint: Color? = null,
     onNavigationClick: () -> Unit = {},
     onActionClick: () -> Unit = {},
 ) {
@@ -39,7 +41,8 @@ fun RecipeTopAppBar(
                 text = stringResource(id = titleRes),
                 fontFamily = RecipeFontFamily.poppinsFamily,
                 fontWeight = FontWeight.Medium,
-                fontSize = 18.sp
+                fontSize = 18.sp,
+                color = textColor ?: Color.Unspecified
             )
         },
         navigationIcon = {
@@ -48,7 +51,7 @@ fun RecipeTopAppBar(
                     Icon(
                         imageVector = navigationIcon,
                         contentDescription = navigationIconContentDescription,
-                        tint = MaterialTheme.colorScheme.onSurface,
+                        tint = navigationTint ?: MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }
@@ -59,7 +62,7 @@ fun RecipeTopAppBar(
                     Icon(
                         imageVector = actionIcon,
                         contentDescription = actionIconContentDescription,
-                        tint = MaterialTheme.colorScheme.onSurface,
+                        tint = actionTint ?: MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }

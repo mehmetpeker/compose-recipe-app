@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,7 +61,10 @@ fun RegisterScreenContent(onNavigationClick: () -> Unit) {
                 titleRes = R.string.sign_up,
                 navigationIcon = Icons.Default.ArrowBack,
                 navigationIconContentDescription = "Navigation icon",
-                onNavigationClick = onNavigationClick
+                onNavigationClick = onNavigationClick,
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White),
+                navigationTint = Color.Black,
+                textColor = Color.Black
             )
         }
     ) {
@@ -102,7 +106,8 @@ fun RegisterScreenContent(onNavigationClick: () -> Unit) {
                     text = stringResource(id = R.string.sign_up).uppercase(),
                     fontFamily = RecipeFontFamily.poppinsFamily,
                     fontWeight = FontWeight.Medium,
-                    fontSize = 15.scaledSp
+                    fontSize = 15.scaledSp,
+                    color = Color.White
                 )
             }
         }

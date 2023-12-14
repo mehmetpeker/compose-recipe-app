@@ -83,8 +83,8 @@ fun RecipeTextField(
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
         ) { decorationBox ->
             val image = if (isPasswordVisible)
-                R.drawable.baseline_visibility_24
-            else R.drawable.baseline_visibility_off_24
+                R.drawable.baseline_visibility_off_24
+            else R.drawable.baseline_visibility_24
             Row {
                 Column(
                     Modifier
@@ -96,14 +96,15 @@ fun RecipeTextField(
                             text = hintText,
                             fontFamily = RecipeFontFamily.poppinsFamily,
                             fontSize = hintTextSize,
-                            fontWeight = FontWeight.Normal
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Black
                         )
                     }
                     decorationBox.invoke()
                 }
                 if (type == RecipeTextFieldType.PASSWORD && value.text.isNotBlank()) {
                     IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                        Icon(painter = painterResource(id = image), "toggle")
+                        Icon(painter = painterResource(id = image), "toggle", tint = Color.Black)
                     }
                 }
             }
@@ -116,7 +117,8 @@ fun RecipeTextField(
                 fontFamily = RecipeFontFamily.poppinsFamily,
                 fontSize = hintTextSize,
                 fontWeight = FontWeight.Normal,
-                modifier = Modifier.align(Alignment.CenterStart)
+                modifier = Modifier.align(Alignment.CenterStart),
+                color = Color.Black
             )
         }
     }
