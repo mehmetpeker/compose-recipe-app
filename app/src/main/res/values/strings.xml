@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Recipe</string>
+    <string name="brand_name">Lezzet Tarifleri</string>
     <string name="generic_error">Bir hata oluştu!</string>
     <string name="a_error">A</string>
     <string name="b_error">B</string>
@@ -13,4 +14,7 @@
     <string name="y_error">Y</string>
     <string name="z_error">Z</string>
     <string name="log_in">Log in</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign Up</string>
 </resources>

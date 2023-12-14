@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -64,12 +65,12 @@ fun RecipeTextField(
     }
     Box(
         modifier = modifier
-            .fillMaxWidth()
             .background(cd_theme_textfield_container_color, shape = RoundedCornerShape(10.dp))
-            .padding(20.dp)
+            .padding(horizontal = 20.dp, vertical = 6.dp)
     ) {
 
         BasicTextField(
+            modifier = Modifier.align(Alignment.CenterStart),
             value = value,
             onValueChange = onValueChange,
             textStyle = TextStyle(
@@ -83,7 +84,7 @@ fun RecipeTextField(
         ) { decorationBox ->
             val image = if (isPasswordVisible)
                 R.drawable.baseline_visibility_24
-            else R.drawable.baseline_visibility_24
+            else R.drawable.baseline_visibility_off_24
             Row {
                 Column(
                     Modifier
@@ -114,7 +115,8 @@ fun RecipeTextField(
                 text = hintText,
                 fontFamily = RecipeFontFamily.poppinsFamily,
                 fontSize = hintTextSize,
-                fontWeight = FontWeight.Normal
+                fontWeight = FontWeight.Normal,
+                modifier = Modifier.align(Alignment.CenterStart)
             )
         }
     }

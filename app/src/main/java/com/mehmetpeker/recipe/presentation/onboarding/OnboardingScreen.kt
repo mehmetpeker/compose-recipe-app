@@ -20,11 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.base.BaseScreen
@@ -32,17 +34,25 @@ import com.mehmetpeker.recipe.common.RecipeRoundedButton
 import com.mehmetpeker.recipe.common.RecipeRoundedButtonType
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
 import com.mehmetpeker.recipe.ui.theme.TransparentSystemBars
+import com.mehmetpeker.recipe.util.extension.scaledSp
+import com.mehmetpeker.recipe.util.extension.verticalSpace
 
 @Composable
-fun OnboardingScreen() {
+fun OnboardingScreen(navController: NavController) {
     TransparentSystemBars()
-    BaseScreen(viewModel = OnBoardingViewModel(), navController = rememberNavController()) {
-        OnboardingContent()
+    BaseScreen(viewModel = OnBoardingViewModel(), navController = navController) {
+        OnboardingContent(
+            onLoginClicked = { navController.navigate("login") },
+            onRegisterClicked = { navController.navigate("register") }
+        )
     }
 }
 
 @Composable
-private fun OnboardingContent() {
+private fun OnboardingContent(
+    onRegisterClicked: () -> Unit,
+    onLoginClicked: () -> Unit,
+) {
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) {
@@ -62,10 +72,10 @@ private fun OnboardingContent() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Lezzet Rehberi", style = TextStyle(
+                    text = stringResource(id = R.string.brand_name), style = TextStyle(
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 70.sp,
+                        fontSize = 70.scaledSp,
                         fontFamily = RecipeFontFamily.playfairFamily
                     ),
                     textAlign = TextAlign.Center
@@ -85,31 +95,31 @@ private fun OnboardingContent() {
                         .fillMaxWidth()
                         .height(56.dp),
                     type = RecipeRoundedButtonType.Primary,
-                    onClick = {},
+                    onClick = onRegisterClicked,
                 ) {
                     Text(
                         text = "Üye Ol",
                         style = TextStyle(
                             color = Color.White,
-                            fontWeight = FontWeight.Medium,
+                            fontWeight = FontWeight.Bold,
                             fontSize = 15.sp,
                             fontFamily = RecipeFontFamily.poppinsFamily
                         )
                     )
                 }
-                Spacer(modifier = Modifier.requiredHeight(8.dp))
+                16.verticalSpace()
                 RecipeRoundedButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
                     type = RecipeRoundedButtonType.Secondary,
-                    onClick = {},
+                    onClick = onLoginClicked,
                 ) {
                     Text(
                         text = "Giriş Yap",
                         style = TextStyle(
                             color = Color.Black,
-                            fontWeight = FontWeight.Medium,
+                            fontWeight = FontWeight.Bold,
                             fontSize = 15.sp,
                             fontFamily = RecipeFontFamily.poppinsFamily
                         )

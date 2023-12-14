@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.mehmetpeker.recipe.ui.theme.primaryRoundedCornerButtonBackground
-import com.mehmetpeker.recipe.ui.theme.secondaryRoundedCornerButtonBackground
+import com.mehmetpeker.recipe.ui.theme.md_theme_light_onPrimary
+import com.mehmetpeker.recipe.ui.theme.md_theme_light_primary
 
 sealed interface RecipeOutlinedButtonType {
     data object Primary : RecipeOutlinedButtonType
@@ -146,8 +146,8 @@ fun RecipeRoundedButton(
     content: @Composable RowScope.() -> Unit,
 ) {
     val color = when (type) {
-        RecipeRoundedButtonType.Primary -> MaterialTheme.colorScheme.primaryRoundedCornerButtonBackground
-        RecipeRoundedButtonType.Secondary -> MaterialTheme.colorScheme.secondaryRoundedCornerButtonBackground
+        RecipeRoundedButtonType.Primary -> md_theme_light_primary
+        RecipeRoundedButtonType.Secondary -> md_theme_light_onPrimary
     }
     Button(
         onClick = onClick,
