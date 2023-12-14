@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mehmetpeker.recipe.presentation.authentication.login.LoginScreen
+import com.mehmetpeker.recipe.presentation.authentication.register.RegisterScreen
 import com.mehmetpeker.recipe.presentation.onboarding.OnboardingScreen
 
 @Composable
@@ -21,8 +22,9 @@ fun RecipeNavigation() {
         composable("login") {
             LoginScreen(navController)
         }
-
-
+        composable("register") {
+            RegisterScreen(navController)
+        }
     }
 
 }

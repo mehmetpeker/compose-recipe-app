@@ -47,6 +47,11 @@ fun LoginScreen(navController: NavController) {
         LoginScreenContent(
             onNavigationClick = {
                 navController.popBackStack()
+            },
+            onSignUpClick = {
+                navController.navigate("register") {
+                    launchSingleTop = true
+                }
             }
         )
     }
@@ -54,7 +59,10 @@ fun LoginScreen(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreenContent(onNavigationClick: () -> Unit) {
+fun LoginScreenContent(
+    onNavigationClick: () -> Unit,
+    onSignUpClick: () -> Unit
+) {
     val context = LocalContext.current
     var email by remember {
         mutableStateOf(TextFieldValue(""))
@@ -126,7 +134,7 @@ fun LoginScreenContent(onNavigationClick: () -> Unit) {
                 onClick = { offset ->
                     annotatedString.getStringAnnotations(offset, offset)
                         .firstOrNull()?.let { _ ->
-                            Toast.makeText(context, "Sign Up", Toast.LENGTH_SHORT).show()
+                            onSignUpClick()
                         }
                 })
         }
