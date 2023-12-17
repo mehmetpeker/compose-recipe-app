@@ -1,6 +1,8 @@
 package com.mehmetpeker.recipe.designsystem
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,6 +36,8 @@ import androidx.compose.ui.unit.sp
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
 import com.mehmetpeker.recipe.ui.theme.cd_theme_textfield_container_color
+import com.mehmetpeker.recipe.util.extension.scaledSp
+import com.mehmetpeker.recipe.util.extension.verticalSpace
 
 sealed interface RecipeTextFieldType {
     data object DEFAULT : RecipeTextFieldType
@@ -46,6 +51,7 @@ fun RecipeTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     isErrorEnabled: Boolean = false,
+    errorMessage: List<String>? = null,
     type: RecipeTextFieldType = RecipeTextFieldType.DEFAULT
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -63,62 +69,90 @@ fun RecipeTextField(
         RecipeTextFieldType.DEFAULT -> KeyboardType.Text
         RecipeTextFieldType.PASSWORD -> KeyboardType.Password
     }
-    Box(
-        modifier = modifier
-            .background(cd_theme_textfield_container_color, shape = RoundedCornerShape(10.dp))
-            .padding(horizontal = 20.dp, vertical = 6.dp)
-    ) {
+    val boxModifier = when {
+        isErrorEnabled -> modifier.then(
+            Modifier.border(
+                BorderStroke(1.dp, Color.Red),
+                RoundedCornerShape(10.dp)
+            )
+        )
 
-        BasicTextField(
-            modifier = Modifier.align(Alignment.CenterStart),
-            value = value,
-            onValueChange = onValueChange,
-            textStyle = TextStyle(
-                fontFamily = RecipeFontFamily.poppinsFamily,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color.Black
-            ),
-            visualTransformation = visualTransformation,
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
-        ) { decorationBox ->
-            val image = if (isPasswordVisible)
-                R.drawable.baseline_visibility_off_24
-            else R.drawable.baseline_visibility_24
-            Row {
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    if (value.text.isNotBlank()) {
-                        Text(
-                            text = hintText,
-                            fontFamily = RecipeFontFamily.poppinsFamily,
-                            fontSize = hintTextSize,
-                            fontWeight = FontWeight.Normal,
-                            color = Color.Black
-                        )
-                    }
-                    decorationBox.invoke()
-                }
-                if (type == RecipeTextFieldType.PASSWORD && value.text.isNotBlank()) {
-                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                        Icon(painter = painterResource(id = image), "toggle", tint = Color.Black)
-                    }
-                }
-            }
+        else -> modifier
+    }
+    Column {
+        Box(
+            modifier = boxModifier
+                .background(cd_theme_textfield_container_color, shape = RoundedCornerShape(10.dp))
+                .padding(horizontal = 20.dp, vertical = 6.dp)
+        ) {
 
-
-        }
-        if (value.text.isBlank()) {
-            Text(
-                text = hintText,
-                fontFamily = RecipeFontFamily.poppinsFamily,
-                fontSize = hintTextSize,
-                fontWeight = FontWeight.Normal,
+            BasicTextField(
                 modifier = Modifier.align(Alignment.CenterStart),
-                color = Color.Black
+                value = value,
+                onValueChange = onValueChange,
+                textStyle = TextStyle(
+                    fontFamily = RecipeFontFamily.poppinsFamily,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Black
+                ),
+                visualTransformation = visualTransformation,
+                keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+            ) { decorationBox ->
+                val image = if (isPasswordVisible)
+                    R.drawable.baseline_visibility_off_24
+                else R.drawable.baseline_visibility_24
+                Row {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        if (value.text.isNotBlank()) {
+                            Text(
+                                text = hintText,
+                                fontFamily = RecipeFontFamily.poppinsFamily,
+                                fontSize = hintTextSize,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black
+                            )
+                        }
+                        decorationBox.invoke()
+                    }
+                    if (type == RecipeTextFieldType.PASSWORD && value.text.isNotBlank()) {
+                        IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                            Icon(
+                                painter = painterResource(id = image),
+                                "toggle",
+                                tint = Color.Black
+                            )
+                        }
+                    }
+                }
+
+
+            }
+            if (value.text.isBlank()) {
+                Text(
+                    text = hintText,
+                    fontFamily = RecipeFontFamily.poppinsFamily,
+                    fontSize = hintTextSize,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    color = Color.Black
+                )
+            }
+        }
+        if (isErrorEnabled) {
+            val errors = errorMessage?.joinToString("\n") { "• $it" }
+                ?: stringResource(id = R.string.general_textfield_error)
+            8.verticalSpace()
+            Text(
+                text = errors,
+                fontFamily = RecipeFontFamily.poppinsFamily,
+                fontSize = 13.scaledSp,
+                fontWeight = FontWeight.Normal,
+                color = Color.Red
             )
         }
     }

@@ -1,6 +1,7 @@
 package com.mehmetpeker.recipe.network
 
 import android.util.Log
+import com.mehmetpeker.recipe.BuildConfig
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.util.HttpExceptions
 import io.ktor.client.HttpClient
@@ -105,7 +106,7 @@ object KtorClient {
         }
         // Apply to all requests
         defaultRequest {
-            url(urlString = "BASE_URL")
+            url(urlString = BuildConfig.BASE_URL)
             contentType(ContentType.Application.Json)
             accept(ContentType.Application.Json)
         }

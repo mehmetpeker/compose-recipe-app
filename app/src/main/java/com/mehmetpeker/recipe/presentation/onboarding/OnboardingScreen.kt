@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,19 +26,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.common.RecipeRoundedButton
 import com.mehmetpeker.recipe.common.RecipeRoundedButtonType
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
-import com.mehmetpeker.recipe.ui.theme.TransparentSystemBars
 import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
 
 @Composable
 fun OnboardingScreen(navController: NavController) {
-    TransparentSystemBars()
+    //TransparentSystemBars()
     BaseScreen(viewModel = OnBoardingViewModel(), navController = navController) {
         OnboardingContent(
             onLoginClicked = { navController.navigate("login") },

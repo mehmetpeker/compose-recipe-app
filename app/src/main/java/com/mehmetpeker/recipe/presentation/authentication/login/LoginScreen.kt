@@ -1,6 +1,5 @@
 package com.mehmetpeker.recipe.presentation.authentication.login
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,10 +20,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -64,13 +63,18 @@ fun LoginScreenContent(
     onNavigationClick: () -> Unit,
     onSignUpClick: () -> Unit
 ) {
-    val context = LocalContext.current
     var email by remember {
         mutableStateOf(TextFieldValue(""))
     }
     var password by remember {
         mutableStateOf(TextFieldValue(""))
     }
+    val titleTextStyle = TextStyle(
+        fontFamily = RecipeFontFamily.poppinsFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.scaledSp,
+        color = Color.Black.copy(alpha = 0.7f)
+    )
     Scaffold(
         containerColor = Color.White,
         topBar = {
@@ -85,6 +89,7 @@ fun LoginScreenContent(
             )
         }
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -92,25 +97,28 @@ fun LoginScreenContent(
                 .padding(horizontal = 24.dp)
                 .padding(top = 16.dp)
         ) {
-
+            Text(stringResource(id = R.string.email_address), style = titleTextStyle)
+            4.verticalSpace()
             RecipeTextField(
                 modifier = Modifier.requiredHeight(56.dp),
-                hintText = "Email Adress",
+                hintText = stringResource(id = R.string.email_address),
                 value = email,
                 onValueChange = {
                     email = it
                 })
-            16.verticalSpace()
+            12.verticalSpace()
+            Text(text = "Password", style = titleTextStyle)
+            4.verticalSpace()
             RecipeTextField(
                 modifier = Modifier.requiredHeight(56.dp),
-                hintText = "Password",
+                hintText = stringResource(id = R.string.password),
                 value = password,
                 onValueChange = {
                     password = it
                 },
                 type = RecipeTextFieldType.PASSWORD
             )
-            16.verticalSpace()
+            12.verticalSpace()
             Text(
                 text = stringResource(id = R.string.forgot_password),
                 fontFamily = RecipeFontFamily.poppinsFamily,
@@ -148,7 +156,7 @@ fun LoginScreenContent(
 
 @Composable
 private fun buildSignUpAnnotatedString(): AnnotatedString {
-    val dontHaveAnAccountText = stringResource(id = R.string.dont_have_account)
+    val doNotHaveAnAccountText = stringResource(id = R.string.do_not_have_account)
     val signUpText = stringResource(id = R.string.sign_up)
 
     val annotatedString = buildAnnotatedString {
@@ -159,7 +167,7 @@ private fun buildSignUpAnnotatedString(): AnnotatedString {
                 fontFamily = RecipeFontFamily.poppinsFamily
             )
         ) {
-            append(dontHaveAnAccountText)
+            append(doNotHaveAnAccountText)
             append("\t")
         }
         withStyle(
