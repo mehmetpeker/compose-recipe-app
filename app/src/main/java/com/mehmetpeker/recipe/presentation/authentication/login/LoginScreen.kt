@@ -1,11 +1,14 @@
 package com.mehmetpeker.recipe.presentation.authentication.login
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,6 +16,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,18 +45,28 @@ import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
 import com.mehmetpeker.recipe.ui.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    BaseScreen(viewModel = LoginViewModel(), navController) {
+fun LoginScreen(navController: NavController, viewModel: LoginViewModel = koinViewModel()) {
+    val uiState by viewModel.uiState.collectAsState()
+    BaseScreen(viewModel, navController) {
         LoginScreenContent(
+            viewModel,
+            uiState,
             onNavigationClick = {
                 navController.popBackStack()
+            },
+            onLogInClick = { email, password ->
+                viewModel.validateInputs(email, password)
             },
             onSignUpClick = {
                 navController.navigate("register") {
                     launchSingleTop = true
                 }
+            },
+            onForgotPasswordClick = {
+
             }
         )
     }
@@ -60,8 +75,12 @@ fun LoginScreen(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreenContent(
+    viewModel: LoginViewModel,
+    uiState: LoginViewModel.UiState,
     onNavigationClick: () -> Unit,
-    onSignUpClick: () -> Unit
+    onLogInClick: (email: String, password: String) -> Unit,
+    onSignUpClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
 ) {
     var email by remember {
         mutableStateOf(TextFieldValue(""))
@@ -71,10 +90,16 @@ fun LoginScreenContent(
     }
     val titleTextStyle = TextStyle(
         fontFamily = RecipeFontFamily.poppinsFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 18.scaledSp,
+        fontWeight = FontWeight.Light,
+        fontSize = 13.scaledSp,
         color = Color.Black.copy(alpha = 0.7f)
     )
+
+    LaunchedEffect(uiState) {
+        if (uiState.isFormValid && uiState.loginResponse == null) {
+            viewModel.login(email.text, password.text)
+        }
+    }
     Scaffold(
         containerColor = Color.White,
         topBar = {
@@ -96,6 +121,7 @@ fun LoginScreenContent(
                 .padding(it)
                 .padding(horizontal = 24.dp)
                 .padding(top = 16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(stringResource(id = R.string.email_address), style = titleTextStyle)
             4.verticalSpace()
@@ -105,7 +131,10 @@ fun LoginScreenContent(
                 value = email,
                 onValueChange = {
                     email = it
-                })
+                },
+                isErrorEnabled = uiState.emailResult?.isSuccess?.not() ?: false,
+                errorMessage = uiState.emailResult?.errorMessage
+            )
             12.verticalSpace()
             Text(text = "Password", style = titleTextStyle)
             4.verticalSpace()
@@ -116,10 +145,13 @@ fun LoginScreenContent(
                 onValueChange = {
                     password = it
                 },
-                type = RecipeTextFieldType.PASSWORD
+                type = RecipeTextFieldType.PASSWORD,
+                isErrorEnabled = uiState.passwordResult?.isSuccess?.not() ?: false,
+                errorMessage = uiState.passwordResult?.errorMessage
             )
             12.verticalSpace()
             Text(
+                modifier = Modifier.clickable { onForgotPasswordClick() },
                 text = stringResource(id = R.string.forgot_password),
                 fontFamily = RecipeFontFamily.poppinsFamily,
                 fontWeight = FontWeight.SemiBold,
@@ -130,7 +162,7 @@ fun LoginScreenContent(
             RecipeRoundedButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .requiredHeight(56.dp), onClick = { }) {
+                    .requiredHeight(56.dp), onClick = { onLogInClick(email.text, password.text) }) {
                 Text(
                     text = stringResource(id = R.string.log_in).uppercase(),
                     fontFamily = RecipeFontFamily.poppinsFamily,

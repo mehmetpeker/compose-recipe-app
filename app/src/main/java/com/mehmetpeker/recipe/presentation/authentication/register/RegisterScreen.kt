@@ -89,8 +89,8 @@ fun RegisterScreenContent(
     }
     val titleTextStyle = TextStyle(
         fontFamily = RecipeFontFamily.poppinsFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 18.scaledSp,
+        fontWeight = FontWeight.Light,
+        fontSize = 13.scaledSp,
         color = Color.Black.copy(alpha = 0.7f)
     )
 

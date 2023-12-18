@@ -73,7 +73,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
     implementation("io.insert-koin:koin-android:$koinVersion")
-
+    implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.collection:collection-ktx:1.3.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")

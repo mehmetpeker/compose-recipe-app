@@ -17,8 +17,10 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.accept
+import io.ktor.client.request.header
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
@@ -73,7 +75,7 @@ object KtorClient {
             }
         }
         install(HttpRequestRetry) {
-            maxRetries = 5
+            maxRetries = 1
             retryIf { request, response ->
                 !response.status.isSuccess()
             }
@@ -109,6 +111,11 @@ object KtorClient {
             url(urlString = BuildConfig.BASE_URL)
             contentType(ContentType.Application.Json)
             accept(ContentType.Application.Json)
+            header(
+                HttpHeaders.Authorization,
+                "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJlbmVzeSIsInJvbGUiOiJNZW1iZXIiLCJuYmYiOjE3MDE3MDg4OTAsImV4cCI6MTcwMjMxMzY5MCwiaWF0IjoxNzAxNzA4ODkwfQ.Q4at7TNZjO4zriuJYeaFEqf9kQ8gy4EmuUSNHM5oBDbAFajEgApeNaNU6XRvr2Q5Alc6hREUxo_zVX7HITqgRA"
+            )
+
         }
     }
 }

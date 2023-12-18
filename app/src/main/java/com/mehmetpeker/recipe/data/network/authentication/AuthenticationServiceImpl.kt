@@ -18,7 +18,8 @@ import io.ktor.http.contentType
 class AuthenticationServiceImpl(private val client: HttpClient) : AuthenticationService {
 
     override suspend fun login(body: LoginRequest): ApiResult<LoginResponse> = client.safeRequest {
-        url("/api/account/login")
+        method = HttpMethod.Post
+        url("api/account/login")
         setBody(body)
     }
 

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Recipe</string>
-    <string name="brand_name">Lezzet Tarifleri</string>
+    <string name="brand_name">Lezzet Rehberi</string>
     <string name="generic_error">Bir hata oluştu!</string>
     <string name="a_error">A</string>
     <string name="b_error">B</string>
