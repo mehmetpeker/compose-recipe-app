@@ -1,19 +1,34 @@
 package com.mehmetpeker.recipe.util
 
-class SessionManager {
-    fun getAccessToken(): String? {
-        return null
+import com.mehmetpeker.recipe.data.UserRepositoryImpl
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+
+class SessionManager : KoinComponent {
+    private val userRepository: UserRepositoryImpl by inject()
+
+    fun retrieveUserData() {}
+    suspend fun getAccessToken(): String? {
+        return userRepository.getAccessToken()
     }
 
-    fun getRefreshToken(): String? {
-        return null
+    suspend fun setAccessToken(token: String) {
+        userRepository.setAccessToken(token)
     }
 
-    fun refreshToken(refreshToken: String): String? {
-        return null
+    suspend fun setUserName(token: String) {
+        userRepository.setAccessToken(token)
     }
 
-    fun logout() {
+    suspend fun setProfilePhotoUrl(url: String) {
+        userRepository.setProfilePhotoUrl(url)
+    }
 
+    suspend fun setRemember(remember: Boolean) {
+        userRepository.setRememberLogin(remember)
+    }
+
+    suspend fun logout() {
+        userRepository.logOut()
     }
 }

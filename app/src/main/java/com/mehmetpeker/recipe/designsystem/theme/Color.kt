@@ -1,4 +1,4 @@
-package com.mehmetpeker.recipe.ui.theme
+package com.mehmetpeker.recipe.designsystem.theme
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable

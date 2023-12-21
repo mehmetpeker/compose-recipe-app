@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.mehmetpeker.recipe.ui.theme.md_theme_light_onPrimary
-import com.mehmetpeker.recipe.ui.theme.md_theme_light_primary
+import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_onPrimary
+import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 
 sealed interface RecipeOutlinedButtonType {
     data object Primary : RecipeOutlinedButtonType

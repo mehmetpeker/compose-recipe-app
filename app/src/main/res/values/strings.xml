@@ -3,7 +3,7 @@
     <string name="brand_name">Lezzet Rehberi</string>
     <string name="generic_error">Bir hata oluştu!</string>
     <string name="a_error">A</string>
-    <string name="b_error">B</string>
+    <string name="error_unauthorized">Kullanıcı Bulunamadı</string>
     <string name="c_error">C</string>
     <string name="d_error">D</string>
     <string name="e_error">E</string>
@@ -15,6 +15,7 @@
     <string name="z_error">Z</string>
     <string name="log_in">Log in</string>
     <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_password_title">Forgot Password</string>
     <string name="do_not_have_account">Don\'t have an account?</string>
     <string name="sign_up">Sign Up</string>
     <string name="username">Username</string>
@@ -30,5 +31,15 @@
     <string name="error_username_invalid_characters">Kullanıcı adı sadece harf, rakam, _ veya - içerebilir.</string>
     <string name="error_username_invalid_length">Kullanıcı adı en az %1$d en fazla %2$d karakter uzunluğunda olmalıdır..</string>
     <string name="error_username_not_start_with_letter">Kullanıcı adı harfle başlamalıdır.</string>
+    <string name="error">Hata!</string>
+    <string name="forgot_password_description">No worries,we\'ll send you reset instructions.</string>
+    <string name="enter_your_email_address">Email adresinizi girin</string>
+    <string name="reset_password">Parolayı Sıfırla</string>
+    <string name="reset_password_title">Parolayı Sıfırla</string>
+    <string name="password_again">Parola(Tekrar)</string>
+    <string name="ok">Tamam</string>
+    <string name="register_success">Kayıt olma işlemi başarılı</string>
+    <string name="success">Başarılı</string>
+    <string name="remember_me">Beni Hatırla</string>
 
 </resources>

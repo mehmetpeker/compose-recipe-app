@@ -33,7 +33,7 @@ import com.mehmetpeker.recipe.common.RecipeRoundedButtonType
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
 import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
-
+const val ROUTE_ONBOARDING = "onboarding"
 @Composable
 fun OnboardingScreen(navController: NavController) {
     //TransparentSystemBars()

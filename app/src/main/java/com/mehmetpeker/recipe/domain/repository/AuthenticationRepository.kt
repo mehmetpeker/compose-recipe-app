@@ -1,4 +1,4 @@
-package com.mehmetpeker.recipe.data.network.authentication
+package com.mehmetpeker.recipe.domain.repository
 
 import com.mehmetpeker.recipe.data.entity.authentication.login.LoginRequest
 import com.mehmetpeker.recipe.data.entity.authentication.login.LoginResponse
@@ -8,9 +8,9 @@ import com.mehmetpeker.recipe.data.entity.authentication.resetPassword.ResetPass
 import com.mehmetpeker.recipe.data.entity.authentication.updatePassword.UpdatePasswordRequest
 import com.mehmetpeker.recipe.util.ApiResult
 
-interface AuthenticationService {
+interface AuthenticationRepository {
 
-    suspend fun login(body: LoginRequest): ApiResult<LoginResponse>
+    suspend fun login(body: LoginRequest, isRememberChecked: Boolean): ApiResult<LoginResponse>
 
     suspend fun register(body: RegisterRequest): ApiResult<RegisterResponse>
 

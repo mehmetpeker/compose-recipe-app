@@ -2,6 +2,7 @@ package com.mehmetpeker.recipe.presentation.authentication.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,7 +12,10 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -42,10 +46,17 @@ import com.mehmetpeker.recipe.designsystem.RecipeTextField
 import com.mehmetpeker.recipe.designsystem.RecipeTextFieldType
 import com.mehmetpeker.recipe.designsystem.RecipeTopAppBar
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
-import com.mehmetpeker.recipe.ui.theme.md_theme_light_primary
+import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
+import com.mehmetpeker.recipe.presentation.authentication.forgotPassword.ROUTE_FORGOT_PASSWORD
+import com.mehmetpeker.recipe.presentation.authentication.register.ROUTE_REGISTER
+import com.mehmetpeker.recipe.presentation.home.ROUTE_HOME
+import com.mehmetpeker.recipe.presentation.onboarding.ROUTE_ONBOARDING
+import com.mehmetpeker.recipe.util.extension.horizontalSpace
 import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
 import org.koin.androidx.compose.koinViewModel
+
+const val ROUTE_LOGIN = "login"
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel = koinViewModel()) {
@@ -55,20 +66,37 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = koinVi
             viewModel,
             uiState,
             onNavigationClick = {
-                navController.popBackStack()
+                navController.navigate(ROUTE_ONBOARDING) {
+                    launchSingleTop = true
+                    popUpTo(ROUTE_ONBOARDING) {
+                        inclusive = true
+                    }
+                }
             },
             onLogInClick = { email, password ->
                 viewModel.validateInputs(email, password)
             },
             onSignUpClick = {
-                navController.navigate("register") {
+                navController.navigate(ROUTE_REGISTER) {
                     launchSingleTop = true
                 }
             },
             onForgotPasswordClick = {
-
+                navController.navigate(ROUTE_FORGOT_PASSWORD)
             }
         )
+    }
+    LaunchedEffect(uiState.loginResponse) {
+        if (uiState.loginResponse != null) {
+            navController.navigate(ROUTE_HOME) {
+                launchSingleTop = true
+                navController.graph.startDestinationRoute?.let {
+                    popUpTo(it) {
+                        inclusive = true
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -123,17 +151,17 @@ fun LoginScreenContent(
                 .padding(top = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(stringResource(id = R.string.email_address), style = titleTextStyle)
+            Text(stringResource(id = R.string.username), style = titleTextStyle)
             4.verticalSpace()
             RecipeTextField(
                 modifier = Modifier.requiredHeight(56.dp),
-                hintText = stringResource(id = R.string.email_address),
+                hintText = stringResource(id = R.string.username),
                 value = email,
                 onValueChange = {
                     email = it
                 },
-                isErrorEnabled = uiState.emailResult?.isSuccess?.not() ?: false,
-                errorMessage = uiState.emailResult?.errorMessage
+                isErrorEnabled = uiState.usernameResult?.isSuccess?.not() ?: false,
+                errorMessage = uiState.usernameResult?.errorMessage
             )
             12.verticalSpace()
             Text(text = "Password", style = titleTextStyle)
@@ -149,6 +177,20 @@ fun LoginScreenContent(
                 isErrorEnabled = uiState.passwordResult?.isSuccess?.not() ?: false,
                 errorMessage = uiState.passwordResult?.errorMessage
             )
+            12.verticalSpace()
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = uiState.isRememberChecked,
+                    onCheckedChange = {
+                        viewModel.changeRememberState(it)
+                    },
+                    colors = CheckboxDefaults.colors(md_theme_light_primary)
+                )
+                Text(
+                    text = stringResource(id = R.string.remember_me),
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
             12.verticalSpace()
             Text(
                 modifier = Modifier.clickable { onForgotPasswordClick() },

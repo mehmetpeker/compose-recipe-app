@@ -15,10 +15,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -30,41 +29,63 @@ import androidx.navigation.NavController
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.common.RecipeRoundedButton
+import com.mehmetpeker.recipe.common.SuccessAlertDialog
 import com.mehmetpeker.recipe.designsystem.RecipeTextField
 import com.mehmetpeker.recipe.designsystem.RecipeTextFieldType
 import com.mehmetpeker.recipe.designsystem.RecipeTopAppBar
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
+import com.mehmetpeker.recipe.presentation.authentication.login.ROUTE_LOGIN
 import com.mehmetpeker.recipe.util.ValidationResult
 import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
+import org.koin.androidx.compose.koinViewModel
+
+const val ROUTE_REGISTER = "register"
 
 @Composable
-fun RegisterScreen(navController: NavController) {
-    val viewModel = RegisterViewModel()
+fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = koinViewModel()) {
     BaseScreen(viewModel, navController) {
         val uiState by viewModel.uiState.collectAsState()
-        when (uiState) {
-            is RegisterViewModel.UiState.Invalid -> {
-                val state = uiState as RegisterViewModel.UiState.Invalid
-                RegisterScreenContent(
-                    state.usernameResult,
-                    state.emailResult,
-                    state.passwordResult,
-                    onNavigationClick = {
-                        navController.popBackStack()
-                    },
-                    onSignUpClick = { username, email, password ->
-                        viewModel.validateInputs(username, email, password)
-                    }
-                )
-            }
 
-            RegisterViewModel.UiState.Valid -> {
+        RegisterScreenContent(
+            viewModel.email,
+            viewModel.username,
+            viewModel.password,
+            uiState.usernameResult,
+            uiState.emailResult,
+            uiState.passwordResult,
+            onNavigationClick = {
+                navController.popBackStack()
+            },
+            onSignUpClick = {
+                viewModel.validateInputs()
+            },
+            onEmailChanged = {
+                viewModel.email = it
+            },
+            onPasswordChanged = {
+                viewModel.password = it
+            },
+            onUserNameChanged = {
+                viewModel.username = it
+            },
+        )
+        LaunchedEffect(uiState.isValid) {
+            if (uiState.isValid) {
                 viewModel.register()
-                navController.navigate(navController.graph.startDestinationRoute ?: "")
             }
         }
-
+        if (uiState.registerState) {
+            SuccessAlertDialog {
+                viewModel.changeRegisterState(false)
+                navController.navigate(ROUTE_LOGIN) {
+                    launchSingleTop = true
+                    popUpTo(ROUTE_LOGIN) {
+                        inclusive = true
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -72,21 +93,20 @@ fun RegisterScreen(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreenContent(
+    email: TextFieldValue,
+    username: TextFieldValue,
+    password: TextFieldValue,
     usernameValidationResult: ValidationResult?,
     emailValidationResult: ValidationResult?,
     passwordValidationResult: ValidationResult?,
     onNavigationClick: () -> Unit,
-    onSignUpClick: (username: String, email: String, password: String) -> Unit
+    onSignUpClick: () -> Unit,
+    onEmailChanged: (TextFieldValue) -> Unit,
+    onUserNameChanged: (TextFieldValue) -> Unit,
+    onPasswordChanged: (TextFieldValue) -> Unit
+
 ) {
-    val (username, setUsername) = remember {
-        mutableStateOf(TextFieldValue(""))
-    }
-    val (email, setEmail) = remember {
-        mutableStateOf(TextFieldValue(""))
-    }
-    val (password, setPassword) = remember {
-        mutableStateOf(TextFieldValue(""))
-    }
+
     val titleTextStyle = TextStyle(
         fontFamily = RecipeFontFamily.poppinsFamily,
         fontWeight = FontWeight.Light,
@@ -126,7 +146,7 @@ fun RegisterScreenContent(
                     modifier = Modifier.requiredHeight(56.dp),
                     hintText = stringResource(id = R.string.username),
                     value = username,
-                    onValueChange = setUsername,
+                    onValueChange = onUserNameChanged,
                     isErrorEnabled = usernameValidationResult?.isSuccess == false,
                     errorMessage = usernameValidationResult?.errorMessage
                 )
@@ -137,7 +157,7 @@ fun RegisterScreenContent(
                     modifier = Modifier.requiredHeight(56.dp),
                     hintText = stringResource(id = R.string.email_address),
                     value = email,
-                    onValueChange = setEmail,
+                    onValueChange = onEmailChanged,
                     isErrorEnabled = emailValidationResult?.isSuccess == false,
                     errorMessage = emailValidationResult?.errorMessage
                 )
@@ -148,7 +168,7 @@ fun RegisterScreenContent(
                     modifier = Modifier.requiredHeight(56.dp),
                     hintText = stringResource(R.string.password),
                     value = password,
-                    onValueChange = setPassword,
+                    onValueChange = onPasswordChanged,
                     type = RecipeTextFieldType.PASSWORD,
                     isErrorEnabled = passwordValidationResult?.isSuccess == false,
                     errorMessage = passwordValidationResult?.errorMessage
@@ -160,7 +180,7 @@ fun RegisterScreenContent(
                     .fillMaxWidth()
                     .padding(8.dp)
                     .requiredHeight(56.dp),
-                onClick = { onSignUpClick(username.text, email.text, password.text) }) {
+                onClick = { onSignUpClick() }) {
                 Text(
                     text = stringResource(id = R.string.sign_up).uppercase(),
                     fontFamily = RecipeFontFamily.poppinsFamily,

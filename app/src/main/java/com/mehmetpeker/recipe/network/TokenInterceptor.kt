@@ -1,6 +1,7 @@
 package com.mehmetpeker.recipe.network
 
 import com.mehmetpeker.recipe.util.SessionManager
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -12,27 +13,16 @@ class TokenInterceptor : Interceptor, KoinComponent {
     private val sessionManager: SessionManager by inject()
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        var accessToken = sessionManager.getAccessToken()
-
+        val accessToken = runBlocking {
+            sessionManager.getAccessToken()
+        }
         val response = chain.proceed(newRequestWithAccessToken(accessToken, request))
 
         if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            synchronized(KtorClient.client) {
-                val newAccessToken = sessionManager.getAccessToken()
-                if (newAccessToken != accessToken) {
-                    return chain.proceed(newRequestWithAccessToken(accessToken, request))
-                } else {
-                    accessToken = refreshToken()
-                    if (accessToken.isNullOrBlank()) {
-                        sessionManager.logout()
-                        return response
-                    }
-                    return chain.proceed(newRequestWithAccessToken(accessToken, request))
-                }
+            runBlocking {
+                sessionManager.logout()
             }
-
         }
-
         return response
     }
 
@@ -40,13 +30,4 @@ class TokenInterceptor : Interceptor, KoinComponent {
         request.newBuilder()
             .header("Authorization", "Bearer $accessToken")
             .build()
-
-    private fun refreshToken(): String? {
-        synchronized(this) {
-            val refreshToken = sessionManager.getRefreshToken()
-            refreshToken?.let {
-                return sessionManager.refreshToken(refreshToken)
-            } ?: return null
-        }
-    }
 }

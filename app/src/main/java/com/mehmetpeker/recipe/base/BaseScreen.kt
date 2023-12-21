@@ -13,7 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import androidx.navigation.navOptions
 import com.mehmetpeker.recipe.R
+import com.mehmetpeker.recipe.presentation.authentication.login.ROUTE_LOGIN
 import io.ktor.http.HttpStatusCode
 
 @Composable
@@ -26,29 +28,31 @@ fun <VM : BaseViewModel> BaseScreen(
     when (error) {
         null -> Unit
         else -> {
-            val message = stringResource(id = error?.messageId ?: R.string.generic_error)
+            val title = stringResource(id = R.string.error)
+            val genericMessage = stringResource(id = error?.messageId ?: R.string.generic_error)
+            val errorMessage = error?.errorBody?.errorMessage ?: genericMessage
+            val errorCode = error?.errorBody?.errorCode
             AlertDialog(
                 onDismissRequest = {
                     viewModel.removeError()
                 },
-                title = {},
+                title = { Text(text = title) },
                 text = {
-                    Text(text = message)
+                    Text(text = errorMessage)
                 },
                 properties = DialogProperties(),
                 confirmButton = {},
                 dismissButton = {
                     val action: () -> Unit = {
-                        when (error?.code) {
+                        when (errorCode?.toIntOrNull()) {
                             HttpStatusCode.Unauthorized.value -> {
-                                // navigate to login screen
-                                /*navController.navigate(
-                                    "eg:loginRoute",
+                                navController.navigate(
+                                    ROUTE_LOGIN,
                                     navOptions = navOptions {
-                                        popUpTo("startDestinationRoute") {
+                                        popUpTo(ROUTE_LOGIN) {
                                             inclusive = true
                                         }
-                                    })*/
+                                    })
                                 viewModel.removeError()
                             }
 
@@ -56,7 +60,7 @@ fun <VM : BaseViewModel> BaseScreen(
                         }
                     }
                     TextButton(onClick = action) {
-                        Text(text = "")
+                        Text(text = stringResource(id = R.string.ok))
                     }
                 },
                 shape = RoundedCornerShape(12.dp)

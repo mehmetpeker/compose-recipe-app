@@ -1,14 +1,12 @@
 package com.mehmetpeker.recipe.di
 
-import com.mehmetpeker.recipe.data.network.authentication.AuthenticationServiceImpl
-import com.mehmetpeker.recipe.network.KtorClient
-import com.mehmetpeker.recipe.network.SimpleLoggingInterceptor
+import com.mehmetpeker.recipe.data.repository.authentication.AuthenticationRepositoryImpl
 import com.mehmetpeker.recipe.network.TokenInterceptor
+import com.mehmetpeker.recipe.network.client
 import org.koin.dsl.module
 
 val networkModule = module {
-    single { SimpleLoggingInterceptor() }
     single { TokenInterceptor() }
-    single { KtorClient.client }
-    factory { AuthenticationServiceImpl(get()) }
+    single { client }
+    factory { AuthenticationRepositoryImpl(get(), get()) }
 }

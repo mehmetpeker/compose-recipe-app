@@ -13,7 +13,12 @@ class SimpleLoggingInterceptor : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Chain): Response {
         val request: Request = chain.request()
-        LOGGER.info("Intercepted headers: {} from URL: {}", request.headers, request.url)
+        LOGGER.info(
+            "Intercepted headers: {} from URL: {} request body {}",
+            request.headers,
+            request.url,
+            request.body?.toString()
+        )
         return chain.proceed(request)
     }
 

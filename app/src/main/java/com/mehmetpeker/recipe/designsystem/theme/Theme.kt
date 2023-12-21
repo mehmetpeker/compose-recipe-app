@@ -1,4 +1,4 @@
-package com.mehmetpeker.recipe.ui.theme
+package com.mehmetpeker.recipe.designsystem.theme
 
 import android.app.Activity
 import android.os.Build
@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.mehmetpeker.recipe.designsystem.theme.RecipeTypography
 
 
 private val LightColors = lightColorScheme(
@@ -109,7 +108,7 @@ fun RecipeTheme(
         }
     }
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = LightColors,
         typography = RecipeTypography,
         content = content
     )

@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
-import com.mehmetpeker.recipe.ui.theme.cd_theme_textfield_container_color
+import com.mehmetpeker.recipe.designsystem.theme.cd_theme_textfield_container_color
 import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
 

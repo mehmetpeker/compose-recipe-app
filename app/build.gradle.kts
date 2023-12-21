@@ -1,6 +1,8 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 val prodBaseUrl: String = gradleLocalProperties(rootDir).getProperty("prodApiBaseUrl")
+val deepLinkHost: String = gradleLocalProperties(rootDir).getProperty("deepLinkHost")
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -22,6 +24,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        manifestPlaceholders["deepLinkHost"] = deepLinkHost
     }
 
     buildTypes {
@@ -34,7 +37,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "baseUrl", prodBaseUrl)
+            buildConfigField("String", "BASE_URL", prodBaseUrl)
         }
     }
     compileOptions {
@@ -63,14 +66,18 @@ dependencies {
     val koinVersion = "3.5.0"
     val ktorVersion = "2.3.6"
     val nav_version = "2.7.5"
-
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-android:$ktorVersion")
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
     implementation("io.ktor:ktor-client-logging:$ktorVersion")
     implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+    implementation("io.ktor:ktor-client-gson:$ktorVersion")
+    implementation("io.ktor:ktor-client-encoding:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("org.slf4j:slf4j-api:1.7.36")
+    implementation("ch.qos.logback:logback-classic:1.2.6")  // or another logging implementation
 
     implementation("io.insert-koin:koin-android:$koinVersion")
     implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
