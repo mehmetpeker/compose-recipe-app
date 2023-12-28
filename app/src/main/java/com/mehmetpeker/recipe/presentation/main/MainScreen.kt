@@ -2,6 +2,7 @@ package com.mehmetpeker.recipe.presentation.main
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -35,7 +37,7 @@ fun HomeScreen() {
     SetStatusBarColor(color = md_theme_light_primary)
     Scaffold(
         bottomBar = {
-            RecipeBottomNavigationBar(navController = nestedNavController)
+            RecipeBottomNavigationBar(Modifier.clip(RoundedCornerShape(topStartPercent = 25, topEndPercent = 25)),navController = nestedNavController)
         },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {

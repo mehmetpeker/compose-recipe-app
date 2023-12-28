@@ -25,6 +25,7 @@ import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 
 @Composable
 fun RecipeBottomNavigationBar(
+    modifier: Modifier,
     navController: NavHostController
 ) {
     val screens = listOf(
@@ -38,7 +39,7 @@ fun RecipeBottomNavigationBar(
 
     NavigationBar {
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .background(md_theme_light_primary)
         ) {

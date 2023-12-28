@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.common.SetStatusBarColor
@@ -34,8 +35,10 @@ fun HomepageScreenContent(uiState: HomeUiState) {
             HomeTopBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(bottomStartPercent = 20, bottomEndPercent = 20))
-                    .background(md_theme_light_primary),
+                    .clip(RoundedCornerShape(bottomStartPercent = 50, bottomEndPercent = 50))
+                    .background(md_theme_light_primary)
+                    .padding(10.dp)
+                ,
                 profileImageUrl = uiState.user?.profilePhotoUrl,
                 username = uiState.user?.username
             )
