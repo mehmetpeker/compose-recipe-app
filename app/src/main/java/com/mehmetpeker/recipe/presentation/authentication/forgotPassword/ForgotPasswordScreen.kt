@@ -35,7 +35,7 @@ import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
 import org.koin.androidx.compose.koinViewModel
 
-const val ROUTE_FORGOT_PASSWORD = "forgotPassword"
+
 
 @Composable
 fun ForgotPasswordScreen(

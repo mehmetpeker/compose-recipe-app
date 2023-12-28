@@ -15,7 +15,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.navOptions
 import com.mehmetpeker.recipe.R
-import com.mehmetpeker.recipe.presentation.authentication.login.ROUTE_LOGIN
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_LOGIN
 import io.ktor.http.HttpStatusCode
 
 @Composable

@@ -34,13 +34,12 @@ import com.mehmetpeker.recipe.designsystem.RecipeTextField
 import com.mehmetpeker.recipe.designsystem.RecipeTextFieldType
 import com.mehmetpeker.recipe.designsystem.RecipeTopAppBar
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
-import com.mehmetpeker.recipe.presentation.authentication.login.ROUTE_LOGIN
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_LOGIN
 import com.mehmetpeker.recipe.util.ValidationResult
 import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
 import org.koin.androidx.compose.koinViewModel
 
-const val ROUTE_REGISTER = "register"
 
 @Composable
 fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = koinViewModel()) {

@@ -10,17 +10,18 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.mehmetpeker.recipe.BuildConfig
 import com.mehmetpeker.recipe.presentation.authentication.forgotPassword.ForgotPasswordScreen
-import com.mehmetpeker.recipe.presentation.authentication.forgotPassword.ROUTE_FORGOT_PASSWORD
 import com.mehmetpeker.recipe.presentation.authentication.login.LoginScreen
-import com.mehmetpeker.recipe.presentation.authentication.login.ROUTE_LOGIN
-import com.mehmetpeker.recipe.presentation.authentication.register.ROUTE_REGISTER
 import com.mehmetpeker.recipe.presentation.authentication.register.RegisterScreen
-import com.mehmetpeker.recipe.presentation.authentication.resetPassword.ROUTE_RESET_PASSWORD
 import com.mehmetpeker.recipe.presentation.authentication.resetPassword.ResetPasswordScreen
-import com.mehmetpeker.recipe.presentation.home.HomeScreen
-import com.mehmetpeker.recipe.presentation.home.ROUTE_HOME
+import com.mehmetpeker.recipe.presentation.main.HomeScreen
 import com.mehmetpeker.recipe.presentation.onboarding.OnboardingScreen
-import com.mehmetpeker.recipe.presentation.onboarding.ROUTE_ONBOARDING
+import com.mehmetpeker.recipe.util.NavArgumentConstants
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_FORGOT_PASSWORD
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_HOME
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_LOGIN
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_ONBOARDING
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_REGISTER
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_RESET_PASSWORD
 
 @Composable
 fun RecipeNavigation(navController: NavHostController) {
@@ -40,11 +41,12 @@ fun RecipeNavigation(navController: NavHostController) {
             RegisterScreen(navController)
         }
         composable(ROUTE_HOME) {
-            HomeScreen(navController)
+            HomeScreen()
         }
         composable(ROUTE_FORGOT_PASSWORD) {
             ForgotPasswordScreen(navController)
         }
+
         composable(
             route = ROUTE_RESET_PASSWORD,
             deepLinks = listOf(navDeepLink {
@@ -52,18 +54,18 @@ fun RecipeNavigation(navController: NavHostController) {
                 action = Intent.ACTION_VIEW
             }),
             arguments = listOf(
-                navArgument("email") {
+                navArgument(NavArgumentConstants.EMAIL) {
                     type = NavType.StringType
                     defaultValue = ""
                 },
-                navArgument("token") {
+                navArgument(NavArgumentConstants.TOKEN) {
                     type = NavType.StringType
                     defaultValue = ""
                 }
             )
         ) { backStackEntry ->
-            val email = backStackEntry.arguments?.getString("email") ?: ""
-            val token = backStackEntry.arguments?.getString("token") ?: ""
+            val email = backStackEntry.arguments?.getString(NavArgumentConstants.EMAIL) ?: ""
+            val token = backStackEntry.arguments?.getString(NavArgumentConstants.TOKEN) ?: ""
             ResetPasswordScreen(navController = navController, email = email, token = token)
         }
     }

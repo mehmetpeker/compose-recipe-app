@@ -1,4 +1,4 @@
-package com.mehmetpeker.recipe.presentation.home.component
+package com.mehmetpeker.recipe.presentation.main.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

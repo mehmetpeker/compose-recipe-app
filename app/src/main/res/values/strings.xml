@@ -44,5 +44,10 @@
     <string name="hello_username">Merhaba, %s!</string>
     <string name="check_amazing_recipe">Harika tariflere göz at\n</string>
     <string name="search_any_recipe">Herhangi bir tarifi arayın..</string>
+    <string name="navigation_home">Anasayfa</string>
+    <string name="navigation_search">Tarif Ara</string>
+    <string name="navigation_favorites">Favoriler</string>
+    <string name="navigation_profile">Profil</string>
+    <string name="navigation_add_recipe">Tarif Ekle</string>
 
 </resources>

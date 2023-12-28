@@ -32,14 +32,14 @@ import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.common.RecipeRoundedButton
 import com.mehmetpeker.recipe.common.RecipeRoundedButtonType
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
-import com.mehmetpeker.recipe.presentation.authentication.login.ROUTE_LOGIN
-import com.mehmetpeker.recipe.presentation.authentication.register.ROUTE_REGISTER
-import com.mehmetpeker.recipe.presentation.home.ROUTE_HOME
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_HOME
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_LOGIN
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_ONBOARDING
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_REGISTER
 import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
 import org.koin.androidx.compose.koinViewModel
 
-const val ROUTE_ONBOARDING = "onboarding"
 
 @Composable
 fun OnboardingScreen(

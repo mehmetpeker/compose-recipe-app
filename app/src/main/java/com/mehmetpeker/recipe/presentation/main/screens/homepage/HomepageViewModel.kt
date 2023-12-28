@@ -1,4 +1,4 @@
-package com.mehmetpeker.recipe.presentation.home
+package com.mehmetpeker.recipe.presentation.main.screens.homepage
 
 import androidx.lifecycle.viewModelScope
 import com.mehmetpeker.recipe.base.BaseViewModel
@@ -16,7 +16,7 @@ data class HomeUiState(
     val user: User? = null
 )
 
-class HomeViewModel : BaseViewModel(), KoinComponent {
+class HomepageViewModel : BaseViewModel(), KoinComponent {
     private val sessionManager: SessionManager by inject()
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()

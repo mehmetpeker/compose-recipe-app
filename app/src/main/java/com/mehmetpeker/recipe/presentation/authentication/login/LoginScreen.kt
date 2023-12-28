@@ -47,16 +47,14 @@ import com.mehmetpeker.recipe.designsystem.RecipeTextFieldType
 import com.mehmetpeker.recipe.designsystem.RecipeTopAppBar
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
-import com.mehmetpeker.recipe.presentation.authentication.forgotPassword.ROUTE_FORGOT_PASSWORD
-import com.mehmetpeker.recipe.presentation.authentication.register.ROUTE_REGISTER
-import com.mehmetpeker.recipe.presentation.home.ROUTE_HOME
-import com.mehmetpeker.recipe.presentation.onboarding.ROUTE_ONBOARDING
-import com.mehmetpeker.recipe.util.extension.horizontalSpace
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_FORGOT_PASSWORD
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_HOME
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_ONBOARDING
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_REGISTER
 import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
 import org.koin.androidx.compose.koinViewModel
 
-const val ROUTE_LOGIN = "login"
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel = koinViewModel()) {

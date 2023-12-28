@@ -1,4 +1,4 @@
-package com.mehmetpeker.recipe.presentation.home
+package com.mehmetpeker.recipe.presentation.main.screens.homepage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -15,21 +15,19 @@ import androidx.navigation.NavController
 import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.common.SetStatusBarColor
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
-import com.mehmetpeker.recipe.presentation.home.component.HomeTopBar
+import com.mehmetpeker.recipe.presentation.main.component.HomeTopBar
 import org.koin.androidx.compose.koinViewModel
 
-const val ROUTE_HOME = "home"
-
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeViewModel = koinViewModel()) {
+fun HomepageScreen(navController: NavController, viewModel: HomepageViewModel = koinViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     BaseScreen(viewModel = viewModel, navController = navController) {
-        HomeScreenContent(uiState)
+        HomepageScreenContent(uiState)
     }
 }
 
 @Composable
-fun HomeScreenContent(uiState: HomeUiState) {
+fun HomepageScreenContent(uiState: HomeUiState) {
     SetStatusBarColor(color = md_theme_light_primary)
     Scaffold {
         Column(modifier = Modifier.padding(it)) {
