@@ -6,6 +6,8 @@ import com.mehmetpeker.recipe.presentation.authentication.forgotPassword.forgotP
 import com.mehmetpeker.recipe.presentation.authentication.login.loginModule
 import com.mehmetpeker.recipe.presentation.authentication.register.registerModule
 import com.mehmetpeker.recipe.presentation.authentication.resetPassword.resetPasswordModule
+import com.mehmetpeker.recipe.presentation.home.homeModule
+import com.mehmetpeker.recipe.presentation.onboarding.onboardingModule
 
 object KoinModules {
     val modules = listOf(
@@ -14,6 +16,8 @@ object KoinModules {
         loginModule,
         registerModule,
         forgotPasswordModule,
-        resetPasswordModule
+        resetPasswordModule,
+        homeModule,
+        onboardingModule
     )
 }

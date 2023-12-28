@@ -41,5 +41,8 @@
     <string name="register_success">Kayıt olma işlemi başarılı</string>
     <string name="success">Başarılı</string>
     <string name="remember_me">Beni Hatırla</string>
+    <string name="hello_username">Merhaba, %s!</string>
+    <string name="check_amazing_recipe">Harika tariflere göz at\n</string>
+    <string name="search_any_recipe">Herhangi bir tarifi arayın..</string>
 
 </resources>
