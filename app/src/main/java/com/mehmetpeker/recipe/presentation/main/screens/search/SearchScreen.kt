@@ -95,12 +95,12 @@ fun SearchScreenContent(
         Column(
             modifier = Modifier
                 .padding(it)
+                .padding(vertical = 8.dp, horizontal = 24.dp)
                 .fillMaxSize()
         ) {
             SearchBar(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                    .fillMaxWidth(),
                 value = searchTextFieldValue,
                 onValueChange = { newTextFieldValue ->
                     onSearchTextFieldValueChange?.invoke(newTextFieldValue)
@@ -140,8 +140,8 @@ fun SearchScreenSuccessContent(
             items(searchRecipeResponse) {
                 SearchRecipeItem(
                     modifier = Modifier
-                        .padding(vertical = 8.dp, horizontal = 24.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
                     item = it
                 ) {
                     onRecipeDetailClick?.invoke(it)
