@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.mehmetpeker.recipe.base.BaseViewModel
-import com.mehmetpeker.recipe.data.entity.recipe.SearchRecipeResponse
+import com.mehmetpeker.recipe.data.entity.recipe.SearchRecipeResponseItem
 import com.mehmetpeker.recipe.data.repository.recipe.RecipeRepositoryImpl
 import com.mehmetpeker.recipe.util.ApiError
 import com.mehmetpeker.recipe.util.ApiSuccess
@@ -24,7 +24,7 @@ class SearchViewModel(
     val searchTextFieldValue = mutableStateOf(TextFieldValue(""))
 
     sealed class SearchUiState {
-        data class RecipeFound(val list: SearchRecipeResponse) : SearchUiState()
+        data class RecipeFound(val list: List<SearchRecipeResponseItem>) : SearchUiState()
         data object NotFound : SearchUiState()
         data object Idle : SearchUiState()
     }

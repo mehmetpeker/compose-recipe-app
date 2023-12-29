@@ -15,7 +15,7 @@ data class SearchRecipeResponseItem(
     @SerialName("id")
     val id: Int?,
     @SerialName("materials")
-    val materials: Materials?,
+    val materials: List<String>?,
     @SerialName("name")
     val name: String?,
     @SerialName("photoUrl")
