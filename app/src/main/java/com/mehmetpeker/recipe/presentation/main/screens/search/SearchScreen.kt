@@ -71,7 +71,7 @@ fun SearchScreenContent(
                 }, title = { Text(stringResource(id = R.string.title_search)) })
         }
     ) {
-        Column(modifier = Modifier.padding(it)) {
+        Column(modifier = Modifier.padding(it).fillMaxSize()) {
             SearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
