@@ -7,6 +7,7 @@ import com.mehmetpeker.recipe.presentation.authentication.login.loginModule
 import com.mehmetpeker.recipe.presentation.authentication.register.registerModule
 import com.mehmetpeker.recipe.presentation.authentication.resetPassword.resetPasswordModule
 import com.mehmetpeker.recipe.presentation.main.screens.homepage.homeModule
+import com.mehmetpeker.recipe.presentation.main.screens.search.searchModule
 import com.mehmetpeker.recipe.presentation.onboarding.onboardingModule
 
 object KoinModules {
@@ -18,6 +19,7 @@ object KoinModules {
         forgotPasswordModule,
         resetPasswordModule,
         homeModule,
+        searchModule,
         onboardingModule
     )
 }

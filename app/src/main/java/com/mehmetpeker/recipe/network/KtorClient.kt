@@ -25,10 +25,12 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import java.io.IOException
 
 
+@OptIn(ExperimentalSerializationApi::class)
 val client = HttpClient(OkHttp) {
     engine {
         config {
@@ -55,6 +57,7 @@ val client = HttpClient(OkHttp) {
 
             // Log the latency or use it as per your requirement
             Log.d("response_time", "API Latency: $latencyInMillis ms: ")
+            Log.d("status_code", "API Status Code: $statusCode ")
 
             // Continue processing the response
 
@@ -103,6 +106,8 @@ val client = HttpClient(OkHttp) {
         json(Json {
             prettyPrint = true
             isLenient = true
+            ignoreUnknownKeys = true
+            explicitNulls = false
         })
     }
     // Logging

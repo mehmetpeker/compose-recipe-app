@@ -1,5 +1,10 @@
 package com.mehmetpeker.recipe.domain.repository
 
-interface RecipeRepository {
+import com.mehmetpeker.recipe.data.entity.recipe.SearchRecipeResponse
+import com.mehmetpeker.recipe.util.ApiResult
 
+interface RecipeRepository {
+    suspend fun searchRecipe(
+        searchText: String
+    ): ApiResult<SearchRecipeResponse>
 }

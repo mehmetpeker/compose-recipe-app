@@ -27,6 +27,7 @@ import com.mehmetpeker.recipe.data.model.RecipeBottomNavigationScreens
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.presentation.main.component.RecipeBottomNavigationBar
 import com.mehmetpeker.recipe.presentation.main.screens.homepage.HomepageScreen
+import com.mehmetpeker.recipe.presentation.main.screens.search.SearchScreen
 import com.mehmetpeker.recipe.util.RouteConstants
 
 
@@ -37,7 +38,14 @@ fun HomeScreen() {
     SetStatusBarColor(color = md_theme_light_primary)
     Scaffold(
         bottomBar = {
-            RecipeBottomNavigationBar(Modifier.clip(RoundedCornerShape(topStartPercent = 25, topEndPercent = 25)),navController = nestedNavController)
+            RecipeBottomNavigationBar(
+                Modifier.clip(
+                    RoundedCornerShape(
+                        topStartPercent = 25,
+                        topEndPercent = 25
+                    )
+                ), navController = nestedNavController
+            )
         },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
@@ -74,7 +82,7 @@ fun HomeScreen() {
                 HomepageScreen(navController = nestedNavController)
             }
             composable(RouteConstants.ROUTE_SEARCH_RECIPE) {
-                Text(text = "Search")
+                SearchScreen(navController = nestedNavController)
             }
             composable(RouteConstants.ROUTE_ADD_RECIPE) {
                 Text(text = "Add Recipe")
