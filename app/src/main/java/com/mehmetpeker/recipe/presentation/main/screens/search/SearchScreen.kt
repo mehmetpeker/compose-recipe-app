@@ -24,7 +24,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,6 +46,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.base.BaseScreen
+import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
 import com.mehmetpeker.recipe.common.SearchBar
 import com.mehmetpeker.recipe.data.entity.recipe.SearchRecipeResponseItem
 import com.mehmetpeker.recipe.util.extension.horizontalSpace
@@ -82,7 +82,7 @@ fun SearchScreenContent(
     onRecipeDetailClick: ((SearchRecipeResponseItem) -> Unit)? = null
 ) {
 
-    Scaffold(
+    EdgeToEdgeScaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 navigationIcon = {

@@ -51,5 +51,6 @@
     <string name="navigation_add_recipe">Tarif Ekle</string>
     <string name="title_search">Tarif Ara</string>
     <string name="recipe_not_found">Tarif Bulunamadı</string>
+    <string name="comments">Yorumlar</string>
 
 </resources>

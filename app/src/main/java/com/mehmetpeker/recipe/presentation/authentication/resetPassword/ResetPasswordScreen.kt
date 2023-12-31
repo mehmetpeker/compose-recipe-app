@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.base.BaseScreen
+import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
 import com.mehmetpeker.recipe.common.RecipeRoundedButton
 import com.mehmetpeker.recipe.designsystem.RecipeTextField
 import com.mehmetpeker.recipe.designsystem.RecipeTopAppBar
@@ -66,7 +66,7 @@ fun ResetPasswordScreenContent(
     onNavigationClick: () -> Unit,
     onResetButtonClick: () -> Unit,
 ) {
-    Scaffold(
+    EdgeToEdgeScaffold(
         containerColor = Color.White,
         topBar = {
             RecipeTopAppBar(

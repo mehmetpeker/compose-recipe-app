@@ -5,13 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,8 +27,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.base.BaseScreen
+import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
 import com.mehmetpeker.recipe.common.RecipeRoundedButton
 import com.mehmetpeker.recipe.common.RecipeRoundedButtonType
+import com.mehmetpeker.recipe.designsystem.theme.ChangeSystemBarColor
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_HOME
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_LOGIN
@@ -46,7 +46,7 @@ fun OnboardingScreen(
     navController: NavController,
     viewModel: OnBoardingViewModel = koinViewModel()
 ) {
-    //TransparentSystemBars()
+    ChangeSystemBarColor()
     LaunchedEffect(viewModel.user?.isRemembered) {
         if (viewModel.user?.isRemembered == true) {
             navController.navigate(ROUTE_HOME) {
@@ -69,9 +69,7 @@ private fun OnboardingContent(
     onRegisterClicked: () -> Unit,
     onLoginClicked: () -> Unit,
 ) {
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
-    ) {
+    EdgeToEdgeScaffold {
         Box(modifier = Modifier.padding(it)) {
             Image(
                 painter = painterResource(id = R.drawable.bg_splash),

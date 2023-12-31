@@ -1,6 +1,7 @@
 package com.mehmetpeker.recipe.presentation.main
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -9,7 +10,6 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,7 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mehmetpeker.recipe.R
-import com.mehmetpeker.recipe.common.SetStatusBarColor
+import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
 import com.mehmetpeker.recipe.data.model.RecipeBottomNavigationScreens
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.presentation.main.component.RecipeBottomNavigationBar
@@ -35,8 +35,7 @@ import com.mehmetpeker.recipe.util.RouteConstants
 fun HomeScreen() {
     val nestedNavController = rememberNavController()
     val navBackStackEntry by nestedNavController.currentBackStackEntryAsState()
-    SetStatusBarColor(color = md_theme_light_primary)
-    Scaffold(
+    EdgeToEdgeScaffold(
         bottomBar = {
             RecipeBottomNavigationBar(
                 Modifier.clip(
@@ -74,7 +73,7 @@ fun HomeScreen() {
             }
         }) {
         NavHost(
-            modifier = Modifier.padding(it),
+            modifier = Modifier.padding(it).systemBarsPadding(),
             navController = nestedNavController,
             startDestination = RouteConstants.ROUTE_HOMEPAGE
         ) {

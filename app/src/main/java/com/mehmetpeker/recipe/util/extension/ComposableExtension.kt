@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,6 +22,18 @@ fun Int.scaledSp(): TextUnit {
     }
 }
 
+val Int.screenHeight: Dp
+    @Composable
+    get() {
+        val configuration = LocalConfiguration.current
+        return (configuration.screenHeightDp / 100 * this).dp
+    }
+val Int.screenWidth: Dp
+    @Composable
+    get() {
+        val configuration = LocalConfiguration.current
+        return (configuration.screenWidthDp / 100 * this).dp
+    }
 val Int.scaledSp: TextUnit
     @Composable get() = scaledSp()
 
