@@ -31,6 +31,10 @@
     <string name="error_username_invalid_characters">Kullanıcı adı sadece harf, rakam, _ veya - içerebilir.</string>
     <string name="error_username_invalid_length">Kullanıcı adı en az %1$d en fazla %2$d karakter uzunluğunda olmalıdır..</string>
     <string name="error_username_not_start_with_letter">Kullanıcı adı harfle başlamalıdır.</string>
+    <string name="error_create_recipe_invalid_length">Tarif en az %1$d en fazla %2$d karakter uzunluğunda olmalıdır.</string>
+    <string name="error_create_recipe_desc_invalid_length">Tarif açıklaması en az %1$d en fazla %2$d karakter uzunluğunda olmalıdır.</string>
+    <string name="error_create_recipe_must_not_be_empty">Tarif adı boş olamaz</string>
+    <string name="error_create_recipe_desc_must_not_be_empty">Tarif açıklaması boş olamaz</string>
     <string name="error">Hata!</string>
     <string name="forgot_password_description">No worries,we\'ll send you reset instructions.</string>
     <string name="enter_your_email_address">Email adresinizi girin</string>
@@ -57,5 +61,8 @@
     <string name="save">Kaydet</string>
     <string name="saved">Kaydedildi</string>
     <string name="how_to_make">Nasıl Yapılır?</string>
+    <string name="create_recipe">Tarif Oluştur</string>
+    <string name="please_type_recipe_description">Tarif açıklamasını giriniz</string>
+    <string name="please_type_recipe_name">Lütfen tarif ismini yazınız</string>
 
 </resources>

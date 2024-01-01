@@ -1,7 +1,6 @@
 package com.mehmetpeker.recipe.presentation.main
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -55,13 +53,7 @@ fun HomeScreen(navController: NavController) {
                     shape = CircleShape,
                     onClick = {
                         RecipeBottomNavigationScreens.AddRecipe.route.let {
-                            nestedNavController.navigate(it) {
-                                popUpTo(nestedNavController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                            navController.navigate(it)
                         }
                     },
                     containerColor = md_theme_light_primary
@@ -85,9 +77,6 @@ fun HomeScreen(navController: NavController) {
             }
             composable(RouteConstants.ROUTE_SEARCH_RECIPE) {
                 SearchScreen(navController = nestedNavController)
-            }
-            composable(RouteConstants.ROUTE_ADD_RECIPE) {
-                Text(text = "Add Recipe")
             }
             composable(RouteConstants.ROUTE_FAVORITES) {
                 RecipeDetailScreen(navController = navController)

@@ -14,8 +14,10 @@ import com.mehmetpeker.recipe.presentation.authentication.login.LoginScreen
 import com.mehmetpeker.recipe.presentation.authentication.register.RegisterScreen
 import com.mehmetpeker.recipe.presentation.authentication.resetPassword.ResetPasswordScreen
 import com.mehmetpeker.recipe.presentation.main.HomeScreen
+import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.CreateRecipeScreen
 import com.mehmetpeker.recipe.presentation.onboarding.OnboardingScreen
 import com.mehmetpeker.recipe.util.NavArgumentConstants
+import com.mehmetpeker.recipe.util.RouteConstants
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_FORGOT_PASSWORD
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_HOME
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_LOGIN
@@ -47,6 +49,9 @@ fun RecipeNavigation(navController: NavHostController) {
             ForgotPasswordScreen(navController)
         }
 
+        composable(RouteConstants.ROUTE_ADD_RECIPE) {
+            CreateRecipeScreen(navController)
+        }
         composable(
             route = ROUTE_RESET_PASSWORD,
             deepLinks = listOf(navDeepLink {

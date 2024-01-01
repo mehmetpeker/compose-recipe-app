@@ -14,6 +14,12 @@ object TextFieldValidator {
     private const val MIN_USERNAME_LENGTH = 3
     private const val MAX_USERNAME_LENGTH = 15
 
+    private const val MIN_RECIPE_NAME_LENGTH = 3
+    private const val MAX_RECIPE_NAME_LENGTH = 50
+
+    private const val MIN_RECIPE_DESCRIPTION_LENGTH = 3
+    private const val MAX_RECIPE_DESCRIPTION_LENGTH = 2000
+
     fun validateUsername(username: String): ValidationResult {
         val errors = mutableListOf<String>()
 
@@ -37,6 +43,52 @@ object TextFieldValidator {
             errors.add(appContext.getString(R.string.error_username_not_start_with_letter))
         }
 
+        val isValid = errors.isEmpty()
+
+        return ValidationResult(isValid, errors)
+    }
+
+    fun validateRecipeName(recipeName: String): ValidationResult {
+        val errors = mutableListOf<String>()
+        if (recipeName.isBlank()) {
+            errors.add(
+                appContext.getString(
+                    R.string.error_create_recipe_must_not_be_empty
+                )
+            )
+        }
+
+        if (recipeName.length < MIN_RECIPE_NAME_LENGTH || recipeName.length > MAX_RECIPE_NAME_LENGTH) {
+            errors.add(
+                appContext.getString(
+                    R.string.error_create_recipe_invalid_length,
+                    MIN_RECIPE_NAME_LENGTH, MAX_RECIPE_NAME_LENGTH
+                )
+            )
+        }
+        val isValid = errors.isEmpty()
+
+        return ValidationResult(isValid, errors)
+    }
+
+    fun validateRecipeDescription(recipeDescription: String): ValidationResult {
+        val errors = mutableListOf<String>()
+        if (recipeDescription.isBlank()) {
+            errors.add(
+                appContext.getString(
+                    R.string.error_create_recipe_desc_must_not_be_empty
+                )
+            )
+        }
+
+        if (recipeDescription.length < MIN_RECIPE_NAME_LENGTH || recipeDescription.length > MAX_RECIPE_NAME_LENGTH) {
+            errors.add(
+                appContext.getString(
+                    R.string.error_create_recipe_desc_invalid_length,
+                    MIN_RECIPE_DESCRIPTION_LENGTH, MAX_RECIPE_DESCRIPTION_LENGTH
+                )
+            )
+        }
         val isValid = errors.isEmpty()
 
         return ValidationResult(isValid, errors)
