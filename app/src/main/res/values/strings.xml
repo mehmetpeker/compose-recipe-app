@@ -52,5 +52,10 @@
     <string name="title_search">Tarif Ara</string>
     <string name="recipe_not_found">Tarif Bulunamadı</string>
     <string name="comments">Yorumlar</string>
+    <string name="ingredients">Malzemeler</string>
+    <string name="share">Paylaş</string>
+    <string name="save">Kaydet</string>
+    <string name="saved">Kaydedildi</string>
+    <string name="how_to_make">Nasıl Yapılır?</string>
 
 </resources>

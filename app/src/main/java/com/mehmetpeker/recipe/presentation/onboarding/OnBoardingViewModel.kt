@@ -21,7 +21,6 @@ class OnBoardingViewModel : BaseViewModel(), KoinComponent {
     }
 
     private fun retrieveUser() = viewModelScope.launch {
-        delay(3000)
         user = sessionManager.retrieveUserData()
     }
 }

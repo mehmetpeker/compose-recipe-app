@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,12 +28,13 @@ import com.mehmetpeker.recipe.data.model.RecipeBottomNavigationScreens
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.presentation.main.component.RecipeBottomNavigationBar
 import com.mehmetpeker.recipe.presentation.main.screens.homepage.HomepageScreen
+import com.mehmetpeker.recipe.presentation.main.screens.recipeDetail.RecipeDetailScreen
 import com.mehmetpeker.recipe.presentation.main.screens.search.SearchScreen
 import com.mehmetpeker.recipe.util.RouteConstants
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     val nestedNavController = rememberNavController()
     val navBackStackEntry by nestedNavController.currentBackStackEntryAsState()
     EdgeToEdgeScaffold(
@@ -73,7 +75,8 @@ fun HomeScreen() {
             }
         }) {
         NavHost(
-            modifier = Modifier.padding(it).systemBarsPadding(),
+            modifier = Modifier
+                .padding(it),
             navController = nestedNavController,
             startDestination = RouteConstants.ROUTE_HOMEPAGE
         ) {
@@ -87,7 +90,7 @@ fun HomeScreen() {
                 Text(text = "Add Recipe")
             }
             composable(RouteConstants.ROUTE_FAVORITES) {
-                Text(text = "Favorites")
+                RecipeDetailScreen(navController = navController)
             }
             composable(RouteConstants.ROUTE_PROFILE) {
                 Text(text = "Profile")

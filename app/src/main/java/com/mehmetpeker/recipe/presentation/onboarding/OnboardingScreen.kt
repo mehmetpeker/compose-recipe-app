@@ -46,7 +46,7 @@ fun OnboardingScreen(
     navController: NavController,
     viewModel: OnBoardingViewModel = koinViewModel()
 ) {
-    ChangeSystemBarColor()
+    ChangeSystemBarColor(restoreToDefault = true)
     LaunchedEffect(viewModel.user?.isRemembered) {
         if (viewModel.user?.isRemembered == true) {
             navController.navigate(ROUTE_HOME) {

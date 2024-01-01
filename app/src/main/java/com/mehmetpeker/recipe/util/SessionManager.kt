@@ -1,6 +1,8 @@
 package com.mehmetpeker.recipe.util
 
 import com.mehmetpeker.recipe.data.UserRepositoryImpl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -11,8 +13,16 @@ data class User(
     val isRemembered: Boolean?
 )
 
-class SessionManager : KoinComponent {
+class SessionManager(private val dispatcher: RecipeDispatchers) : KoinComponent {
     private val userRepository: UserRepositoryImpl by inject()
+    lateinit var user: User
+        private set
+
+    init {
+        CoroutineScope(dispatcher.io).launch {
+            user = userRepository.retrieveUserData()
+        }
+    }
 
     suspend fun retrieveUserData(): User {
         return userRepository.retrieveUserData()

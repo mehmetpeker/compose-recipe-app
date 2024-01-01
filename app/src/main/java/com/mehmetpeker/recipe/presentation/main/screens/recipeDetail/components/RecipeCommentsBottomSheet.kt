@@ -1,4 +1,5 @@
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
+@file:OptIn(
+    ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class
 )
 
@@ -12,49 +13,70 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mehmetpeker.recipe.R
- /*
- * Example
- *  val scope = rememberCoroutineScope()
-    val scaffoldState = rememberBottomSheetScaffoldState()
+import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
+import com.mehmetpeker.recipe.util.SessionManager
+import org.koin.compose.koinInject
 
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
-        sheetShape = RoundedCornerShape(topStartPercent = 10, topEndPercent = 10),
-        sheetShadowElevation = 20.dp,
-        sheetPeekHeight = 0.dp,
-        sheetContent = {
-            RecipeCommentsBottomSheetContent(
-                modifier = Modifier
-                    .requiredHeight(60.screenHeight)
-            )
-        }
-    ) {
-        Scaffold content
-    }
- *
- *
- * */
+/*
+* Example
+*  val scope = rememberCoroutineScope()
+   val scaffoldState = rememberBottomSheetScaffoldState()
+
+   BottomSheetScaffold(
+       scaffoldState = scaffoldState,
+       sheetShape = RoundedCornerShape(topStartPercent = 10, topEndPercent = 10),
+       sheetShadowElevation = 20.dp,
+       sheetPeekHeight = 0.dp,
+       sheetContent = {
+           RecipeCommentsBottomSheetContent(
+               modifier = Modifier
+                   .requiredHeight(60.screenHeight)
+           )
+       }
+   ) {
+       Scaffold content
+   }
+*
+*
+* */
 @Composable
-fun RecipeCommentsBottomSheetContent(modifier: Modifier = Modifier) {
+fun RecipeCommentsBottomSheetContent(
+    modifier: Modifier = Modifier,
+    sessionManager: SessionManager = koinInject(),
+    onSendClick: () -> Unit
+) {
+    var textFieldValue by remember { mutableStateOf(TextFieldValue("")) }
     val lazyListState = rememberLazyListState()
     val flingBehavior = rememberSnapFlingBehavior(lazyListState)
     val commentList = (1..50).map { it.toString() }
@@ -85,6 +107,46 @@ fun RecipeCommentsBottomSheetContent(modifier: Modifier = Modifier) {
                 CommentItem()
             }
         }
+        /*
+        * Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
+            AsyncImage(
+                modifier = Modifier.size(32.dp),
+                model = sessionManager.user.profilePhotoUrl,
+                contentDescription = null
+            )
+            BasicTextField(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .fillMaxWidth()
+                    .weight(1f),
+                value = textFieldValue,
+                onValueChange = {
+                    textFieldValue = it
+                },
+                singleLine = true
+            ) {
+                if (textFieldValue.text.isEmpty()) {
+                    Text(
+                        text = "Tarif için bir yorum ekle",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }
+            IconButton(
+                modifier = Modifier
+                    .requiredSize(24.dp)
+                    .alpha(if (textFieldValue.text.isNotEmpty()) 1f else 0f),
+                onClick = onSendClick
+            ) {
+                Icon(Icons.Default.Send, contentDescription = null, tint = md_theme_light_primary)
+            }
+        }
+        *
+        * */
     }
 }
 

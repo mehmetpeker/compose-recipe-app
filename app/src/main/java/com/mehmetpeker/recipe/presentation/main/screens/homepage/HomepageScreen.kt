@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,6 +35,7 @@ fun HomepageScreenContent(uiState: HomeUiState) {
         Column(modifier = Modifier.padding(it)) {
             HomeTopBar(
                 modifier = Modifier
+                    .systemBarsPadding()
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(bottomStartPercent = 50, bottomEndPercent = 50))
                     .background(md_theme_light_primary)

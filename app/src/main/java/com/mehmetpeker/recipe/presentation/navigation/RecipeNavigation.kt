@@ -41,7 +41,7 @@ fun RecipeNavigation(navController: NavHostController) {
             RegisterScreen(navController)
         }
         composable(ROUTE_HOME) {
-            HomeScreen()
+            HomeScreen(navController)
         }
         composable(ROUTE_FORGOT_PASSWORD) {
             ForgotPasswordScreen(navController)
