@@ -1,5 +1,6 @@
 package com.mehmetpeker.recipe.domain.repository
 
+import com.mehmetpeker.recipe.data.entity.authentication.forgotPassword.ForgotPasswordRequest
 import com.mehmetpeker.recipe.data.entity.authentication.login.LoginRequest
 import com.mehmetpeker.recipe.data.entity.authentication.login.LoginResponse
 import com.mehmetpeker.recipe.data.entity.authentication.register.RegisterRequest
@@ -14,7 +15,7 @@ interface AuthenticationRepository {
 
     suspend fun register(body: RegisterRequest): ApiResult<RegisterResponse>
 
-    suspend fun forgotPassword(email: String): ApiResult<String>
+    suspend fun forgotPassword(request: ForgotPasswordRequest): ApiResult<String>
 
     suspend fun resetPassword(body: ResetPasswordRequest): ApiResult<String>
     suspend fun updatePassword(body: UpdatePasswordRequest): ApiResult<String>

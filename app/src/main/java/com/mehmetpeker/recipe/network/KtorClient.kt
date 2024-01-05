@@ -64,11 +64,11 @@ val client = HttpClient(OkHttp) {
             if (!response.status.isSuccess()) {
                 val errorResourceId = when (response.status) {
                     HttpStatusCode.Unauthorized -> R.string.error_unauthorized
-                    HttpStatusCode.Forbidden -> R.string.a_error
-                    HttpStatusCode.NotFound -> R.string.a_error
-                    HttpStatusCode.UpgradeRequired -> R.string.a_error
-                    HttpStatusCode.RequestTimeout -> R.string.a_error
-                    in HttpStatusCode.InternalServerError..HttpStatusCode.GatewayTimeout -> R.string.a_error
+                    HttpStatusCode.Forbidden -> R.string.error_forbidden
+                    HttpStatusCode.NotFound -> R.string.error_not_found
+                    HttpStatusCode.UpgradeRequired -> R.string.error_upgrade_required
+                    HttpStatusCode.RequestTimeout -> R.string.error_request_timeout
+                    in HttpStatusCode.InternalServerError..HttpStatusCode.GatewayTimeout -> R.string.error_internal_server_error
                     else -> R.string.generic_error
                 }
                 val responseText = response.bodyAsText()

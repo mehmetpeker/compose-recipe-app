@@ -1,5 +1,6 @@
 package com.mehmetpeker.recipe.data.repository.authentication
 
+import com.mehmetpeker.recipe.data.entity.authentication.forgotPassword.ForgotPasswordRequest
 import com.mehmetpeker.recipe.data.entity.authentication.login.LoginRequest
 import com.mehmetpeker.recipe.data.entity.authentication.login.LoginResponse
 import com.mehmetpeker.recipe.data.entity.authentication.register.RegisterRequest
@@ -54,12 +55,13 @@ class AuthenticationRepositoryImpl(
             setBody(body)
         }
 
-    override suspend fun forgotPassword(email: String): ApiResult<String> = client.safeRequest {
-        method = HttpMethod.Post
-        contentType(ContentType.Text.Plain)
-        url("/api/account/forgot_password")
-        setBody(email)
-    }
+    override suspend fun forgotPassword(request: ForgotPasswordRequest): ApiResult<String> =
+        client.safeRequest {
+            method = HttpMethod.Post
+            contentType(ContentType.Text.Plain)
+            url("/api/account/forgot_password")
+            setBody(request)
+        }
 
     override suspend fun resetPassword(body: ResetPasswordRequest): ApiResult<String> =
         client.safeRequest {

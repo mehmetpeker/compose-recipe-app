@@ -1,11 +1,11 @@
 package com.mehmetpeker.recipe.presentation.authentication.forgotPassword
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -49,8 +49,8 @@ fun ForgotPasswordScreen(
                 navController.popBackStack()
             },
             onResetButtonClick = {
-                viewModel.validateEmail {
-                    viewModel.resetPassword()
+                viewModel.validateEmail { mail ->
+                    viewModel.sendForgotPasswordEmail(mail)
                 }
             }
         )
@@ -78,64 +78,107 @@ fun ForgotPasswordScreenContent(
             )
         }
     ) { it ->
+        when (viewModel.uiState) {
+            ForgotPasswordViewModel.ForgotPasswordUiState.INITIAL -> InitialContent(
+                modifier = Modifier.padding(
+                    it
+                ), viewModel = viewModel,
+                onResetButtonClick = onResetButtonClick
+            )
 
-        Column(
+            ForgotPasswordViewModel.ForgotPasswordUiState.SUCCESS -> SuccessContent(Modifier.fillMaxSize()) {
+                onNavigationClick()
+            }
+        }
+    }
+}
+
+@Composable
+fun InitialContent(
+    modifier: Modifier = Modifier,
+    viewModel: ForgotPasswordViewModel,
+    onResetButtonClick: () -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp)
+            .padding(top = 16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Text(
+            stringResource(id = R.string.forgot_password),
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-                .padding(horizontal = 24.dp)
                 .padding(top = 16.dp)
-                .verticalScroll(rememberScrollState())
+                .align(Alignment.CenterHorizontally)
+        )
+        Text(
+            stringResource(id = R.string.forgot_password_description),
+            style = MaterialTheme.typography.titleMedium.copy(
+                color = Color.Gray,
+                textAlign = TextAlign.Center
+            ),
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .align(Alignment.CenterHorizontally),
+
+            )
+        12.verticalSpace()
+        Text(
+            stringResource(id = R.string.forgot_password_title),
+            style = MaterialTheme.typography.labelLarge
+        )
+        4.verticalSpace()
+        RecipeTextField(
+            modifier = Modifier.heightIn(min = 56.dp),
+            hintText = stringResource(id = R.string.enter_your_email_address),
+            value = viewModel.emailField,
+            onValueChange = { textFieldValue ->
+                viewModel.onEmailTextChanged(textFieldValue)
+            },
+            isErrorEnabled = viewModel.emailValidationResult?.isSuccess?.not() ?: false,
+            errorMessage = viewModel.emailValidationResult?.errorMessage
+        )
+        24.verticalSpace()
+        RecipeRoundedButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 56.dp), onClick = onResetButtonClick
         ) {
             Text(
-                stringResource(id = R.string.forgot_password),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .align(Alignment.CenterHorizontally)
+                text = stringResource(id = R.string.reset_password).uppercase(),
+                fontFamily = RecipeFontFamily.poppinsFamily,
+                fontWeight = FontWeight.Medium,
+                fontSize = 15.scaledSp,
+                color = Color.White
             )
-            Text(
-                stringResource(id = R.string.forgot_password_description),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = Color.Gray,
-                    textAlign = TextAlign.Center
-                ),
-                modifier = Modifier
-                    .padding(top = 12.dp)
-                    .align(Alignment.CenterHorizontally),
+        }
+        24.verticalSpace()
+    }
+}
 
-                )
-            12.verticalSpace()
+@Composable
+fun SuccessContent(modifier: Modifier = Modifier, onOkClick: () -> Unit) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = stringResource(id = R.string.forgot_password_email_send_successfuly))
+        8.verticalSpace()
+        RecipeRoundedButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 56.dp), onClick = onOkClick
+        ) {
             Text(
-                stringResource(id = R.string.forgot_password_title),
-                style = MaterialTheme.typography.labelLarge
+                text = stringResource(id = R.string.ok).uppercase(),
+                fontFamily = RecipeFontFamily.poppinsFamily,
+                fontWeight = FontWeight.Medium,
+                fontSize = 15.scaledSp,
+                color = Color.White
             )
-            4.verticalSpace()
-            RecipeTextField(
-                modifier = Modifier.heightIn(min =56.dp),
-                hintText = stringResource(id = R.string.enter_your_email_address),
-                value = viewModel.emailField,
-                onValueChange = { textFieldValue ->
-                    viewModel.onEmailTextChanged(textFieldValue)
-                },
-                isErrorEnabled = viewModel.emailValidationResult?.isSuccess?.not() ?: false,
-                errorMessage = viewModel.emailValidationResult?.errorMessage
-            )
-            24.verticalSpace()
-            RecipeRoundedButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min =56.dp), onClick = onResetButtonClick
-            ) {
-                Text(
-                    text = stringResource(id = R.string.reset_password).uppercase(),
-                    fontFamily = RecipeFontFamily.poppinsFamily,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 15.scaledSp,
-                    color = Color.White
-                )
-            }
-            24.verticalSpace()
         }
     }
 }

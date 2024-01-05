@@ -1,27 +1,41 @@
 <resources>
-    <string name="app_name">Recipe</string>
+    <string name="app_name">Lezzet Rehberi</string>
     <string name="brand_name">Lezzet Rehberi</string>
     <string name="generic_error">Bir hata oluştu!</string>
-    <string name="a_error">A</string>
     <string name="error_unauthorized">Kullanıcı Bulunamadı</string>
-    <string name="c_error">C</string>
-    <string name="d_error">D</string>
-    <string name="e_error">E</string>
-    <string name="f_error">F</string>
-    <string name="g_error">G</string>
-    <string name="h_error">H</string>
-    <string name="x_error">X</string>
-    <string name="y_error">Y</string>
-    <string name="z_error">Z</string>
-    <string name="log_in">Log in</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="forgot_password_title">Forgot Password</string>
-    <string name="do_not_have_account">Don\'t have an account?</string>
-    <string name="sign_up">Sign Up</string>
-    <string name="username">Username</string>
-    <string name="email_address">Email Address</string>
+    <string name="error_internal_server_error">Üzgünüz, bir hata oluştu.
+İşlemi tamamlayamıyoruz çünkü sunucu tarafında bir sorun var.
+Lütfen daha sonra tekrar deneyin.
+</string>
+    <string name="error_request_timeout">Üzgünüz, isteğiniz belirli bir süre içinde tamamlanamadı.
+Bu durum, sunucu ile iletişim sorunlarından kaynaklanıyor olabilir.
+
+Nedeni anlamak için lütfen birkaç dakika bekleyin ve tekrar deneyin.
+Eğer sorun devam ederse, destek ekibimize başvurun.</string>
+    <string name="error_upgrade_required">Üzgünüz, işleminizi tamamlayamıyoruz.
+Güvenli ve düzgün bir deneyim için uygulamamızın yeni bir versiyonu gerekiyor.
+
+Lütfen uygulamanızı en son sürüme güncelleyerek tekrar deneyin.
+Eğer sorun devam ederse, destek ekibimizle iletişime geçmekten çekinmeyin.</string>
+    <string name="error_not_found">Üzgünüz, istediğiniz sayfa veya kaynak bulunamadı.
+Belirttiğiniz içeriğin mevcut olmadığını gösteriyor.
+
+Lütfen doğru bir URL girdiğinizden emin olun veya istediğiniz içeriğin güncel olup olmadığını kontrol edin.
+Eğer sorun devam ederse, destek ekibimizle iletişime geçmekten çekinmeyin.</string>
+    <string name="error_forbidden">Üzgünüz, bu içeriği görüntüleme izniniz yok.
+Erişmeye çalıştığınız kaynağa yetkisiz erişim talebinde bulundunuz.
+
+Lütfen doğru izinlere sahip olduğunuzdan emin olun veya içeriği görüntüleme yetkiniz varsa tarayıcınızın çerezlerini kontrol edin.
+Eğer sorun devam ederse, destek ekibimizle iletişime geçmekten çekinmeyin.</string>
+    <string name="log_in">Giriş Yap</string>
+    <string name="forgot_password">Parolamı Unuttum?</string>
+    <string name="forgot_password_title">Parolamı Unuttum</string>
+    <string name="do_not_have_account">Henüz hesabın yok mu?</string>
+    <string name="sign_up">Kayıt Ol</string>
+    <string name="username">Kullanıcı Adı</string>
+    <string name="email_address">Email Adresi</string>
     <string name="general_textfield_error">Geçersiz giriş.Lütfen bilgilerinizi kontrol edip tekrar deneyin.</string>
-    <string name="password">Password</string>
+    <string name="password">Parola</string>
     <string name="error_invalid_email">Geçersiz e-mail</string>
     <string name="error_password_missing_uppercase">Parola en az bir büyük harf içermelidir.</string>
     <string name="error_password_missing_lowercase">Parola en az bir küçük harf içermelidir.</string>
@@ -36,7 +50,7 @@
     <string name="error_create_recipe_must_not_be_empty">Tarif adı boş olamaz</string>
     <string name="error_create_recipe_desc_must_not_be_empty">Tarif açıklaması boş olamaz</string>
     <string name="error">Hata!</string>
-    <string name="forgot_password_description">No worries,we\'ll send you reset instructions.</string>
+    <string name="forgot_password_description">Hiç endişelenmene gerek yok.Kurtarma e-postası göndereceğiz.</string>
     <string name="enter_your_email_address">Email adresinizi girin</string>
     <string name="reset_password">Parolayı Sıfırla</string>
     <string name="reset_password_title">Parolayı Sıfırla</string>
@@ -68,6 +82,7 @@
     <string name="ingredients_name">Malzeme</string>
     <string name="amount">Miktar</string>
     <string name="add_new_ingredient">Yeni Malzeme Ekle</string>
+    <string name="forgot_password_email_send_successfuly">Parolanızı yenileyebilmeniz için link mail adresinize gönderildi.</string>
     <string-array name="measurement_unit">
         <item>Gram</item>
         <item>Kilogram</item>
