@@ -132,6 +132,51 @@ object TextFieldValidator {
         return ValidationResult(isValid, errors)
     }
 
+    fun validateResetPassword(password: String, confirmPassword: String): ValidationResult {
+        val errors = mutableListOf<String>()
+
+        val arePasswordSame = password == confirmPassword
+        if (!arePasswordSame) {
+            errors.add(RecipeApplication.getAppContext().getString(R.string.passwords_must_be_same))
+            val isValid = errors.isEmpty()
+            return ValidationResult(isValid, errors)
+        }
+
+        val containsUppercase = password.any { it.isUpperCase() }
+        if (!containsUppercase) {
+            errors.add(appContext.getString(R.string.error_password_missing_uppercase))
+        }
+
+        val containsLowercase = password.any { it.isLowerCase() }
+        if (!containsLowercase) {
+            errors.add(appContext.getString(R.string.error_password_missing_lowercase))
+        }
+
+        val containsDigit = password.any { it.isDigit() }
+        if (!containsDigit) {
+            errors.add(appContext.getString(R.string.error_password_missing_digit))
+        }
+
+        val containsSpecialChar = password.any { !it.isLetterOrDigit() }
+        if (!containsSpecialChar) {
+            errors.add(appContext.getString(R.string.error_password_missing_special_char))
+        }
+
+        val isLengthValid = password.length in MIN_LENGTH..MAX_LENGTH
+        if (!isLengthValid) {
+            errors.add(
+                appContext.getString(
+                    R.string.error_password_invalid_length,
+                    MIN_LENGTH, MAX_LENGTH
+                )
+            )
+        }
+
+        val isValid = errors.isEmpty()
+
+        return ValidationResult(isValid, errors)
+    }
+
     fun validateEmail(email: String): ValidationResult {
         val errors = mutableListOf<String>()
 

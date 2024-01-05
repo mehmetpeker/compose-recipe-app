@@ -32,6 +32,7 @@ import com.mehmetpeker.recipe.common.RecipeRoundedButton
 import com.mehmetpeker.recipe.designsystem.RecipeTextField
 import com.mehmetpeker.recipe.designsystem.RecipeTopAppBar
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
+import com.mehmetpeker.recipe.util.RouteConstants
 import com.mehmetpeker.recipe.util.extension.scaledSp
 import com.mehmetpeker.recipe.util.extension.verticalSpace
 import org.koin.androidx.compose.koinViewModel
@@ -52,6 +53,14 @@ fun ForgotPasswordScreen(
                 viewModel.validateEmail { mail ->
                     viewModel.sendForgotPasswordEmail(mail)
                 }
+            },
+            onOkClick = {
+                navController.navigate(RouteConstants.ROUTE_LOGIN) {
+                    launchSingleTop = true
+                    popUpTo(RouteConstants.ROUTE_LOGIN) {
+                        inclusive = true
+                    }
+                }
             }
         )
     }
@@ -63,6 +72,7 @@ fun ForgotPasswordScreenContent(
     viewModel: ForgotPasswordViewModel,
     onNavigationClick: () -> Unit,
     onResetButtonClick: () -> Unit,
+    onOkClick: () -> Unit,
 ) {
     EdgeToEdgeScaffold(
         containerColor = Color.White,
@@ -87,7 +97,7 @@ fun ForgotPasswordScreenContent(
             )
 
             ForgotPasswordViewModel.ForgotPasswordUiState.SUCCESS -> SuccessContent(Modifier.fillMaxSize()) {
-                onNavigationClick()
+                onOkClick()
             }
         }
     }

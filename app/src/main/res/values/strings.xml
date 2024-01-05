@@ -83,6 +83,8 @@ Eğer sorun devam ederse, destek ekibimizle iletişime geçmekten çekinmeyin.</
     <string name="amount">Miktar</string>
     <string name="add_new_ingredient">Yeni Malzeme Ekle</string>
     <string name="forgot_password_email_send_successfuly">Parolanızı yenileyebilmeniz için link mail adresinize gönderildi.</string>
+    <string name="passwords_must_be_same">Parolalar eşleşmiyor!</string>
+    <string name="reset_password_success">Parolan başarıyla sıfırlandı.</string>
     <string-array name="measurement_unit">
         <item>Gram</item>
         <item>Kilogram</item>

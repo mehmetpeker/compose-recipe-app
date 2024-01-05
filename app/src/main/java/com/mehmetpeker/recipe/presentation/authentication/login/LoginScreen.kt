@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
@@ -146,6 +147,7 @@ fun LoginScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
+                .systemBarsPadding()
                 .padding(horizontal = 24.dp)
                 .padding(top = 16.dp)
                 .verticalScroll(rememberScrollState())
@@ -153,7 +155,7 @@ fun LoginScreenContent(
             Text(stringResource(id = R.string.username), style = titleTextStyle)
             4.verticalSpace()
             RecipeTextField(
-                modifier = Modifier.heightIn(min =56.dp),
+                modifier = Modifier.heightIn(min = 56.dp),
                 hintText = stringResource(id = R.string.username),
                 value = email,
                 onValueChange = {
@@ -166,7 +168,7 @@ fun LoginScreenContent(
             Text(text = "Password", style = titleTextStyle)
             4.verticalSpace()
             RecipeTextField(
-                modifier = Modifier.heightIn(min =56.dp),
+                modifier = Modifier.heightIn(min = 56.dp),
                 hintText = stringResource(id = R.string.password),
                 value = password,
                 onValueChange = {
@@ -203,7 +205,7 @@ fun LoginScreenContent(
             RecipeRoundedButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min =56.dp), onClick = { onLogInClick(email.text, password.text) }) {
+                    .heightIn(min = 56.dp), onClick = { onLogInClick(email.text, password.text) }) {
                 Text(
                     text = stringResource(id = R.string.log_in).uppercase(),
                     fontFamily = RecipeFontFamily.poppinsFamily,
