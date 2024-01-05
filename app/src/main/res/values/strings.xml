@@ -64,5 +64,15 @@
     <string name="create_recipe">Tarif Oluştur</string>
     <string name="please_type_recipe_description">Tarif açıklamasını giriniz</string>
     <string name="please_type_recipe_name">Lütfen tarif ismini yazınız</string>
-
+    <string name="save_recipe">Tarifi Ekle</string>
+    <string name="ingredients_name">Malzeme</string>
+    <string name="amount">Miktar</string>
+    <string name="add_new_ingredient">Yeni Malzeme Ekle</string>
+    <string-array name="measurement_unit">
+        <item>Gram</item>
+        <item>Kilogram</item>
+        <item>Adet</item>
+        <item>Mililitre</item>
+        <item>Litre</item>
+    </string-array>
 </resources>

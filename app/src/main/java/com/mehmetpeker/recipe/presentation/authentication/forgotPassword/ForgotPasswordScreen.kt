@@ -3,6 +3,7 @@ package com.mehmetpeker.recipe.presentation.authentication.forgotPassword
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
@@ -111,7 +112,7 @@ fun ForgotPasswordScreenContent(
             )
             4.verticalSpace()
             RecipeTextField(
-                modifier = Modifier.requiredHeight(56.dp),
+                modifier = Modifier.heightIn(min =56.dp),
                 hintText = stringResource(id = R.string.enter_your_email_address),
                 value = viewModel.emailField,
                 onValueChange = { textFieldValue ->
@@ -124,7 +125,7 @@ fun ForgotPasswordScreenContent(
             RecipeRoundedButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .requiredHeight(56.dp), onClick = onResetButtonClick
+                    .heightIn(min =56.dp), onClick = onResetButtonClick
             ) {
                 Text(
                     text = stringResource(id = R.string.reset_password).uppercase(),

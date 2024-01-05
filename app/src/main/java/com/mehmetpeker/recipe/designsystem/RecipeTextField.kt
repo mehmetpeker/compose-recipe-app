@@ -79,7 +79,7 @@ fun RecipeTextField(
 
         else -> modifier
     }
-    Column {
+    Column(modifier = modifier) {
         Box(
             modifier = boxModifier
                 .background(cd_theme_textfield_container_color, shape = RoundedCornerShape(10.dp))

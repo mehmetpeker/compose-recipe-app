@@ -72,7 +72,7 @@ fun RecipeOutlinedButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
-    shape: Shape = RoundedCornerShape(8.dp),
+    shape: Shape = RoundedCornerShape(10.dp),
     type: RecipeOutlinedButtonType = RecipeOutlinedButtonType.Primary,
     content: @Composable RowScope.() -> Unit,
 ) {

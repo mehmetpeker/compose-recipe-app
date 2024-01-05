@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
@@ -152,7 +153,7 @@ fun LoginScreenContent(
             Text(stringResource(id = R.string.username), style = titleTextStyle)
             4.verticalSpace()
             RecipeTextField(
-                modifier = Modifier.requiredHeight(56.dp),
+                modifier = Modifier.heightIn(min =56.dp),
                 hintText = stringResource(id = R.string.username),
                 value = email,
                 onValueChange = {
@@ -165,7 +166,7 @@ fun LoginScreenContent(
             Text(text = "Password", style = titleTextStyle)
             4.verticalSpace()
             RecipeTextField(
-                modifier = Modifier.requiredHeight(56.dp),
+                modifier = Modifier.heightIn(min =56.dp),
                 hintText = stringResource(id = R.string.password),
                 value = password,
                 onValueChange = {
@@ -202,7 +203,7 @@ fun LoginScreenContent(
             RecipeRoundedButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .requiredHeight(56.dp), onClick = { onLogInClick(email.text, password.text) }) {
+                    .heightIn(min =56.dp), onClick = { onLogInClick(email.text, password.text) }) {
                 Text(
                     text = stringResource(id = R.string.log_in).uppercase(),
                     fontFamily = RecipeFontFamily.poppinsFamily,
