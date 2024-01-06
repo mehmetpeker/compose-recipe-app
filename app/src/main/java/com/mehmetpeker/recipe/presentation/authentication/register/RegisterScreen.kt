@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -35,6 +36,7 @@ import com.mehmetpeker.recipe.common.SuccessAlertDialog
 import com.mehmetpeker.recipe.designsystem.RecipeTextField
 import com.mehmetpeker.recipe.designsystem.RecipeTextFieldType
 import com.mehmetpeker.recipe.designsystem.RecipeTopAppBar
+import com.mehmetpeker.recipe.designsystem.theme.ChangeSystemBarColor
 import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_LOGIN
 import com.mehmetpeker.recipe.util.ValidationResult
@@ -114,7 +116,7 @@ fun RegisterScreenContent(
         fontSize = 13.scaledSp,
         color = Color.Black.copy(alpha = 0.7f)
     )
-
+    ChangeSystemBarColor()
     EdgeToEdgeScaffold(
         containerColor = Color.White,
         topBar = {
@@ -133,8 +135,8 @@ fun RegisterScreenContent(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
-                .systemBarsPadding()
                 .padding(horizontal = 24.dp)
+
         ) {
 
             Column(
@@ -179,6 +181,7 @@ fun RegisterScreenContent(
             }
             RecipeRoundedButton(
                 modifier = Modifier
+                    .navigationBarsPadding()
                     .fillMaxWidth()
                     .padding(8.dp)
                     .heightIn(min = 56.dp),

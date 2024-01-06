@@ -43,7 +43,7 @@ class ResetPasswordViewModel(
 
     fun validateForm(onValidate: () -> Unit) = viewModelScope.launch {
         resetPasswordValidation =
-            TextFieldValidator.validateResetPassword(password.text, password.text)
+            TextFieldValidator.validateResetPassword(password.text, passwordConfirm.text)
         if (resetPasswordValidation != null && resetPasswordValidation!!.isSuccess) {
             onValidate()
         }

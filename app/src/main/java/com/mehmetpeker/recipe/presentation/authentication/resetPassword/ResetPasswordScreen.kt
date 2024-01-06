@@ -148,6 +148,7 @@ fun ResetPasswordInitialContent(
             modifier = Modifier.heightIn(min = 56.dp),
             hintText = stringResource(id = R.string.password),
             value = viewModel.password,
+            isErrorEnabled = viewModel.resetPasswordValidation?.isSuccess?.not() ?: false,
             onValueChange = { textFieldValue ->
                 viewModel.onPasswordTextChanged(textFieldValue)
             }

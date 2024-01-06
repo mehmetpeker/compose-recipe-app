@@ -1,12 +1,15 @@
 package com.mehmetpeker.recipe.data.repository.authentication
 
 import com.mehmetpeker.recipe.data.entity.authentication.forgotPassword.ForgotPasswordRequest
+import com.mehmetpeker.recipe.data.entity.authentication.forgotPassword.ForgotPasswordResponse
 import com.mehmetpeker.recipe.data.entity.authentication.login.LoginRequest
 import com.mehmetpeker.recipe.data.entity.authentication.login.LoginResponse
 import com.mehmetpeker.recipe.data.entity.authentication.register.RegisterRequest
 import com.mehmetpeker.recipe.data.entity.authentication.register.RegisterResponse
 import com.mehmetpeker.recipe.data.entity.authentication.resetPassword.ResetPasswordRequest
+import com.mehmetpeker.recipe.data.entity.authentication.resetPassword.ResetPasswordResponse
 import com.mehmetpeker.recipe.data.entity.authentication.updatePassword.UpdatePasswordRequest
+import com.mehmetpeker.recipe.data.entity.authentication.updatePassword.UpdatePasswordResponse
 import com.mehmetpeker.recipe.domain.repository.AuthenticationRepository
 import com.mehmetpeker.recipe.util.ApiResult
 import com.mehmetpeker.recipe.util.ApiSuccess
@@ -55,7 +58,7 @@ class AuthenticationRepositoryImpl(
             setBody(body)
         }
 
-    override suspend fun forgotPassword(request: ForgotPasswordRequest): ApiResult<String> =
+    override suspend fun forgotPassword(request: ForgotPasswordRequest): ApiResult<ForgotPasswordResponse> =
         client.safeRequest {
             method = HttpMethod.Post
             contentType(ContentType.Text.Plain)
@@ -63,14 +66,16 @@ class AuthenticationRepositoryImpl(
             setBody(request)
         }
 
-    override suspend fun resetPassword(body: ResetPasswordRequest): ApiResult<String> =
+    override suspend fun resetPassword(body: ResetPasswordRequest): ApiResult<ResetPasswordResponse> =
         client.safeRequest {
+            method = HttpMethod.Post
             url("/api/account/reset_password")
             setBody(body)
         }
 
-    override suspend fun updatePassword(body: UpdatePasswordRequest): ApiResult<String> =
+    override suspend fun updatePassword(body: UpdatePasswordRequest): ApiResult<UpdatePasswordResponse> =
         client.safeRequest {
+            method = HttpMethod.Post
             url("/api/account/update_password")
             setBody(body)
         }
