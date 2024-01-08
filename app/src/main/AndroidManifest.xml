@@ -3,6 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
     <application
         android:name=".RecipeApplication"
         android:allowBackup="true"
@@ -26,7 +34,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <intent-filter android:autoVerify="true" tools:targetApi="m">
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="m">
                 <!--below line is to set the action to our intent to view-->
                 <action android:name="android.intent.action.VIEW" />
                 <!--on below line we are adding a default category to our intent-->
@@ -40,7 +50,9 @@
                 <data android:scheme="https" />
 
             </intent-filter>
-            <intent-filter android:autoVerify="true" tools:targetApi="m">
+            <intent-filter
+                android:autoVerify="true"
+                tools:targetApi="m">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />

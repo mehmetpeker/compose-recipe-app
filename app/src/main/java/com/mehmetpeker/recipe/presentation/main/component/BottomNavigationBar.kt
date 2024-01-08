@@ -37,7 +37,7 @@ fun RecipeBottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    NavigationBar {
+    NavigationBar(modifier = modifier, containerColor = md_theme_light_primary) {
         Row(
             modifier = modifier
                 .fillMaxWidth()

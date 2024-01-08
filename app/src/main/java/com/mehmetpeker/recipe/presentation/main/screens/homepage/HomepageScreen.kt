@@ -1,9 +1,11 @@
 package com.mehmetpeker.recipe.presentation.main.screens.homepage
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -22,7 +24,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomepageScreen(navController: NavController, viewModel: HomepageViewModel = koinViewModel()) {
-    ChangeSystemBarColor(md_theme_light_primary)
     val uiState by viewModel.uiState.collectAsState()
     BaseScreen(viewModel = viewModel, navController = navController) {
         HomepageScreenContent(uiState)
@@ -33,9 +34,9 @@ fun HomepageScreen(navController: NavController, viewModel: HomepageViewModel = 
 fun HomepageScreenContent(uiState: HomeUiState) {
     EdgeToEdgeScaffold {
         Column(modifier = Modifier.padding(it)) {
+            Box(modifier = Modifier.background(md_theme_light_primary).fillMaxWidth().statusBarsPadding())
             HomeTopBar(
                 modifier = Modifier
-                    .systemBarsPadding()
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(bottomStartPercent = 50, bottomEndPercent = 50))
                     .background(md_theme_light_primary)

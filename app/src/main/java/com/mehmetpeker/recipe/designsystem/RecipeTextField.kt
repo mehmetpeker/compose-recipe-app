@@ -52,6 +52,7 @@ fun RecipeTextField(
     onValueChange: (TextFieldValue) -> Unit,
     isErrorEnabled: Boolean = false,
     errorMessage: List<String>? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     type: RecipeTextFieldType = RecipeTextFieldType.DEFAULT
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -97,7 +98,9 @@ fun RecipeTextField(
                     color = Color.Black
                 ),
                 visualTransformation = visualTransformation,
-                keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+                keyboardOptions = if (keyboardOptions == KeyboardOptions.Default) KeyboardOptions(
+                    keyboardType = keyboardType
+                ) else keyboardOptions
             ) { decorationBox ->
                 val image = if (isPasswordVisible)
                     R.drawable.baseline_visibility_off_24

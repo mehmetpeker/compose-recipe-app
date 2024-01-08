@@ -85,6 +85,16 @@ Eğer sorun devam ederse, destek ekibimizle iletişime geçmekten çekinmeyin.</
     <string name="forgot_password_email_send_successfuly">Parolanızı yenileyebilmeniz için link mail adresinize gönderildi.</string>
     <string name="passwords_must_be_same">Parolalar eşleşmiyor!</string>
     <string name="reset_password_success">Parolan başarıyla sıfırlandı.</string>
+    <string name="confirm">Onayla</string>
+    <string name="please_type_serves_amount">Lütfen servis miktarını giriniz</string>
+    <string name="serves_amount">Servis Miktarı</string>
+    <string name="invalid_input">Geçersiz değer</string>
+    <string name="cook_time">Pişirme Süresi</string>
+    <string name="please_type_cook_time">Lütfen pişirme süresini giriniz</string>
+    <string name="recipe_image_upload_failed">Resim yükleme başarısız oldu.\nTekrar Dene.</string>
+    <string name="try_again">Tekrar Dene</string>
+    <string name="preparation_time">Hazırlık Süresi</string>
+    <string name="please_type_preparation_time">Lütfen hazırlık süresini giriniz</string>
     <string-array name="measurement_unit">
         <item>Gram</item>
         <item>Kilogram</item>
