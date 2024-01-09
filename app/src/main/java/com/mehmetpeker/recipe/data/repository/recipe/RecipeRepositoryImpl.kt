@@ -2,6 +2,10 @@ package com.mehmetpeker.recipe.data.repository.recipe
 
 import com.mehmetpeker.recipe.data.entity.ErrorResponseBody
 import com.mehmetpeker.recipe.data.entity.recipe.SearchRecipeResponseItem
+import com.mehmetpeker.recipe.data.entity.recipe.categories.GetAllCategoriesItem
+import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeRequest
+import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeResponse
+import com.mehmetpeker.recipe.data.entity.recipe.materials.GetAllMaterialsResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.uploadImage.UploadRecipeImageResponse
 import com.mehmetpeker.recipe.domain.repository.RecipeRepository
 import com.mehmetpeker.recipe.util.ApiError
@@ -32,7 +36,7 @@ class RecipeRepositoryImpl(private val client: HttpClient) : RecipeRepository {
     override suspend fun uploadRecipePhoto(file: File): ApiResult<UploadRecipeImageResponse> {
         return try {
             val response = client.submitFormWithBinaryData(
-                url = "/api/recipe/add-photo/3",
+                url = "/api/recipe/add-photo",
                 formData = formData {
                     append("File", file.readBytes(), Headers.build {
                         append(HttpHeaders.ContentType, "image/png")
@@ -54,6 +58,27 @@ class RecipeRepositoryImpl(private val client: HttpClient) : RecipeRepository {
             }
         } catch (e: Exception) {
             ApiError()
+        }
+    }
+
+    override suspend fun getAllCategories(): ApiResult<List<GetAllCategoriesItem>> {
+        return client.safeRequest {
+            method = HttpMethod.Get
+            url("api/recipe/get-all-categories")
+        }
+    }
+
+    override suspend fun getAllMaterials(): ApiResult<List<GetAllMaterialsResponseItem>> {
+        return client.safeRequest {
+            method = HttpMethod.Get
+            url("api/recipe/get-all-materials")
+        }
+    }
+
+    override suspend fun createRecipe(createRecipeRequest: CreateRecipeRequest): ApiResult<CreateRecipeResponse> {
+        return client.safeRequest {
+            method = HttpMethod.Post
+            url("api/recipe/create-recipe")
         }
     }
 }

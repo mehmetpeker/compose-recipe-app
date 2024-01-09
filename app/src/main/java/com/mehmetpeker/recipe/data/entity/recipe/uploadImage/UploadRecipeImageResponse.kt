@@ -4,7 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UploadRecipeImageResponse(
-    val id: Int,
-    val url: String,
-    val isMain: Boolean
+    val url: String
 )

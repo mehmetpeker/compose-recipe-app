@@ -95,6 +95,7 @@ Eğer sorun devam ederse, destek ekibimizle iletişime geçmekten çekinmeyin.</
     <string name="try_again">Tekrar Dene</string>
     <string name="preparation_time">Hazırlık Süresi</string>
     <string name="please_type_preparation_time">Lütfen hazırlık süresini giriniz</string>
+    <string name="category">Kategori</string>
     <string-array name="measurement_unit">
         <item>Gram</item>
         <item>Kilogram</item>

@@ -8,8 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.RecipeApplication
 import com.mehmetpeker.recipe.base.BaseViewModel
-import com.mehmetpeker.recipe.data.model.Ingredients
+import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeRequest
+import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.Material
+import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.Measurement
 import com.mehmetpeker.recipe.data.repository.recipe.RecipeRepositoryImpl
+import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.uiModel.CategoriesUiModel
+import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.uiModel.MaterialsUiModel
+import com.mehmetpeker.recipe.util.ApiError
 import com.mehmetpeker.recipe.util.ApiSuccess
 import com.mehmetpeker.recipe.util.RecipeDispatchers
 import com.mehmetpeker.recipe.util.ValidationResult
@@ -20,6 +25,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,11 +42,26 @@ class CreateRecipeViewModel(
         FAILED
     }
 
+    init {
+        getAllCategories()
+        getAllMaterials()
+    }
+
+    var buttonVisibility by mutableStateOf(false)
     var selectedFile by mutableStateOf<File?>(null)
     var uploadedImageUrl by mutableStateOf<String>("")
     var imageUploadStatus by mutableStateOf<ImageUploadStatus>(ImageUploadStatus.IDLE)
-    val ingredients = mutableStateOf(listOf<Ingredients>())
-    private val defaultIngredients = Ingredients("", 0, "")
+    val ingredients = mutableStateOf(listOf<MaterialsUiModel>())
+    private val defaultIngredients = MaterialsUiModel(-1, "", 0, "")
+
+    private var _categories = MutableStateFlow<List<CategoriesUiModel>>(emptyList())
+    val categories = _categories.asStateFlow()
+
+    private var _selectedCategory = MutableStateFlow<CategoriesUiModel?>(null)
+    val selectedCategory = _selectedCategory.asStateFlow()
+
+    private var _materials = MutableStateFlow<List<MaterialsUiModel>>(emptyList())
+    val materials = _materials.asStateFlow()
 
     private var _recipeName = MutableStateFlow(TextFieldValue(""))
     val recipeName = _recipeName.asStateFlow()
@@ -60,7 +81,9 @@ class CreateRecipeViewModel(
     val recipeNameValidationResult: StateFlow<ValidationResult> =
         recipeName
             .debounce(500)
-            .mapLatest { TextFieldValidator.validateRecipeName(it.text) }
+            .mapLatest { TextFieldValidator.validateRecipeName(it.text) }.onEach {
+                checkButtonEnabled()
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
@@ -69,7 +92,9 @@ class CreateRecipeViewModel(
     val recipeDescriptionValidationResult: StateFlow<ValidationResult> =
         recipeDescription
             .debounce(500)
-            .mapLatest { TextFieldValidator.validateRecipeDescription(it.text) }
+            .mapLatest { TextFieldValidator.validateRecipeDescription(it.text) }.onEach {
+                checkButtonEnabled()
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
@@ -88,6 +113,8 @@ class CreateRecipeViewModel(
                     errorMessage = if (condition) emptyList() else errorMessage
                 )
 
+            }.onEach {
+                checkButtonEnabled()
             }
             .stateIn(
                 scope = viewModelScope,
@@ -106,6 +133,8 @@ class CreateRecipeViewModel(
                     errorMessage = if (condition) emptyList() else errorMessage
                 )
 
+            }.onEach {
+                checkButtonEnabled()
             }
             .stateIn(
                 scope = viewModelScope,
@@ -125,6 +154,8 @@ class CreateRecipeViewModel(
                     errorMessage = if (condition) emptyList() else errorMessage
                 )
 
+            }.onEach {
+                checkButtonEnabled()
             }
             .stateIn(
                 scope = viewModelScope,
@@ -132,40 +163,84 @@ class CreateRecipeViewModel(
                 initialValue = ValidationResult()
             )
 
+    private fun getAllCategories() = viewModelScope.launch {
+        val response = withContext(recipeDispatcher.io) {
+            recipeRepositoryImpl.getAllCategories()
+        }
+        if (response is ApiSuccess) {
+            val categoriesUiModelList = response.data.map {
+                CategoriesUiModel(
+                    id = it.id,
+                    name = it.name
+                )
+            }
+            _categories.emit(categoriesUiModelList)
+        }
+    }
+
+    private fun getAllMaterials() = viewModelScope.launch {
+        val response = withContext(recipeDispatcher.io) {
+            recipeRepositoryImpl.getAllMaterials()
+        }
+        if (response is ApiSuccess) {
+            val materialsUiModelList = response.data.map {
+                MaterialsUiModel(
+                    id = it.id,
+                    name = it.name,
+                    measurement = it.measurement
+                )
+            }
+            _materials.emit(materialsUiModelList)
+        }
+    }
+
+    fun updateSelectedCategory(categoriesUiModel: CategoriesUiModel) = viewModelScope.launch {
+        _selectedCategory.emit(categoriesUiModel)
+        checkButtonEnabled()
+    }
+
     fun updateRecipeDescription(textFieldValue: TextFieldValue) = viewModelScope.launch {
         _recipeDescription.emit(textFieldValue)
+        checkButtonEnabled()
     }
 
     fun updateRecipeName(textFieldValue: TextFieldValue) = viewModelScope.launch {
         _recipeName.emit(textFieldValue)
+        checkButtonEnabled()
     }
 
     fun updateServes(textFieldValue: TextFieldValue) = viewModelScope.launch {
         _servesAmount.emit(textFieldValue)
+        checkButtonEnabled()
     }
 
     fun updateCookTime(textFieldValue: TextFieldValue) = viewModelScope.launch {
         _cookTime.emit(textFieldValue)
+        checkButtonEnabled()
     }
 
     fun updatePreparationTime(textFieldValue: TextFieldValue) = viewModelScope.launch {
         _preparationTime.emit(textFieldValue)
+        checkButtonEnabled()
     }
 
     fun addIngredient() {
         ingredients.value = ingredients.value.toMutableList().also { it.add(defaultIngredients) }
+        checkButtonEnabled()
     }
 
-    fun updateIngredient(index: Int, newIngredients: Ingredients) {
+    fun updateIngredient(index: Int, newIngredients: MaterialsUiModel) {
         ingredients.value = ingredients.value.toMutableList().also {
             it[index] = newIngredients
         }
+        checkButtonEnabled()
     }
 
     fun onRemove(removeIndex: Int) {
         ingredients.value = ingredients.value.toMutableList().also {
             it.removeAt(removeIndex)
         }
+        checkButtonEnabled()
     }
 
     fun onImageSelected(file: File?) {
@@ -186,6 +261,54 @@ class CreateRecipeViewModel(
             }
 
             else -> imageUploadStatus = ImageUploadStatus.FAILED
+        }
+        checkButtonEnabled()
+    }
+
+    private fun checkButtonEnabled() = viewModelScope.launch {
+        buttonVisibility =
+            imageUploadStatus == ImageUploadStatus.SUCCESS && ingredients.value.isNotEmpty()
+                    && recipeNameValidationResult.value.isSuccess
+                    && recipeDescriptionValidationResult.value.isSuccess
+                    && recipeServeValidationResult.value.isSuccess
+                    && recipeCookingTimeValidationResult.value.isSuccess
+                    && recipePreparationTimeValidationResult.value.isSuccess
+                    && selectedCategory.value != null
+    }
+
+    fun createRecipe() = viewModelScope.launch {
+        if (!buttonVisibility) return@launch
+        val request = CreateRecipeRequest(
+            categoryId = selectedCategory.value?.id ?: -1,
+            cookingTime = cookTime.value.text.toIntOrNull(),
+            description = recipeDescription.value.text,
+            materials = ingredients.value.map {
+                Material(
+                    id = it.id,
+                    name = it.name,
+                    measurement = Measurement(
+                        amount = it.amount.toDouble(),
+                        unit = it.measurement
+                    )
+                )
+            },
+            name = recipeName.value.text,
+            photoUrl = uploadedImageUrl,
+            portions = servesAmount.value.text.toIntOrNull(),
+            preparitionTime = preparationTime.value.text.toIntOrNull()
+        )
+        showProgress()
+        val response = withContext(recipeDispatcher.io) {
+            recipeRepositoryImpl.createRecipe(request)
+        }
+        when (response) {
+            is ApiSuccess -> {
+
+            }
+
+            is ApiError -> {
+                _error.value = response
+            }
         }
     }
 }

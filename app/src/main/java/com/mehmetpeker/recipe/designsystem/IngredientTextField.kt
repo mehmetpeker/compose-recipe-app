@@ -66,7 +66,8 @@ fun IngredientsTextField(
     cursorBrush: Brush = SolidColor(Color.Black),
     placeHolder: String = "",
     type: IngredientTextFieldType = IngredientTextFieldType.Default,
-    onUnitSelected: (String) -> Unit = {}
+    onUnitSelected: (String) -> Unit = {},
+    onClick: () -> Unit = {}
 ) {
     var isDialogExpanded by remember {
         mutableStateOf(false)
@@ -97,12 +98,18 @@ fun IngredientsTextField(
             )
             .padding(8.dp),
     ) {
-        Row(Modifier.align(Alignment.CenterStart)) {
+        Row(
+            Modifier
+                .align(Alignment.CenterStart)
+        ) {
             BasicTextField(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .fillMaxWidth()
-                    .weight(1f),
+                    .weight(1f)
+                    .clickable {
+                        onClick()
+                    },
                 value = value,
                 onValueChange = onValueChange,
                 enabled = enabled,
