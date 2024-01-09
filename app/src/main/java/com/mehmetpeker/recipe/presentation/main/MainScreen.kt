@@ -25,6 +25,7 @@ import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
 import com.mehmetpeker.recipe.data.model.RecipeBottomNavigationScreens
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.presentation.main.component.RecipeBottomNavigationBar
+import com.mehmetpeker.recipe.presentation.main.screens.favorites.FavoritesScreen
 import com.mehmetpeker.recipe.presentation.main.screens.homepage.HomepageScreen
 import com.mehmetpeker.recipe.presentation.main.screens.search.SearchScreen
 import com.mehmetpeker.recipe.util.RouteConstants
@@ -72,13 +73,19 @@ fun HomeScreen(navController: NavController) {
             startDestination = RouteConstants.ROUTE_HOMEPAGE
         ) {
             composable(RouteConstants.ROUTE_HOMEPAGE) {
-                HomepageScreen(navController = navController,hostNavController = nestedNavController)
+                HomepageScreen(
+                    navController = navController,
+                    hostNavController = nestedNavController
+                )
             }
             composable(RouteConstants.ROUTE_SEARCH_RECIPE) {
                 SearchScreen(navController = nestedNavController)
             }
             composable(RouteConstants.ROUTE_FAVORITES) {
-                Text(text = "Favorites")
+                FavoritesScreen(
+                    navController = navController,
+                    nestedNavController = nestedNavController
+                )
             }
             composable(RouteConstants.ROUTE_PROFILE) {
                 Text(text = "Profile")

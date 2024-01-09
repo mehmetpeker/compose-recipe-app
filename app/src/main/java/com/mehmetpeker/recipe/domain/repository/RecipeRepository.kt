@@ -5,6 +5,7 @@ import com.mehmetpeker.recipe.data.entity.recipe.categories.GetAllCategoriesItem
 import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeRequest
 import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeResponse
 import com.mehmetpeker.recipe.data.entity.recipe.getAllRecipe.GetAllRecipeResponseItem
+import com.mehmetpeker.recipe.data.entity.recipe.getLikedRecipe.GetLikedRecipesItem
 import com.mehmetpeker.recipe.data.entity.recipe.materials.GetAllMaterialsResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.uploadImage.UploadRecipeImageResponse
 import com.mehmetpeker.recipe.util.ApiResult
@@ -21,4 +22,5 @@ interface RecipeRepository {
     suspend fun createRecipe(createRecipeRequest: CreateRecipeRequest): ApiResult<CreateRecipeResponse>
     suspend fun getAllRecipes(): ApiResult<List<GetAllRecipeResponseItem>>
     suspend fun getRecipe(recipeId: String): ApiResult<GetAllRecipeResponseItem>
+    suspend fun getLikedRecipes(): ApiResult<List<GetLikedRecipesItem>>
 }

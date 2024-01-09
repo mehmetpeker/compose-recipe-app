@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -22,20 +23,29 @@ fun FailScreen(
     content: @Composable RowScope.() -> Unit
 ) {
     Column(
-        Modifier.fillMaxSize(),
+        Modifier
+            .padding(horizontal = 24.dp)
+            .fillMaxSize()
+            ,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = title, style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center
+        )
         Text(
             text = message,
             style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = 8.dp),
+            textAlign = TextAlign.Center
         )
         RecipeRoundedButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .height(56.dp)
+                .padding(top = 10.dp),
             type = RecipeRoundedButtonType.Primary,
             onClick = onButtonClick,
         ) {

@@ -5,6 +5,7 @@ package com.mehmetpeker.recipe.presentation.main.screens.recipeDetail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -102,12 +103,16 @@ fun RecipeDetailScreen(
             onShare = {},
             onNavigateClick = {
                 navController.popBackStack()
+            },
+            onTryAgain = {
+                recipeDetailViewModel.getRecipeDetail(recipeId = recipeId)
+            },
+            onComment = {
+                scope.launch {
+                    scaffoldState.bottomSheetState.expand()
+                }
             }
-        ) {
-            scope.launch {
-                scaffoldState.bottomSheetState.expand()
-            }
-        }
+        )
     }
 
 }
@@ -120,7 +125,8 @@ fun RecipeDetailContent(
     onLike: () -> Unit = {},
     onBookmark: () -> Unit = {},
     onShare: () -> Unit = {},
-    onComment: () -> Unit = {}
+    onComment: () -> Unit = {},
+    onTryAgain: () -> Unit = {},
 ) {
     EdgeToEdgeScaffold(
         topBar = {
@@ -149,9 +155,8 @@ fun RecipeDetailContent(
                 FailScreen(
                     title = "Bir hata oluştu",
                     message = "Tarif detayına ulaşamadık!",
-                    onButtonClick = {
-
-                    }) {
+                    onButtonClick = onTryAgain
+                ) {
                     Text(
                         text = "Tekrar Dene",
                         style = TextStyle(
@@ -164,7 +169,13 @@ fun RecipeDetailContent(
                 }
             }
 
-            else -> CircularProgressIndicator()
+            else -> Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(modifier = Modifier.size(24.dp))
+            }
         }
     }
 }

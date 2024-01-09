@@ -6,6 +6,7 @@ import com.mehmetpeker.recipe.data.entity.recipe.categories.GetAllCategoriesItem
 import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeRequest
 import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeResponse
 import com.mehmetpeker.recipe.data.entity.recipe.getAllRecipe.GetAllRecipeResponseItem
+import com.mehmetpeker.recipe.data.entity.recipe.getLikedRecipe.GetLikedRecipesItem
 import com.mehmetpeker.recipe.data.entity.recipe.materials.GetAllMaterialsResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.uploadImage.UploadRecipeImageResponse
 import com.mehmetpeker.recipe.domain.repository.RecipeRepository
@@ -96,6 +97,13 @@ class RecipeRepositoryImpl(private val client: HttpClient) : RecipeRepository {
         return client.safeRequest {
             method = HttpMethod.Get
             url("api/recipe/get-recipe/$recipeId")
+        }
+    }
+
+    override suspend fun getLikedRecipes(): ApiResult<List<GetLikedRecipesItem>> {
+        return client.safeRequest {
+            method = HttpMethod.Get
+            url("api/recipe/get-liked-recipes")
         }
     }
 }
