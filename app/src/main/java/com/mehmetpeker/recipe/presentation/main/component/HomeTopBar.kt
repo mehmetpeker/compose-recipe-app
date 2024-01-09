@@ -29,12 +29,6 @@ fun HomeTopBar(
     profileImageUrl: String?,
     username: String?
 ) {
-    val imageUrl = when {
-        profileImageUrl.isNullOrEmpty() ->
-            "https://pbs.twimg.com/profile_images/1423037075264315404/9Tyzo0Lw_400x400.jpg"
-
-        else -> profileImageUrl
-    }
     Row(
         modifier = modifier
             .padding(8.dp)
@@ -44,7 +38,7 @@ fun HomeTopBar(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape),
-            model = imageUrl,
+            model = profileImageUrl,
             contentDescription = null,
         )
         4.horizontalSpace()

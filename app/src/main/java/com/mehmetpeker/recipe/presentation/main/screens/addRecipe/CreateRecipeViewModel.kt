@@ -294,6 +294,7 @@ class CreateRecipeViewModel(
             },
             name = recipeName.value.text,
             photoUrl = uploadedImageUrl,
+            photoUrls = listOf(uploadedImageUrl),
             portions = servesAmount.value.text.toIntOrNull(),
             preparitionTime = preparationTime.value.text.toIntOrNull()
         )

@@ -2,6 +2,12 @@ package com.mehmetpeker.recipe.presentation.main.screens.homepage
 
 import androidx.lifecycle.viewModelScope
 import com.mehmetpeker.recipe.base.BaseViewModel
+import com.mehmetpeker.recipe.data.repository.recipe.RecipeRepositoryImpl
+import com.mehmetpeker.recipe.domain.uimodel.recipe.RecipeItemUiModel
+import com.mehmetpeker.recipe.domain.uimodel.recipe.toRecipeItemUiModel
+import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.uiModel.CategoriesUiModel
+import com.mehmetpeker.recipe.util.ApiSuccess
+import com.mehmetpeker.recipe.util.RecipeDispatchers
 import com.mehmetpeker.recipe.util.SessionManager
 import com.mehmetpeker.recipe.util.User
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,14 +15,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 data class HomeUiState(
-    val user: User? = null
+    val user: User? = null,
+    val categories: List<CategoriesUiModel> = emptyList(),
+    val recipes: List<RecipeItemUiModel> = emptyList()
 )
 
-class HomepageViewModel : BaseViewModel(), KoinComponent {
+class HomepageViewModel(
+    private val recipeDispatcher: RecipeDispatchers,
+    private val recipeRepositoryImpl: RecipeRepositoryImpl,
+) : BaseViewModel(), KoinComponent {
     private val sessionManager: SessionManager by inject()
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -24,6 +36,8 @@ class HomepageViewModel : BaseViewModel(), KoinComponent {
 
     init {
         getUserData()
+        getAllCategories()
+        getAllRecipe()
     }
 
     private fun getUserData() = viewModelScope.launch {
@@ -31,5 +45,38 @@ class HomepageViewModel : BaseViewModel(), KoinComponent {
             val newUser = sessionManager.retrieveUserData()
             it.copy(user = newUser)
         }
+    }
+
+    private fun getAllCategories() = viewModelScope.launch {
+        showProgress()
+        val response = withContext(recipeDispatcher.io) {
+            recipeRepositoryImpl.getAllCategories()
+        }
+        if (response is ApiSuccess) {
+            val categoriesUiModelList = response.data.map {
+                CategoriesUiModel(
+                    id = it.id,
+                    name = it.name
+                )
+            }
+            _uiState.update {
+                it.copy(categories = categoriesUiModelList)
+            }
+        }
+        hideProgress()
+    }
+
+    private fun getAllRecipe() = viewModelScope.launch {
+        showProgress()
+        val response = withContext(recipeDispatcher.io) {
+            recipeRepositoryImpl.getAllRecipes()
+        }
+        if (response is ApiSuccess) {
+            val recipesUiModelList = response.data.map { it.toRecipeItemUiModel() }
+            _uiState.update {
+                it.copy(recipes = recipesUiModelList)
+            }
+        }
+        hideProgress()
     }
 }

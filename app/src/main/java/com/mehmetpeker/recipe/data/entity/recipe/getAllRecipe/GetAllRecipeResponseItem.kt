@@ -1,17 +1,19 @@
-package com.mehmetpeker.recipe.data.entity.recipe.createRecipe
+package com.mehmetpeker.recipe.data.entity.recipe.getAllRecipe
 
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CreateRecipeRequest(
+data class GetAllRecipeResponseItem(
     @SerialName("categoryId")
     val categoryId: Int?,
     @SerialName("cookingTime")
     val cookingTime: Int?,
     @SerialName("description")
     val description: String?,
+    @SerialName("id")
+    val id: Int?,
     @SerialName("materials")
     val materials: List<Material?>?,
     @SerialName("name")
@@ -19,9 +21,11 @@ data class CreateRecipeRequest(
     @SerialName("photoUrl")
     val photoUrl: String?,
     @SerialName("photoUrls")
-    val photoUrls: List<String?>,
+    val photoUrls: String?,
     @SerialName("portions")
     val portions: Int?,
     @SerialName("preparitionTime")
-    val preparitionTime: Int?
+    val preparitionTime: Int?,
+    @SerialName("userId")
+    val userId: Int?
 )

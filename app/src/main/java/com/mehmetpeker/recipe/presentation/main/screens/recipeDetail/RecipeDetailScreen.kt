@@ -36,6 +36,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,16 +46,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
+import com.mehmetpeker.recipe.common.FailScreen
+import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
 import com.mehmetpeker.recipe.designsystem.theme.RoundedCornerShape10Percent
 import com.mehmetpeker.recipe.designsystem.theme.RoundedCornerShape30Percent
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
+import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.uiModel.MaterialsUiModel
 import com.mehmetpeker.recipe.presentation.main.screens.recipeDetail.components.RecipeCommentsBottomSheetContent
 import com.mehmetpeker.recipe.util.extension.horizontalSpace
 import com.mehmetpeker.recipe.util.extension.screenHeight
@@ -64,11 +71,15 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RecipeDetailScreen(
     navController: NavController,
+    recipeId: String,
     recipeDetailViewModel: RecipeDetailViewModel = koinViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
-
+    val uiState by recipeDetailViewModel.recipeDetailUiState.collectAsStateWithLifecycle()
+    LaunchedEffect(recipeId) {
+        recipeDetailViewModel.getRecipeDetail(recipeId = recipeId)
+    }
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetShape = RoundedCornerShape(topStartPercent = 10, topEndPercent = 10),
@@ -85,15 +96,18 @@ fun RecipeDetailScreen(
         }
     ) {
         RecipeDetailContent(
+            uiState,
             onBookmark = {},
             onLike = {},
             onShare = {},
-            onComment = {
-                scope.launch {
-                    scaffoldState.bottomSheetState.expand()
-                }
+            onNavigateClick = {
+                navController.popBackStack()
             }
-        )
+        ) {
+            scope.launch {
+                scaffoldState.bottomSheetState.expand()
+            }
+        }
     }
 
 }
@@ -101,63 +115,116 @@ fun RecipeDetailScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeDetailContent(
-    onLike: () -> Unit,
-    onBookmark: () -> Unit,
-    onShare: () -> Unit,
-    onComment: () -> Unit
+    uiState: RecipeDetailViewModel.RecipeDetailUiState,
+    onNavigateClick: () -> Unit = {},
+    onLike: () -> Unit = {},
+    onBookmark: () -> Unit = {},
+    onShare: () -> Unit = {},
+    onComment: () -> Unit = {}
 ) {
     EdgeToEdgeScaffold(
         topBar = {
             TopAppBar(navigationIcon = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = onNavigateClick) {
                     Icon(Icons.Default.ArrowBack, contentDescription = null)
                 }
             }, title = {})
         }
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 16.dp)
-        ) {
-            recipeTitle()
-            recipeImage(
-                modifier = Modifier
-                    .aspectRatio(16f / 9f)
-                    .clip(RoundedCornerShape10Percent)
-            )
-            recipeShareLikeAndFavoriteRow(
-                isLiked = true,
-                isBookmarked = true,
-                onBookmark = {},
-                onLike = {},
-                onShare = {},
-                onComment = {
-                    onComment()
-                }
-            )
-            recipePreparitionAndCookingTimeRow(
-                modifier = Modifier.padding(top = 12.dp),
-                portion = 1,
-                cookingTime = 60,
-                preparitionTime = 30
-            )
-            recipeIngredients(
-                modifier = Modifier.fillMaxSize(),
-                ingredients = listOf("Ekmek", "Mercimek", "Yumurta")
-            )
+        when (uiState) {
+            is RecipeDetailViewModel.RecipeDetailUiState.Success -> {
+                RecipeDetailSuccessContent(
+                    modifier = Modifier
+                        .padding(it)
+                        .fillMaxSize()
+                        .padding(horizontal = 20.dp)
+                        .padding(bottom = 16.dp),
+                    uiState.uiState,
+                    onLike = onLike,
+                    onBookmark = onBookmark, onShare = onShare, onComment = onComment
+                )
+            }
 
-            recipeDescription(modifier = Modifier.padding(top = 10.dp))
+            is RecipeDetailViewModel.RecipeDetailUiState.FAILED -> {
+                FailScreen(
+                    title = "Bir hata oluştu",
+                    message = "Tarif detayına ulaşamadık!",
+                    onButtonClick = {
+
+                    }) {
+                    Text(
+                        text = "Tekrar Dene",
+                        style = TextStyle(
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp,
+                            fontFamily = RecipeFontFamily.poppinsFamily
+                        )
+                    )
+                }
+            }
+
+            else -> CircularProgressIndicator()
         }
     }
 }
 
-private fun LazyListScope.recipeTitle() {
+@Composable
+private fun RecipeDetailSuccessContent(
+    modifier: Modifier,
+    uiState: RecipeDetailViewModel.RecipeDetailSuccessUiState,
+    onLike: () -> Unit = {},
+    onBookmark: () -> Unit = {},
+    onShare: () -> Unit = {},
+    onComment: () -> Unit = {}
+) {
+    LazyColumn(
+        modifier = modifier
+    ) {
+        recipeTitle(uiState.recipeDetail.name ?: "")
+        recipeImage(
+            modifier = Modifier
+                .aspectRatio(16f / 9f)
+                .clip(RoundedCornerShape10Percent),
+            uiState.recipeDetail.photoUrl
+        )
+        recipeShareLikeAndFavoriteRow(
+            isLiked = true,
+            isBookmarked = true,
+            onBookmark = onBookmark,
+            onLike = onLike,
+            onShare = onShare,
+            onComment = onComment
+        )
+        recipePreparitionAndCookingTimeRow(
+            modifier = Modifier.padding(top = 12.dp),
+            portion = uiState.recipeDetail.portions ?: 0,
+            cookingTime = uiState.recipeDetail.cookingTime ?: 0,
+            preparitionTime = uiState.recipeDetail.preparitionTime ?: 0
+        )
+        recipeIngredients(
+            modifier = Modifier.fillMaxSize(),
+            ingredients = uiState.recipeDetail.materials?.mapNotNull {
+                MaterialsUiModel(
+                    id = it?.id,
+                    measurement = it?.measurement?.unit,
+                    amount = it?.measurement?.amount?.toInt() ?: 0,
+                    name = it?.name
+                )
+            } ?: emptyList()
+        )
+
+        recipeDescription(
+            modifier = Modifier.padding(top = 10.dp),
+            description = uiState.recipeDetail.description ?: ""
+        )
+    }
+}
+
+private fun LazyListScope.recipeTitle(title: String) {
     item {
         Text(
-            text = "How to make french toast",
+            text = title,
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 24.sp
@@ -166,7 +233,7 @@ private fun LazyListScope.recipeTitle() {
     }
 }
 
-private fun LazyListScope.recipeDescription(modifier: Modifier = Modifier) {
+private fun LazyListScope.recipeDescription(modifier: Modifier = Modifier, description: String) {
     item {
         Text(
             modifier = modifier,
@@ -180,16 +247,16 @@ private fun LazyListScope.recipeDescription(modifier: Modifier = Modifier) {
     item {
         Text(
             modifier = modifier,
-            text = "French toast, known as pain perdu (\"lost bread\") in France, is a breakfast and brunch dish made with old bread slices that are soaked in a milk and egg mixture and fried until golden brown and crispy. Often served with fresh fruit and a glass of orange juice, French toast is one of America's favorite breakfast foods.",
+            text = description,
             color = Color.Black.copy(alpha = 0.7f)
         )
     }
 }
 
-private fun LazyListScope.recipeImage(modifier: Modifier = Modifier) {
+private fun LazyListScope.recipeImage(modifier: Modifier = Modifier, photoUrl: String?) {
     item {
         SubcomposeAsyncImage(
-            model = "https://www.allrecipes.com/thmb/VjVrkCVYaalH2JXogJMoFQ_a-zI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/7016-french-toast-mfs-010-0e1007bf0b47433abe91f2f0c74e5a27.jpg",
+            model = photoUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = modifier,
@@ -206,7 +273,10 @@ private fun LazyListScope.recipeImage(modifier: Modifier = Modifier) {
     }
 }
 
-private fun LazyListScope.recipeIngredients(modifier: Modifier, ingredients: List<String>) {
+private fun LazyListScope.recipeIngredients(
+    modifier: Modifier,
+    ingredients: List<MaterialsUiModel>
+) {
     item {
         Text(
             modifier = modifier,
@@ -380,7 +450,7 @@ private fun LazyListScope.recipePreparitionAndCookingTimeRow(
 }
 
 @Composable
-private fun IngredientsItem(name: String) {
+private fun IngredientsItem(model: MaterialsUiModel) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -392,14 +462,16 @@ private fun IngredientsItem(name: String) {
             .padding(vertical = 12.dp, horizontal = 16.dp)
     ) {
         Text(
-            text = "Yumurta",
+            text = model.name ?: "-",
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
         )
         Text(
-            text = "3 adet", style = MaterialTheme.typography.titleSmall, modifier = Modifier
+            text = model.amount.toString(),
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
         )
