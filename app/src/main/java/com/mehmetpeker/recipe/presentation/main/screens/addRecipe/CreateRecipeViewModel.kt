@@ -78,6 +78,7 @@ class CreateRecipeViewModel(
     private var _preparationTime = MutableStateFlow(TextFieldValue(""))
     val preparationTime = _preparationTime.asStateFlow()
 
+    var createRecipeResult by mutableStateOf(false)
     val recipeNameValidationResult: StateFlow<ValidationResult> =
         recipeName
             .debounce(500)
@@ -304,7 +305,7 @@ class CreateRecipeViewModel(
         }
         when (response) {
             is ApiSuccess -> {
-
+                createRecipeResult = true
             }
 
             is ApiError -> {

@@ -8,11 +8,14 @@ import androidx.compose.ui.res.stringResource
 import com.mehmetpeker.recipe.R
 
 @Composable
-fun SuccessAlertDialog(onDismiss: () -> Unit) {
+fun SuccessAlertDialog(
+    description: String = stringResource(id = R.string.register_success),
+    onDismiss: () -> Unit = {}
+) {
     AlertDialog(
         onDismissRequest = { onDismiss.invoke() },
         title = { Text(stringResource(id = R.string.success)) },
-        text = { Text(stringResource(id = R.string.register_success)) },
+        text = { Text(description) },
         confirmButton = {
             Button(
                 onClick = { onDismiss.invoke() }

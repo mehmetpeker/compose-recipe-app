@@ -98,6 +98,7 @@ Eğer sorun devam ederse, destek ekibimizle iletişime geçmekten çekinmeyin.</
     <string name="category">Kategori</string>
     <string name="categories">Kategoriler</string>
     <string name="recipes">Tarifler</string>
+    <string name="create_recipe_successful">Tarif Başarıyla Kaydedildi</string>
     <string-array name="measurement_unit">
         <item>Gram</item>
         <item>Kilogram</item>

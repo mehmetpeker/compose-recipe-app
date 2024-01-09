@@ -17,6 +17,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
+import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.Headers
@@ -80,6 +81,7 @@ class RecipeRepositoryImpl(private val client: HttpClient) : RecipeRepository {
         return client.safeRequest {
             method = HttpMethod.Post
             url("api/recipe/create-recipe")
+            setBody(createRecipeRequest)
         }
     }
 

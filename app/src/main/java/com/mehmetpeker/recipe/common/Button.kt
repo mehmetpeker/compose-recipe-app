@@ -68,8 +68,8 @@ private fun RecipeButtonContent(
 
 @Composable
 fun RecipeOutlinedButton(
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
     enabled: Boolean = true,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     shape: Shape = RoundedCornerShape(10.dp),

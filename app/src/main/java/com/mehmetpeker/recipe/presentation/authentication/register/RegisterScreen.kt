@@ -79,7 +79,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
             }
         }
         if (uiState.registerState) {
-            SuccessAlertDialog {
+            SuccessAlertDialog(onDismiss = {
                 viewModel.changeRegisterState(false)
                 navController.navigate(ROUTE_LOGIN) {
                     launchSingleTop = true
@@ -87,7 +87,7 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterViewModel = 
                         inclusive = true
                     }
                 }
-            }
+            })
         }
     }
 }
