@@ -10,6 +10,7 @@ class ApiSuccess<T : Any>(val data: T) : ApiResult<T>
 //If throwable is not null it means this error is exception
 class ApiError<T : Any>(
     @StringRes val messageId: Int? = null,
-    val errorBody: ErrorResponseBody? = null
+    val errorBody: ErrorResponseBody? = null,
+    val httpStatusCode: Int? = null
 ) :
     ApiResult<T>

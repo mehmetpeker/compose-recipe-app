@@ -101,6 +101,7 @@ Eğer sorun devam ederse, destek ekibimizle iletişime geçmekten çekinmeyin.</
     <string name="create_recipe_successful">Tarif Başarıyla Kaydedildi</string>
     <string name="favorites">Favoriler</string>
     <string name="back_to_home_page">Anasayfaya dön</string>
+    <string name="eror_occurred_while_showing_comments">Yorumlar görüntülenirken bir sorun oluştu!</string>
     <string-array name="measurement_unit">
         <item>Gram</item>
         <item>Kilogram</item>

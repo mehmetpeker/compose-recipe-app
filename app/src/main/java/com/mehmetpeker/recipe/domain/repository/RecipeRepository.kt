@@ -6,6 +6,8 @@ import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeReques
 import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeResponse
 import com.mehmetpeker.recipe.data.entity.recipe.getAllRecipe.GetAllRecipeResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.getLikedRecipe.GetLikedRecipesItem
+import com.mehmetpeker.recipe.data.entity.recipe.getRecipe.GetRecipeResponse
+import com.mehmetpeker.recipe.data.entity.recipe.likeRecipe.LikeRecipeResponse
 import com.mehmetpeker.recipe.data.entity.recipe.materials.GetAllMaterialsResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.uploadImage.UploadRecipeImageResponse
 import com.mehmetpeker.recipe.util.ApiResult
@@ -21,6 +23,8 @@ interface RecipeRepository {
     suspend fun getAllMaterials(): ApiResult<List<GetAllMaterialsResponseItem>>
     suspend fun createRecipe(createRecipeRequest: CreateRecipeRequest): ApiResult<CreateRecipeResponse>
     suspend fun getAllRecipes(): ApiResult<List<GetAllRecipeResponseItem>>
-    suspend fun getRecipe(recipeId: String): ApiResult<GetAllRecipeResponseItem>
+    suspend fun getRecipe(recipeId: String): ApiResult<GetRecipeResponse>
     suspend fun getLikedRecipes(): ApiResult<List<GetLikedRecipesItem>>
+    suspend fun likeRecipe(recipeId : String) : ApiResult<LikeRecipeResponse>
+    suspend fun dislikeRecipe(recipeId : String,userId : String) : ApiResult<LikeRecipeResponse>
 }

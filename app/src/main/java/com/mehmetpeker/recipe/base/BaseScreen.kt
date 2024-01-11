@@ -32,6 +32,7 @@ fun <VM : BaseViewModel> BaseScreen(
             val genericMessage = stringResource(id = error?.messageId ?: R.string.generic_error)
             val errorMessage = error?.errorBody?.errorMessage ?: genericMessage
             val errorCode = error?.errorBody?.errorCode
+            val httpStatusCode = error?.httpStatusCode ?: -1
             AlertDialog(
                 onDismissRequest = {
                     viewModel.removeError()
@@ -44,7 +45,7 @@ fun <VM : BaseViewModel> BaseScreen(
                 confirmButton = {},
                 dismissButton = {
                     val action: () -> Unit = {
-                        when (errorCode?.toIntOrNull()) {
+                        when (httpStatusCode) {
                             HttpStatusCode.Unauthorized.value -> {
                                 navController.navigate(
                                     ROUTE_LOGIN,

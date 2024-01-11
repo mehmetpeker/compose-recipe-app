@@ -6,12 +6,17 @@
 package com.mehmetpeker.recipe.presentation.main.screens.recipeDetail.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
@@ -41,10 +46,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
+import com.mehmetpeker.recipe.presentation.main.screens.recipeDetail.RecipeDetailViewModel
 import com.mehmetpeker.recipe.util.SessionManager
 import org.koin.compose.koinInject
 
@@ -74,12 +81,13 @@ import org.koin.compose.koinInject
 fun RecipeCommentsBottomSheetContent(
     modifier: Modifier = Modifier,
     sessionManager: SessionManager = koinInject(),
-    onSendClick: () -> Unit
+    onSendClick: () -> Unit,
+    uiState: RecipeDetailViewModel.RecipeDetailUiState
 ) {
     var textFieldValue by remember { mutableStateOf(TextFieldValue("")) }
     val lazyListState = rememberLazyListState()
     val flingBehavior = rememberSnapFlingBehavior(lazyListState)
-    val commentList = (1..50).map { it.toString() }
+    val commentList = emptyList<String>()
     Column(
         modifier = modifier
     ) {
@@ -97,21 +105,56 @@ fun RecipeCommentsBottomSheetContent(
             thickness = 0.5.dp,
             color = Color.Gray
         )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(), flingBehavior = flingBehavior,
-            state = lazyListState,
-            contentPadding = PaddingValues(10.dp)
-        ) {
-            items(commentList) {
-                CommentItem()
+        when (uiState) {
+            is RecipeDetailViewModel.RecipeDetailUiState.Success -> {
+                if (commentList.isEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Bu tarife hiç yorum yapılmadı ilk yorum yapan sen ol",
+                            style = MaterialTheme.typography.titleMedium,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f), flingBehavior = flingBehavior,
+                        state = lazyListState,
+                        contentPadding = PaddingValues(10.dp)
+                    ) {
+                        items(commentList) {
+                            CommentItem()
+                        }
+                    }
+                }
+            }
+
+            else -> Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.eror_occurred_while_showing_comments),
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
             }
         }
-        /*
-        * Row(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
+                .background(Color(0xffF1F1F1))
+                .navigationBarsPadding()
+                .heightIn(min = 60.dp)
+, verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
                 modifier = Modifier.size(32.dp),
@@ -122,6 +165,7 @@ fun RecipeCommentsBottomSheetContent(
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .fillMaxWidth()
+                    .heightIn(min = 60.dp)
                     .weight(1f),
                 value = textFieldValue,
                 onValueChange = {
@@ -129,12 +173,20 @@ fun RecipeCommentsBottomSheetContent(
                 },
                 singleLine = true
             ) {
-                if (textFieldValue.text.isEmpty()) {
-                    Text(
-                        text = "Tarif için bir yorum ekle",
-                        style = MaterialTheme.typography.labelSmall
-                    )
+                Box(contentAlignment = Alignment.CenterStart){
+                    if (textFieldValue.text.isEmpty()) {
+                        Text(
+                            text = "Tarif için bir yorum ekle",
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    } else {
+                        Text(
+                            text = textFieldValue.text,
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
                 }
+
             }
             IconButton(
                 modifier = Modifier
@@ -145,8 +197,6 @@ fun RecipeCommentsBottomSheetContent(
                 Icon(Icons.Default.Send, contentDescription = null, tint = md_theme_light_primary)
             }
         }
-        *
-        * */
     }
 }
 

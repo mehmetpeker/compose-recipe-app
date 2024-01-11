@@ -26,14 +26,15 @@ suspend inline fun <reified T : Any> HttpClient.safeRequest(
             }
             ApiError(
                 errorBody = errorResponseBody,
+                httpStatusCode = response.status.value
             )
         }
     } catch (exception: HttpExceptions) {
         ApiError(
             messageId = exception.errorStringResourceId,
             errorBody = exception.errorResponseBody,
-
-            )
+            httpStatusCode = exception.response.status.value
+        )
     } catch (e: Exception) {
         ApiError()
     } catch (e: Throwable) {

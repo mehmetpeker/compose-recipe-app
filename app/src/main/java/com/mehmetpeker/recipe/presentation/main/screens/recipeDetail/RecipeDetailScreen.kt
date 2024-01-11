@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -44,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -90,16 +90,22 @@ fun RecipeDetailScreen(
             RecipeCommentsBottomSheetContent(
                 modifier = Modifier
                     .requiredHeight(60.screenHeight),
+                uiState = uiState,
                 onSendClick = {
 
-                }
+                },
             )
         }
     ) {
         RecipeDetailContent(
             uiState,
-            onBookmark = {},
-            onLike = {},
+            onLike = {
+
+                recipeDetailViewModel.likeRecipe(
+                    recipeId,
+                    isAlreadyLiked = it
+                )
+            },
             onShare = {},
             onNavigateClick = {
                 navController.popBackStack()
@@ -122,8 +128,7 @@ fun RecipeDetailScreen(
 fun RecipeDetailContent(
     uiState: RecipeDetailViewModel.RecipeDetailUiState,
     onNavigateClick: () -> Unit = {},
-    onLike: () -> Unit = {},
-    onBookmark: () -> Unit = {},
+    onLike: (isAlreadyLiked: Boolean) -> Unit = {},
     onShare: () -> Unit = {},
     onComment: () -> Unit = {},
     onTryAgain: () -> Unit = {},
@@ -146,8 +151,10 @@ fun RecipeDetailContent(
                         .padding(horizontal = 20.dp)
                         .padding(bottom = 16.dp),
                     uiState.uiState,
-                    onLike = onLike,
-                    onBookmark = onBookmark, onShare = onShare, onComment = onComment
+                    onLike = {
+                        onLike(uiState.uiState.recipeDetail.recipe?.isCurrentUserLikeRecipe == true)
+                    },
+                    onShare = onShare, onComment = onComment
                 )
             }
 
@@ -185,37 +192,35 @@ private fun RecipeDetailSuccessContent(
     modifier: Modifier,
     uiState: RecipeDetailViewModel.RecipeDetailSuccessUiState,
     onLike: () -> Unit = {},
-    onBookmark: () -> Unit = {},
     onShare: () -> Unit = {},
     onComment: () -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier
     ) {
-        recipeTitle(uiState.recipeDetail.name ?: "")
+        recipeTitle(uiState.recipeDetail.recipe?.name ?: "")
         recipeImage(
             modifier = Modifier
                 .aspectRatio(16f / 9f)
                 .clip(RoundedCornerShape10Percent),
-            uiState.recipeDetail.photoUrl
+            uiState.recipeDetail.recipe?.photoUrl
         )
         recipeShareLikeAndFavoriteRow(
-            isLiked = true,
-            isBookmarked = true,
-            onBookmark = onBookmark,
+            isLiked = uiState.recipeDetail.recipe?.isCurrentUserLikeRecipe == true,
+            likeCount = uiState.recipeDetail.recipe?.likesCount ?: 0,
             onLike = onLike,
             onShare = onShare,
             onComment = onComment
         )
         recipePreparitionAndCookingTimeRow(
             modifier = Modifier.padding(top = 12.dp),
-            portion = uiState.recipeDetail.portions ?: 0,
-            cookingTime = uiState.recipeDetail.cookingTime ?: 0,
-            preparitionTime = uiState.recipeDetail.preparitionTime ?: 0
+            portion = uiState.recipeDetail.recipe?.portions ?: 0,
+            cookingTime = uiState.recipeDetail.recipe?.cookingTime ?: 0,
+            preparitionTime = uiState.recipeDetail.recipe?.preparitionTime ?: 0
         )
         recipeIngredients(
             modifier = Modifier.fillMaxSize(),
-            ingredients = uiState.recipeDetail.materials?.mapNotNull {
+            ingredients = uiState.recipeDetail.recipe?.materials?.mapNotNull {
                 MaterialsUiModel(
                     id = it?.id,
                     measurement = it?.measurement?.unit,
@@ -227,7 +232,7 @@ private fun RecipeDetailSuccessContent(
 
         recipeDescription(
             modifier = Modifier.padding(top = 10.dp),
-            description = uiState.recipeDetail.description ?: ""
+            description = uiState.recipeDetail.recipe?.description ?: ""
         )
     }
 }
@@ -305,27 +310,14 @@ private fun LazyListScope.recipeIngredients(
 
 private fun LazyListScope.recipeShareLikeAndFavoriteRow(
     isLiked: Boolean,
-    isBookmarked: Boolean,
+    likeCount: Int,
     onLike: () -> Unit,
-    onBookmark: () -> Unit,
     onShare: () -> Unit,
     onComment: () -> Unit,
 ) {
-    val likeIcon = when {
-        isLiked -> Icons.Default.Favorite
-        else -> Icons.Default.FavoriteBorder
-    }
-    val likeTint = when {
-        isLiked -> md_theme_light_primary
-        else -> Color(0xffABABAB)
-    }
-    val favoriteTint = when {
-        isBookmarked -> md_theme_light_primary
-        else -> Color(0xffABABAB)
-    }
-    val favoriteText = when {
-        isBookmarked -> R.string.saved
-        else -> R.string.save
+    val likeIconAndTintColor: Pair<ImageVector, Color> = when {
+        isLiked -> Pair(Icons.Default.Favorite, md_theme_light_primary)
+        else -> Pair(Icons.Default.FavoriteBorder, Color(0xffABABAB))
     }
     item {
         Row(
@@ -341,26 +333,14 @@ private fun LazyListScope.recipeShareLikeAndFavoriteRow(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    likeIcon,
+                    likeIconAndTintColor.first,
                     contentDescription = null,
-                    tint = likeTint,
+                    tint = likeIconAndTintColor.second,
                     modifier = Modifier.clickable { onLike() }
                 )
                 2.horizontalSpace()
                 Text(
-                    text = "326",
-                    style = MaterialTheme.typography.labelSmall.copy(Color(0xffABABAB))
-                )
-            }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.Star,
-                    contentDescription = null,
-                    tint = favoriteTint,
-                    modifier = Modifier.clickable { onBookmark() })
-                2.horizontalSpace()
-                Text(
-                    text = stringResource(favoriteText),
+                    text = likeCount.toString(),
                     style = MaterialTheme.typography.labelSmall.copy(Color(0xffABABAB))
                 )
             }
@@ -390,6 +370,11 @@ private fun LazyListScope.recipeShareLikeAndFavoriteRow(
             }
         }
     }
+}
+
+@Composable
+private fun RecipeUser(modifier: Modifier = Modifier) {
+
 }
 
 private fun LazyListScope.recipePreparitionAndCookingTimeRow(

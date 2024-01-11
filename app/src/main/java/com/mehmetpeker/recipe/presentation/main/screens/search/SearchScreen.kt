@@ -49,12 +49,14 @@ import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
 import com.mehmetpeker.recipe.common.SearchBar
 import com.mehmetpeker.recipe.data.entity.recipe.SearchRecipeResponseItem
+import com.mehmetpeker.recipe.util.NavArgumentConstants
+import com.mehmetpeker.recipe.util.RouteConstants
 import com.mehmetpeker.recipe.util.extension.horizontalSpace
 import com.mehmetpeker.recipe.util.extension.verticalSpace
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SearchScreen(navController: NavController, searchViewModel: SearchViewModel = koinViewModel()) {
+fun SearchScreen(mainNavController: NavController,navController: NavController, searchViewModel: SearchViewModel = koinViewModel()) {
     val uiState by searchViewModel.searchUiState.collectAsState()
     BaseScreen(viewModel = searchViewModel, navController = navController) {
         SearchScreenContent(
@@ -67,7 +69,12 @@ fun SearchScreen(navController: NavController, searchViewModel: SearchViewModel 
             onNavigationClick = {
                 navController.popBackStack()
             }, onRecipeDetailClick = {
-                // navigate to recipe detail
+                mainNavController.navigate(
+                    RouteConstants.ROUTE_RECIPE_DETAIL.replace(
+                        "{${NavArgumentConstants.RECIPE_ID}}",
+                        it.id.toString()
+                    )
+                )
             })
     }
 }

@@ -7,6 +7,8 @@ import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeReques
 import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeResponse
 import com.mehmetpeker.recipe.data.entity.recipe.getAllRecipe.GetAllRecipeResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.getLikedRecipe.GetLikedRecipesItem
+import com.mehmetpeker.recipe.data.entity.recipe.getRecipe.GetRecipeResponse
+import com.mehmetpeker.recipe.data.entity.recipe.likeRecipe.LikeRecipeResponse
 import com.mehmetpeker.recipe.data.entity.recipe.materials.GetAllMaterialsResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.uploadImage.UploadRecipeImageResponse
 import com.mehmetpeker.recipe.domain.repository.RecipeRepository
@@ -93,7 +95,7 @@ class RecipeRepositoryImpl(private val client: HttpClient) : RecipeRepository {
         }
     }
 
-    override suspend fun getRecipe(recipeId: String): ApiResult<GetAllRecipeResponseItem> {
+    override suspend fun getRecipe(recipeId: String): ApiResult<GetRecipeResponse> {
         return client.safeRequest {
             method = HttpMethod.Get
             url("api/recipe/get-recipe/$recipeId")
@@ -104,6 +106,23 @@ class RecipeRepositoryImpl(private val client: HttpClient) : RecipeRepository {
         return client.safeRequest {
             method = HttpMethod.Get
             url("api/recipe/get-liked-recipes")
+        }
+    }
+
+    override suspend fun likeRecipe(recipeId: String): ApiResult<LikeRecipeResponse> {
+        return client.safeRequest {
+            method = HttpMethod.Post
+            url("api/recipe/add-recipe-like?recipeId=$recipeId")
+        }
+    }
+
+    override suspend fun dislikeRecipe(
+        recipeId: String,
+        userId: String
+    ): ApiResult<LikeRecipeResponse> {
+        return client.safeRequest {
+            method = HttpMethod.Delete
+            url("api/recipe/delete-recipe-like?userId=$userId&recipeId=$recipeId")
         }
     }
 }

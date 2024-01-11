@@ -79,7 +79,7 @@ fun HomeScreen(navController: NavController) {
                 )
             }
             composable(RouteConstants.ROUTE_SEARCH_RECIPE) {
-                SearchScreen(navController = nestedNavController)
+                SearchScreen(mainNavController = navController,navController = nestedNavController)
             }
             composable(RouteConstants.ROUTE_FAVORITES) {
                 FavoritesScreen(
