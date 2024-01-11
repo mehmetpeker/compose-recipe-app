@@ -50,8 +50,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mehmetpeker.recipe.R
+import com.mehmetpeker.recipe.data.entity.recipe.recipeComments.RecipeCommentsResponseItem
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
-import com.mehmetpeker.recipe.presentation.main.screens.recipeDetail.RecipeDetailViewModel
 import com.mehmetpeker.recipe.util.SessionManager
 import org.koin.compose.koinInject
 
@@ -81,13 +81,12 @@ import org.koin.compose.koinInject
 fun RecipeCommentsBottomSheetContent(
     modifier: Modifier = Modifier,
     sessionManager: SessionManager = koinInject(),
-    onSendClick: () -> Unit,
-    uiState: RecipeDetailViewModel.RecipeDetailUiState
+    onSendClick: (comment: String) -> Unit,
+    commentList: List<RecipeCommentsResponseItem> = emptyList()
 ) {
     var textFieldValue by remember { mutableStateOf(TextFieldValue("")) }
     val lazyListState = rememberLazyListState()
     val flingBehavior = rememberSnapFlingBehavior(lazyListState)
-    val commentList = emptyList<String>()
     Column(
         modifier = modifier
     ) {
@@ -105,37 +104,35 @@ fun RecipeCommentsBottomSheetContent(
             thickness = 0.5.dp,
             color = Color.Gray
         )
-        when (uiState) {
-            is RecipeDetailViewModel.RecipeDetailUiState.Success -> {
-                if (commentList.isEmpty()) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Bu tarife hiç yorum yapılmadı ilk yorum yapan sen ol",
-                            style = MaterialTheme.typography.titleMedium,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f), flingBehavior = flingBehavior,
-                        state = lazyListState,
-                        contentPadding = PaddingValues(10.dp)
-                    ) {
-                        items(commentList) {
-                            CommentItem()
-                        }
-                    }
+        if (commentList.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Bu tarife hiç yorum yapılmadı ilk yorum yapan sen ol",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f), flingBehavior = flingBehavior,
+                state = lazyListState,
+                contentPadding = PaddingValues(10.dp),
+                reverseLayout = true
+            ) {
+                items(commentList) {
+                    CommentItem(it)
                 }
             }
-
+        }
+        /*
             else -> Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -146,74 +143,72 @@ fun RecipeCommentsBottomSheetContent(
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
                 )
-            }
-        }
-        Row(
+            }*/
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xffF1F1F1))
+            .navigationBarsPadding()
+            .heightIn(min = 60.dp), verticalAlignment = Alignment.CenterVertically
+    ) {
+        AsyncImage(
+            modifier = Modifier.size(32.dp),
+            model = sessionManager.user.profilePhotoUrl,
+            contentDescription = null
+        )
+        BasicTextField(
             modifier = Modifier
+                .padding(horizontal = 8.dp)
                 .fillMaxWidth()
-                .background(Color(0xffF1F1F1))
-                .navigationBarsPadding()
                 .heightIn(min = 60.dp)
-, verticalAlignment = Alignment.CenterVertically
+                .weight(1f),
+            value = textFieldValue,
+            onValueChange = {
+                textFieldValue = it
+            },
+            singleLine = true
         ) {
-            AsyncImage(
-                modifier = Modifier.size(32.dp),
-                model = sessionManager.user.profilePhotoUrl,
-                contentDescription = null
-            )
-            BasicTextField(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxWidth()
-                    .heightIn(min = 60.dp)
-                    .weight(1f),
-                value = textFieldValue,
-                onValueChange = {
-                    textFieldValue = it
-                },
-                singleLine = true
-            ) {
-                Box(contentAlignment = Alignment.CenterStart){
-                    if (textFieldValue.text.isEmpty()) {
-                        Text(
-                            text = "Tarif için bir yorum ekle",
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    } else {
-                        Text(
-                            text = textFieldValue.text,
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    }
+            Box(contentAlignment = Alignment.CenterStart) {
+                if (textFieldValue.text.isEmpty()) {
+                    Text(
+                        text = "Tarif için bir yorum ekle",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                } else {
+                    Text(
+                        text = textFieldValue.text,
+                        style = MaterialTheme.typography.labelMedium
+                    )
                 }
+            }
 
-            }
-            IconButton(
-                modifier = Modifier
-                    .requiredSize(24.dp)
-                    .alpha(if (textFieldValue.text.isNotEmpty()) 1f else 0f),
-                onClick = onSendClick
-            ) {
-                Icon(Icons.Default.Send, contentDescription = null, tint = md_theme_light_primary)
-            }
+        }
+        IconButton(
+            modifier = Modifier
+                .requiredSize(24.dp)
+                .alpha(if (textFieldValue.text.isNotEmpty()) 1f else 0f),
+            onClick = { onSendClick(textFieldValue.text) }
+        ) {
+            Icon(Icons.Default.Send, contentDescription = null, tint = md_theme_light_primary)
         }
     }
 }
 
 @Composable
-fun CommentItem() {
+fun CommentItem(comment: RecipeCommentsResponseItem) {
     Row(Modifier.padding(top = 8.dp)) {
         AsyncImage(
-            model = "https://pbs.twimg.com/profile_images/1423037075264315404/9Tyzo0Lw_400x400.jpg",
+            model = comment.user?.profilePhoto,
             contentDescription = null,
             modifier = Modifier
                 .size(32.dp)
                 .clip(CircleShape),
         )
         Column(modifier = Modifier.padding(horizontal = 10.dp)) {
-            Text(text = "mehmetpeker", style = MaterialTheme.typography.titleSmall)
+            Text(text = comment.user?.username ?: "-", style = MaterialTheme.typography.titleSmall)
             Text(
-                text = "Harika bir tarif,bu uygulamayı yapanlara teşekkür ederim böyle tariflere erişebiliyoruz <3 <3",
+                text = comment.content ?: "-",
                 style = MaterialTheme.typography.labelSmall.copy(color = Color.DarkGray),
                 modifier = Modifier.padding(top = 5.dp)
             )

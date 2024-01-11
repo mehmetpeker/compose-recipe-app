@@ -27,6 +27,7 @@ import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.presentation.main.component.RecipeBottomNavigationBar
 import com.mehmetpeker.recipe.presentation.main.screens.favorites.FavoritesScreen
 import com.mehmetpeker.recipe.presentation.main.screens.homepage.HomepageScreen
+import com.mehmetpeker.recipe.presentation.main.screens.profile.ProfileScreen
 import com.mehmetpeker.recipe.presentation.main.screens.search.SearchScreen
 import com.mehmetpeker.recipe.util.RouteConstants
 
@@ -88,7 +89,7 @@ fun HomeScreen(navController: NavController) {
                 )
             }
             composable(RouteConstants.ROUTE_PROFILE) {
-                Text(text = "Profile")
+                ProfileScreen(mainNavController = navController, nestedNavController = nestedNavController )
             }
         }
     }

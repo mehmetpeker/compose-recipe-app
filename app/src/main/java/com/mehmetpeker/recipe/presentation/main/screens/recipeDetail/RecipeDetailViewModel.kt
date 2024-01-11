@@ -1,8 +1,13 @@
 package com.mehmetpeker.recipe.presentation.main.screens.recipeDetail
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.mehmetpeker.recipe.base.BaseViewModel
 import com.mehmetpeker.recipe.data.entity.recipe.getRecipe.GetRecipeResponse
+import com.mehmetpeker.recipe.data.entity.recipe.recipeComments.RecipeCommentsResponseItem
+import com.mehmetpeker.recipe.data.entity.recipe.recipeComments.addComment.AddCommentRequest
 import com.mehmetpeker.recipe.data.repository.recipe.RecipeRepositoryImpl
 import com.mehmetpeker.recipe.util.ApiError
 import com.mehmetpeker.recipe.util.ApiSuccess
@@ -19,9 +24,12 @@ class RecipeDetailViewModel(
     private val sessionManager: SessionManager
 ) : BaseViewModel() {
 
+
     data class RecipeDetailSuccessUiState(
         val recipeDetail: GetRecipeResponse
     )
+
+    var recipeComments by mutableStateOf(emptyList<RecipeCommentsResponseItem>())
 
     sealed class RecipeDetailUiState {
         data object LOADING : RecipeDetailUiState()
@@ -52,11 +60,9 @@ class RecipeDetailViewModel(
     }
 
     fun likeRecipe(recipeId: String, isAlreadyLiked: Boolean) = viewModelScope.launch {
-        //TODO login olduktan sonra servisin userId bilgisi sağlaması gerekli
         val response = withContext(recipeDispatcher.io) {
             if (isAlreadyLiked) recipeRepositoryImpl.dislikeRecipe(
-                recipeId,
-                "1"
+                recipeId
             ) else recipeRepositoryImpl.likeRecipe(recipeId)
         }
         when (response) {
@@ -79,5 +85,31 @@ class RecipeDetailViewModel(
             else -> Unit
         }
 
+    }
+
+    fun getCommentsByRecipe(recipeId: String) = viewModelScope.launch {
+        val response = withContext(recipeDispatcher.io) {
+            recipeRepositoryImpl.getCommentsByRecipe(recipeId)
+        }
+        when (response) {
+            is ApiSuccess -> {
+                recipeComments = response.data
+            }
+
+            else -> Unit
+        }
+    }
+
+    fun addComment(recipeId: String, comment: String) = viewModelScope.launch {
+        val response = withContext(recipeDispatcher.io) {
+            recipeRepositoryImpl.addComment(AddCommentRequest(recipeId, comment))
+        }
+        when (response) {
+            is ApiSuccess -> {
+                getCommentsByRecipe(recipeId)
+            }
+
+            else -> Unit
+        }
     }
 }

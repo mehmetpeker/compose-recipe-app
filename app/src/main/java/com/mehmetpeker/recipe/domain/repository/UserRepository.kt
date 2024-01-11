@@ -1,5 +1,7 @@
 package com.mehmetpeker.recipe.domain.repository
 
+import com.mehmetpeker.recipe.data.entity.user.userDetail.UserDetailResponse
+import com.mehmetpeker.recipe.util.ApiResult
 import com.mehmetpeker.recipe.util.User
 
 interface UserRepository {
@@ -15,4 +17,6 @@ interface UserRepository {
     suspend fun setRememberLogin(remember: Boolean)
     suspend fun getRememberLogin(): Boolean?
     suspend fun logOut()
+
+    suspend fun getProfileInformation(): ApiResult<UserDetailResponse>
 }

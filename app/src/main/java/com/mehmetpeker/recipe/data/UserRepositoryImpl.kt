@@ -1,12 +1,18 @@
 package com.mehmetpeker.recipe.data
 
+import com.mehmetpeker.recipe.data.entity.user.userDetail.UserDetailResponse
 import com.mehmetpeker.recipe.data.local.preferences.RecipePreferences
 import com.mehmetpeker.recipe.domain.repository.UserRepository
+import com.mehmetpeker.recipe.util.ApiResult
 import com.mehmetpeker.recipe.util.User
+import com.mehmetpeker.recipe.util.safeRequest
+import io.ktor.client.HttpClient
+import io.ktor.client.request.url
+import io.ktor.http.HttpMethod
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class UserRepositoryImpl : UserRepository, KoinComponent {
+class UserRepositoryImpl(private val httpClient: HttpClient) : UserRepository, KoinComponent {
     private val preferences: RecipePreferences by inject()
 
     override suspend fun retrieveUserData(): User {
@@ -66,6 +72,13 @@ class UserRepositoryImpl : UserRepository, KoinComponent {
             profilePhotoUrl = ""
             isUserLoggedIn = false
             rememberLogin = false
+        }
+    }
+
+    override suspend fun getProfileInformation(): ApiResult<UserDetailResponse> {
+        return httpClient.safeRequest {
+            method = HttpMethod.Get
+            url("api/user/get-user-info")
         }
     }
 }

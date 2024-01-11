@@ -10,7 +10,7 @@ import org.koin.dsl.module
 
 val appModule = module {
     single { SessionManager(get()) }
-    single { UserRepositoryImpl() }
+    single { UserRepositoryImpl(get()) }
     single { RecipePreferences(androidContext()) }
     single { RecipeDispatchers }
     factory { RecipeRepositoryImpl(get()) }

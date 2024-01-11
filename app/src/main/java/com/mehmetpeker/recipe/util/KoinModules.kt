@@ -9,6 +9,7 @@ import com.mehmetpeker.recipe.presentation.authentication.resetPassword.resetPas
 import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.createRecipeModule
 import com.mehmetpeker.recipe.presentation.main.screens.favorites.favoritesModule
 import com.mehmetpeker.recipe.presentation.main.screens.homepage.homeModule
+import com.mehmetpeker.recipe.presentation.main.screens.profile.profileModule
 import com.mehmetpeker.recipe.presentation.main.screens.recipeDetail.recipeDetailModule
 import com.mehmetpeker.recipe.presentation.main.screens.search.searchModule
 import com.mehmetpeker.recipe.presentation.onboarding.onboardingModule
@@ -26,6 +27,7 @@ object KoinModules {
         onboardingModule,
         recipeDetailModule,
         createRecipeModule,
-        favoritesModule
+        favoritesModule,
+        profileModule
     )
 }

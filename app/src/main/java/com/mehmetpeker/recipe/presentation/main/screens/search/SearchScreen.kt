@@ -24,10 +24,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -56,26 +60,41 @@ import com.mehmetpeker.recipe.util.extension.verticalSpace
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SearchScreen(mainNavController: NavController,navController: NavController, searchViewModel: SearchViewModel = koinViewModel()) {
+fun SearchScreen(
+    mainNavController: NavController,
+    navController: NavController,
+    searchViewModel: SearchViewModel = koinViewModel()
+) {
     val uiState by searchViewModel.searchUiState.collectAsState()
+    val radioOptions = listOf("Malzemeleri içersin", "Malzemeleri içermesin")
+    var selectedOption by remember { mutableStateOf(radioOptions[0]) }
     BaseScreen(viewModel = searchViewModel, navController = navController) {
         SearchScreenContent(
             uiState = uiState,
             onSearchClick = {
                 searchViewModel.searchRecipe(it)
-            }, onSearchTextFieldValueChange = {
+            },
+            onSearchTextFieldValueChange = {
                 searchViewModel.changeTextFieldValue(it)
-            }, searchTextFieldValue = searchViewModel.searchTextFieldValue.value,
+            },
+            searchTextFieldValue = searchViewModel.searchTextFieldValue.value,
             onNavigationClick = {
                 navController.popBackStack()
-            }, onRecipeDetailClick = {
+            },
+            onRecipeDetailClick = {
                 mainNavController.navigate(
                     RouteConstants.ROUTE_RECIPE_DETAIL.replace(
                         "{${NavArgumentConstants.RECIPE_ID}}",
                         it.id.toString()
                     )
                 )
-            })
+            },
+            filterOptions = radioOptions,
+            selectedOption = selectedOption,
+            onClick = {
+                selectedOption = it
+            }
+        )
     }
 }
 
@@ -86,9 +105,11 @@ fun SearchScreenContent(
     onSearchTextFieldValueChange: ((textFieldValue: TextFieldValue) -> Unit)? = null,
     onSearchClick: ((searchText: String) -> Unit)? = null,
     onNavigationClick: (() -> Unit)? = null,
-    onRecipeDetailClick: ((SearchRecipeResponseItem) -> Unit)? = null
+    onRecipeDetailClick: ((SearchRecipeResponseItem) -> Unit)? = null,
+    filterOptions: List<String>,
+    selectedOption: String,
+    onClick: ((String) -> Unit)?,
 ) {
-
     EdgeToEdgeScaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -118,6 +139,21 @@ fun SearchScreenContent(
                     onSearchClick?.invoke(searchText)
                 }
             )
+            4.verticalSpace()
+            Text(text = "Malzemeye Göre Filtrele", style = MaterialTheme.typography.titleMedium)
+            filterOptions.forEach { filterName ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = (filterName == selectedOption),
+                        onClick = { onClick?.invoke(filterName) }
+                    )
+                    Text(
+                        text = filterName,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+            }
             when (uiState) {
                 is SearchViewModel.SearchUiState.Idle -> Box(modifier = Modifier.fillMaxSize())
                 is SearchViewModel.SearchUiState.NotFound -> EmptySearchScreenContent(modifier = Modifier.fillMaxSize())

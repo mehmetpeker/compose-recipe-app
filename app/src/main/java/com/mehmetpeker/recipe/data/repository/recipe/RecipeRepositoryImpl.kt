@@ -10,6 +10,9 @@ import com.mehmetpeker.recipe.data.entity.recipe.getLikedRecipe.GetLikedRecipesI
 import com.mehmetpeker.recipe.data.entity.recipe.getRecipe.GetRecipeResponse
 import com.mehmetpeker.recipe.data.entity.recipe.likeRecipe.LikeRecipeResponse
 import com.mehmetpeker.recipe.data.entity.recipe.materials.GetAllMaterialsResponseItem
+import com.mehmetpeker.recipe.data.entity.recipe.recipeComments.RecipeCommentsResponseItem
+import com.mehmetpeker.recipe.data.entity.recipe.recipeComments.addComment.AddCommentRequest
+import com.mehmetpeker.recipe.data.entity.recipe.recipeComments.addComment.AddCommentResponse
 import com.mehmetpeker.recipe.data.entity.recipe.uploadImage.UploadRecipeImageResponse
 import com.mehmetpeker.recipe.domain.repository.RecipeRepository
 import com.mehmetpeker.recipe.util.ApiError
@@ -117,12 +120,28 @@ class RecipeRepositoryImpl(private val client: HttpClient) : RecipeRepository {
     }
 
     override suspend fun dislikeRecipe(
-        recipeId: String,
-        userId: String
+        recipeId: String
     ): ApiResult<LikeRecipeResponse> {
         return client.safeRequest {
             method = HttpMethod.Delete
-            url("api/recipe/delete-recipe-like?userId=$userId&recipeId=$recipeId")
+            url("api/recipe/delete-recipe-like?&recipeId=$recipeId")
+        }
+    }
+
+    override suspend fun getCommentsByRecipe(recipeId: String): ApiResult<List<RecipeCommentsResponseItem>> {
+        return client.safeRequest {
+            method = HttpMethod.Get
+            url("api/comment/get-comments-by-recipe?recipeId=$recipeId")
+        }
+    }
+
+    override suspend fun addComment(
+        addCommentRequest: AddCommentRequest
+    ): ApiResult<AddCommentResponse> {
+        return client.safeRequest {
+            method = HttpMethod.Post
+            url("api/comment/add-comment")
+            setBody(addCommentRequest)
         }
     }
 }

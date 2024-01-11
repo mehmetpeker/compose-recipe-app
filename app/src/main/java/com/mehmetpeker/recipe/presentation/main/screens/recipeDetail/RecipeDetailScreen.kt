@@ -2,6 +2,8 @@
 
 package com.mehmetpeker.recipe.presentation.main.screens.recipeDetail
 
+import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -75,11 +78,13 @@ fun RecipeDetailScreen(
     recipeId: String,
     recipeDetailViewModel: RecipeDetailViewModel = koinViewModel()
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
     val uiState by recipeDetailViewModel.recipeDetailUiState.collectAsStateWithLifecycle()
     LaunchedEffect(recipeId) {
         recipeDetailViewModel.getRecipeDetail(recipeId = recipeId)
+        recipeDetailViewModel.getCommentsByRecipe(recipeId = recipeId)
     }
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -90,9 +95,9 @@ fun RecipeDetailScreen(
             RecipeCommentsBottomSheetContent(
                 modifier = Modifier
                     .requiredHeight(60.screenHeight),
-                uiState = uiState,
+                commentList = recipeDetailViewModel.recipeComments,
                 onSendClick = {
-
+                    recipeDetailViewModel.addComment(recipeId, it)
                 },
             )
         }
@@ -106,7 +111,24 @@ fun RecipeDetailScreen(
                     isAlreadyLiked = it
                 )
             },
-            onShare = {},
+            onShare = {
+                (context as? Activity)?.let {
+                    val sendIntent: Intent = Intent().apply {
+                        val destination = "https://lezzet-tarifleri.com/recipes/$recipeId"
+                        action = Intent.ACTION_SEND
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            "Bu harika tarife Lezzet Tarifleri uygulamasında göz at \n\n $destination"
+                        )
+                        type = "text/plain"
+                    }
+
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    it.startActivity(shareIntent)
+                }
+
+
+            },
             onNavigateClick = {
                 navController.popBackStack()
             },
@@ -331,7 +353,13 @@ private fun LazyListScope.recipeShareLikeAndFavoriteRow(
                 .padding(vertical = 12.dp, horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Icon(
                     likeIconAndTintColor.first,
                     contentDescription = null,
@@ -344,7 +372,13 @@ private fun LazyListScope.recipeShareLikeAndFavoriteRow(
                     style = MaterialTheme.typography.labelSmall.copy(Color(0xffABABAB))
                 )
             }
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Icon(
                     Icons.Default.Share,
                     contentDescription = null,
@@ -356,7 +390,13 @@ private fun LazyListScope.recipeShareLikeAndFavoriteRow(
                     style = MaterialTheme.typography.labelSmall.copy(Color(0xffABABAB))
                 )
             }
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Icon(
                     painterResource(id = R.drawable.baseline_comment_24),
                     contentDescription = null,
