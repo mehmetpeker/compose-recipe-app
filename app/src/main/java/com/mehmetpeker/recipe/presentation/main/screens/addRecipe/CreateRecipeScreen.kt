@@ -2,7 +2,6 @@
 
 package com.mehmetpeker.recipe.presentation.main.screens.addRecipe
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -134,7 +133,6 @@ fun CreateRecipeScreenContent(
                     .fillMaxWidth()
                     .navigationBarsPadding()
                     .heightIn(min = 56.dp), onClick = {
-                    Log.d("Recipe", "Create Recipe")
                     viewModel.createRecipe()
                 }) {
                 Text(
@@ -757,7 +755,8 @@ private fun MeasurementItem(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        val newIngredient = material.copy(name = item.name, id = item.id)
+                                        val newIngredient =
+                                            material.copy(name = item.name, id = item.id)
                                         onIngredientChanged(index, newIngredient)
                                         isDialogExpanded = false
                                     },

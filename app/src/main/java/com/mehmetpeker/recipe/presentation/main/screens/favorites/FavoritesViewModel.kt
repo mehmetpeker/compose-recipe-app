@@ -19,7 +19,6 @@ class FavoritesViewModel(
     private val _likedRecipes = MutableStateFlow<List<RecipeItemUiModel>?>(null)
     val likedRecipes = _likedRecipes
     fun getFavoritesRecipe() = viewModelScope.launch {
-        showProgress()
         val response = withContext(recipeDispatchers.io) {
             recipeRepositoryImpl.getLikedRecipes()
         }
@@ -38,6 +37,5 @@ class FavoritesViewModel(
                 _error.value = response
             }
         }
-        hideProgress()
     }
 }

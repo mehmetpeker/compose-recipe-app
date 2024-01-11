@@ -14,18 +14,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -46,6 +52,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.mehmetpeker.recipe.R
@@ -53,6 +61,8 @@ import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
 import com.mehmetpeker.recipe.common.SearchBar
 import com.mehmetpeker.recipe.data.entity.recipe.SearchRecipeResponseItem
+import com.mehmetpeker.recipe.designsystem.theme.RecipeTheme
+import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.uiModel.MaterialsUiModel
 import com.mehmetpeker.recipe.util.NavArgumentConstants
 import com.mehmetpeker.recipe.util.RouteConstants
 import com.mehmetpeker.recipe.util.extension.horizontalSpace
@@ -68,6 +78,8 @@ fun SearchScreen(
     val uiState by searchViewModel.searchUiState.collectAsState()
     val radioOptions = listOf("Malzemeleri içersin", "Malzemeleri içermesin")
     var selectedOption by remember { mutableStateOf(radioOptions[0]) }
+    val materials by searchViewModel.materials.collectAsStateWithLifecycle()
+    val selectedMaterials by searchViewModel.selectedMaterials.collectAsStateWithLifecycle()
     BaseScreen(viewModel = searchViewModel, navController = navController) {
         SearchScreenContent(
             uiState = uiState,
@@ -93,7 +105,9 @@ fun SearchScreen(
             selectedOption = selectedOption,
             onClick = {
                 selectedOption = it
-            }
+            },
+            materials = materials,
+            selectedMaterials = selectedMaterials
         )
     }
 }
@@ -109,7 +123,14 @@ fun SearchScreenContent(
     filterOptions: List<String>,
     selectedOption: String,
     onClick: ((String) -> Unit)?,
+    selectedMaterials: List<MaterialsUiModel>,
+    materials: List<MaterialsUiModel>,
+    onAddMaterialClick: (MaterialsUiModel) -> Unit = {},
+    onRemoveMaterialClick: (MaterialsUiModel) -> Unit = {},
 ) {
+    var isDialogExpanded by remember {
+        mutableStateOf(false)
+    }
     EdgeToEdgeScaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -152,6 +173,59 @@ fun SearchScreenContent(
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(start = 4.dp)
                     )
+                }
+            }
+            Row(Modifier.fillMaxWidth()) {
+                LazyRow(modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)) {
+                    items(selectedMaterials) {
+                        Row {
+                            Text(
+                                text = it.name ?: "-",
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                            2.horizontalSpace()
+                            IconButton(onClick = { onRemoveMaterialClick(it) }) {
+                                Icon(Icons.Default.Clear, contentDescription = null)
+                            }
+                        }
+                    }
+                }
+                TextButton(onClick = { isDialogExpanded = true }) {
+                    Text(text = "Malzeme Seç", style = MaterialTheme.typography.titleMedium)
+                }
+            }
+            if (isDialogExpanded) {
+                Dialog(
+                    onDismissRequest = { isDialogExpanded = false },
+                ) {
+                    RecipeTheme {
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                        ) {
+                            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+                                itemsIndexed(materials) { materialIndex, item ->
+                                    Text(
+                                        text = item.name ?: "",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable {
+                                                onAddMaterialClick(item)
+                                                isDialogExpanded = false
+                                            },
+                                        textAlign = TextAlign.Center,
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontWeight = FontWeight.Normal
+                                        )
+                                    )
+                                    if (materialIndex < materials.lastIndex) {
+                                        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             when (uiState) {
