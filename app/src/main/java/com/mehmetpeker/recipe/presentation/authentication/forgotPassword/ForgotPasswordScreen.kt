@@ -171,11 +171,11 @@ fun InitialContent(
 @Composable
 fun SuccessContent(modifier: Modifier = Modifier, onOkClick: () -> Unit) {
     Column(
-        modifier = modifier,
+        modifier = modifier.padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = stringResource(id = R.string.forgot_password_email_send_successfuly))
+        Text(text = stringResource(id = R.string.forgot_password_email_send_successfuly), textAlign = TextAlign.Center)
         8.verticalSpace()
         RecipeRoundedButton(
             modifier = Modifier
