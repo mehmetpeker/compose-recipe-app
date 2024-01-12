@@ -21,7 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -59,18 +59,15 @@ import com.mehmetpeker.recipe.designsystem.theme.RoundedCornerShape10Percent
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.util.NavArgumentConstants
 import com.mehmetpeker.recipe.util.RouteConstants
-import com.mehmetpeker.recipe.util.SessionManager
 import com.mehmetpeker.recipe.util.extension.toFile
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 import java.io.File
 
 @Composable
 fun ProfileScreen(
     mainNavController: NavController,
     nestedNavController: NavController,
-    profileViewModel: ProfileViewModel = koinViewModel(),
-    sessionManager: SessionManager = koinInject(),
+    profileViewModel: ProfileViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val launcher =
@@ -110,12 +107,8 @@ fun ProfileScreen(
                     )
                 )
             },
-            onChangePhotoClick = {
-                launcher.launch(
-                    PickVisualMediaRequest(
-                        mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
-                    )
-                )
+            onDeletePhotoClick = {
+                profileViewModel.deleteUserPhoto()
             }
         )
     }
@@ -130,7 +123,7 @@ fun ProfileScreenContent(
     onRecipeClick: (Recipe?) -> Unit = {},
     onUpdatePasswordClick: () -> Unit = {},
     onUploadPhotoClick: () -> Unit = {},
-    onChangePhotoClick: () -> Unit = {},
+    onDeletePhotoClick: () -> Unit = {},
 ) {
     EdgeToEdgeScaffold(
         topBar = {
@@ -153,7 +146,7 @@ fun ProfileScreenContent(
                     onRecipeClick = onRecipeClick,
                     onUpdatePasswordClick = onUpdatePasswordClick,
                     onUploadPhotoClick = onUploadPhotoClick,
-                    onChangePhotoClick = onChangePhotoClick
+                    onDeletePhotoClick = onDeletePhotoClick
                 )
 
                 else -> ProfileSuccessContent(
@@ -162,7 +155,7 @@ fun ProfileScreenContent(
                     onRecipeClick = onRecipeClick,
                     onUpdatePasswordClick = onUpdatePasswordClick,
                     onUploadPhotoClick = onUploadPhotoClick,
-                    onChangePhotoClick = onChangePhotoClick
+                    onDeletePhotoClick = onDeletePhotoClick
                 )
             }
         }
@@ -174,7 +167,7 @@ private fun ProfileSuccessContent(
     modifier: Modifier = Modifier,
     uiState: ProfileViewModel.UiState,
     onUploadPhotoClick: () -> Unit = {},
-    onChangePhotoClick: () -> Unit = {},
+    onDeletePhotoClick: () -> Unit = {},
     onRecipeClick: (Recipe?) -> Unit = {},
     onUpdatePasswordClick: () -> Unit = {}
 
@@ -194,9 +187,9 @@ private fun ProfileSuccessContent(
             modifier = Modifier
                 .size(120.dp)
                 .align(Alignment.CenterHorizontally),
-            profilePhotoUrl = uiState.profilePhotoUrl,
+            profilePhotoUrl = uiState.profilePhotoUrls.first()?.url ?: "",
             onUploadPhotoClick = onUploadPhotoClick,
-            onChangePhotoClick = onChangePhotoClick
+            onDeletePhotoClick = onDeletePhotoClick
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -300,7 +293,7 @@ private fun ProfileImage(
     selectedFile: File? = null,
     uploadedUrl: String? = null,
     onUploadPhotoClick: () -> Unit = {},
-    onChangePhotoClick: () -> Unit = {},
+    onDeletePhotoClick: () -> Unit = {},
 ) {
     Box(modifier = modifier) {
         SubcomposeAsyncImage(
@@ -328,9 +321,9 @@ private fun ProfileImage(
             }
         } else {
 
-            IconButton(modifier = Modifier.align(Alignment.TopEnd), onClick = onChangePhotoClick) {
+            IconButton(modifier = Modifier.align(Alignment.TopEnd), onClick = onDeletePhotoClick) {
                 Icon(
-                    Icons.Default.Edit,
+                    Icons.Default.Delete,
                     tint = md_theme_light_primary,
                     contentDescription = null
                 )

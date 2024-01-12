@@ -132,18 +132,6 @@ fun RecipeCommentsBottomSheetContent(
                 }
             }
         }
-        /*
-            else -> Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.eror_occurred_while_showing_comments),
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center
-                )
-            }*/
     }
     Row(
         modifier = Modifier
@@ -188,7 +176,10 @@ fun RecipeCommentsBottomSheetContent(
             modifier = Modifier
                 .requiredSize(24.dp)
                 .alpha(if (textFieldValue.text.isNotEmpty()) 1f else 0f),
-            onClick = { onSendClick(textFieldValue.text) }
+            onClick = {
+                onSendClick(textFieldValue.text)
+                textFieldValue = TextFieldValue("")
+            }
         ) {
             Icon(Icons.Default.Send, contentDescription = null, tint = md_theme_light_primary)
         }

@@ -1,6 +1,7 @@
 package com.mehmetpeker.recipe.data
 
 import com.mehmetpeker.recipe.data.entity.ErrorResponseBody
+import com.mehmetpeker.recipe.data.entity.user.deletePhotoResponse.DeleteProfilePhotoResponse
 import com.mehmetpeker.recipe.data.entity.user.uploadProfilePhoto.UploadProfilePhotoResponse
 import com.mehmetpeker.recipe.data.entity.user.userDetail.UserDetailResponse
 import com.mehmetpeker.recipe.data.local.preferences.RecipePreferences
@@ -120,6 +121,13 @@ class UserRepositoryImpl(private val httpClient: HttpClient) : UserRepository, K
             }
         } catch (e: Exception) {
             ApiError()
+        }
+    }
+
+    override suspend fun deleteProfilePhoto(photoId: Int): ApiResult<DeleteProfilePhotoResponse> {
+        return httpClient.safeRequest {
+            method = HttpMethod.Delete
+            url("/api/user/delete-photo/$photoId")
         }
     }
 }

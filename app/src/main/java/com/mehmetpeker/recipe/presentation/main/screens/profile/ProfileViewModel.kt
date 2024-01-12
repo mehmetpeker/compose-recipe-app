@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mehmetpeker.recipe.base.BaseViewModel
 import com.mehmetpeker.recipe.data.UserRepositoryImpl
 import com.mehmetpeker.recipe.data.entity.recipe.getRecipe.Recipe
+import com.mehmetpeker.recipe.data.entity.user.userDetail.Photo
 import com.mehmetpeker.recipe.util.ApiError
 import com.mehmetpeker.recipe.util.ApiSuccess
 import com.mehmetpeker.recipe.util.RecipeDispatchers
@@ -32,7 +33,7 @@ class ProfileViewModel(
     }
 
     data class UiState(
-        val profilePhotoUrl: String = "",
+        val profilePhotoUrls: List<Photo?> = emptyList(),
         val userEmail: String = "",
         val userName: String = "",
         val userRecipes: List<Recipe?> = emptyList(),
@@ -56,7 +57,7 @@ class ProfileViewModel(
             is ApiSuccess -> {
                 _uiState.update {
                     it.copy(
-                        profilePhotoUrl = response.data.profilePhoto ?: "",
+                        profilePhotoUrls = response.data.photos ?: emptyList(),
                         userEmail = response.data.email ?: "",
                         userName = response.data.username ?: "",
                         userRecipes = response.data.recipes ?: emptyList(),
@@ -87,9 +88,36 @@ class ProfileViewModel(
             is ApiSuccess -> {
                 uploadedImageUrl = response.data.url ?: ""
                 imageUploadStatus = ImageUploadStatus.SUCCESS
+                _uiState.update {
+                    it.copy(
+                        profilePhotoUrls = listOf(
+                            Photo(
+                                id = response.data.id,
+                                url = response.data.url
+                            )
+                        )
+                    )
+                }
             }
 
             else -> imageUploadStatus = ImageUploadStatus.FAILED
+        }
+    }
+
+    fun deleteUserPhoto() = viewModelScope.launch {
+        val currentProfilePhotoId = _uiState.value.profilePhotoUrls.first()?.id ?: return@launch
+        val response = withContext(recipeDispatchers.io) {
+            userRepositoryImpl.deleteProfilePhoto(currentProfilePhotoId)
+        }
+        when (response) {
+            is ApiSuccess -> {
+                selectedFile = null
+                uploadedImageUrl = ""
+                imageUploadStatus = ImageUploadStatus.IDLE
+                userRepositoryImpl.setProfilePhotoUrl("")
+            }
+
+            else -> Unit
         }
     }
 }
