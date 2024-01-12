@@ -505,7 +505,7 @@ private fun IngredientsItem(model: MaterialsUiModel) {
                 .weight(1f)
         )
         Text(
-            text = model.amount.toString(),
+            text = "${model.amount} - ${model.measurement ?: ""}",
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier
                 .fillMaxWidth()

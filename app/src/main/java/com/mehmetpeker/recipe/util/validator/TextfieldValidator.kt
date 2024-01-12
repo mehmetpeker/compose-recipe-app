@@ -18,7 +18,7 @@ object TextFieldValidator {
     private const val MAX_RECIPE_NAME_LENGTH = 50
 
     private const val MIN_RECIPE_DESCRIPTION_LENGTH = 3
-    private const val MAX_RECIPE_DESCRIPTION_LENGTH = 2000
+    private const val MAX_RECIPE_DESCRIPTION_LENGTH = 10000
 
     fun validateUsername(username: String): ValidationResult {
         val errors = mutableListOf<String>()
@@ -81,7 +81,7 @@ object TextFieldValidator {
             )
         }
 
-        if (recipeDescription.length < MIN_RECIPE_NAME_LENGTH || recipeDescription.length > MAX_RECIPE_NAME_LENGTH) {
+        if (recipeDescription.length < MIN_RECIPE_DESCRIPTION_LENGTH || recipeDescription.length > MAX_RECIPE_DESCRIPTION_LENGTH) {
             errors.add(
                 appContext.getString(
                     R.string.error_create_recipe_desc_invalid_length,

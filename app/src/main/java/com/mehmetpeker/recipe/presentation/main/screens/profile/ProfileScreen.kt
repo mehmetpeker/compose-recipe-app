@@ -187,7 +187,7 @@ private fun ProfileSuccessContent(
             modifier = Modifier
                 .size(120.dp)
                 .align(Alignment.CenterHorizontally),
-            profilePhotoUrl = uiState.profilePhotoUrls.first()?.url ?: "",
+            profilePhotoUrl = uiState.profilePhotoUrls.firstOrNull()?.url ?: "",
             onUploadPhotoClick = onUploadPhotoClick,
             onDeletePhotoClick = onDeletePhotoClick
         )

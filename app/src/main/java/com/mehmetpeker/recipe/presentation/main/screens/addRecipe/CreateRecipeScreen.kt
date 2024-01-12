@@ -675,6 +675,13 @@ private fun MeasurementItem(
     var isDialogExpanded by remember {
         mutableStateOf(false)
     }
+    val measurementUnits = listOf(
+        "Adet",
+        "Gram",
+        "Kilogram",
+        "Litre",
+        "Mililitre"
+    )
     Row(
         modifier = modifier
             .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
@@ -717,18 +724,15 @@ private fun MeasurementItem(
                     selection = TextRange(material.amount.toString().length)
                 ),
                 onValueChange = {
-                    val newIngredient = material.copy(amount = it.text.toIntOrNull() ?: 0)
+                    val unit =
+                        if (material.measurement.isNullOrBlank()) measurementUnits.first() else material.measurement
+                    val newIngredient =
+                        material.copy(amount = it.text.toIntOrNull() ?: 0, measurement = unit)
                     onIngredientChanged(index, newIngredient)
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 type = IngredientTextFieldType.Unit(
-                    listOf(
-                        "Adet",
-                        "Gram",
-                        "Kilogram",
-                        "Litre",
-                        "Mililitre"
-                    )
+                    measurementUnits
                 ),
                 onUnitSelected = { selectedUnit ->
                     val newIngredient = material.copy(measurement = selectedUnit)
@@ -756,7 +760,7 @@ private fun MeasurementItem(
                                     .fillMaxWidth()
                                     .clickable {
                                         val newIngredient =
-                                            material.copy(name = item.name, id = item.id)
+                                            material.copy(name = item.name, id = item.id, measurement = measurementUnits.first())
                                         onIngredientChanged(index, newIngredient)
                                         isDialogExpanded = false
                                     },
@@ -775,3 +779,4 @@ private fun MeasurementItem(
         }
     }
 }
+

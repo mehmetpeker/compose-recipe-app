@@ -1,18 +1,19 @@
 package com.mehmetpeker.recipe.data.repository.recipe
 
 import com.mehmetpeker.recipe.data.entity.ErrorResponseBody
-import com.mehmetpeker.recipe.data.entity.recipe.SearchRecipeResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.categories.GetAllCategoriesItem
 import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeRequest
 import com.mehmetpeker.recipe.data.entity.recipe.createRecipe.CreateRecipeResponse
 import com.mehmetpeker.recipe.data.entity.recipe.getAllRecipe.GetAllRecipeResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.getLikedRecipe.GetLikedRecipesItem
 import com.mehmetpeker.recipe.data.entity.recipe.getRecipe.GetRecipeResponse
+import com.mehmetpeker.recipe.data.entity.recipe.getRecipe.Recipe
 import com.mehmetpeker.recipe.data.entity.recipe.likeRecipe.LikeRecipeResponse
 import com.mehmetpeker.recipe.data.entity.recipe.materials.GetAllMaterialsResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.recipeComments.RecipeCommentsResponseItem
 import com.mehmetpeker.recipe.data.entity.recipe.recipeComments.addComment.AddCommentRequest
 import com.mehmetpeker.recipe.data.entity.recipe.recipeComments.addComment.AddCommentResponse
+import com.mehmetpeker.recipe.data.entity.recipe.searchRecipeIncludedMaterials.SearchRecipeWithIncludedMaterialsRequestItem
 import com.mehmetpeker.recipe.data.entity.recipe.uploadImage.UploadRecipeImageResponse
 import com.mehmetpeker.recipe.domain.repository.RecipeRepository
 import com.mehmetpeker.recipe.util.ApiError
@@ -34,7 +35,7 @@ import kotlinx.serialization.json.Json
 import java.io.File
 
 class RecipeRepositoryImpl(private val client: HttpClient) : RecipeRepository {
-    override suspend fun searchRecipe(searchText: String): ApiResult<List<SearchRecipeResponseItem>> {
+    override suspend fun searchRecipe(searchText: String): ApiResult<List<Recipe>> {
         return client.safeRequest {
             method = HttpMethod.Get
             url("api/recipe/get-search-recipes?recipeName=$searchText")
@@ -149,6 +150,28 @@ class RecipeRepositoryImpl(private val client: HttpClient) : RecipeRepository {
             method = HttpMethod.Post
             url("api/comment/add-comment")
             setBody(addCommentRequest)
+        }
+    }
+
+    override suspend fun searchRecipeWithExcludedMaterials(
+        searchText: String,
+        searchRecipeWithExcludedMaterialsRequest: List<SearchRecipeWithIncludedMaterialsRequestItem>
+    ): ApiResult<List<Recipe>> {
+        return client.safeRequest {
+            method = HttpMethod.Post
+            url("api/recipe/find-recipes-with-excluded-materials?recipeName=$searchText")
+            setBody(searchRecipeWithExcludedMaterialsRequest)
+        }
+    }
+
+    override suspend fun searchRecipeWithIncludedMaterials(
+        searchText: String,
+        searchRecipeWithIncludedMaterialsRequest: List<SearchRecipeWithIncludedMaterialsRequestItem>
+    ): ApiResult<List<Recipe>> {
+        return client.safeRequest {
+            method = HttpMethod.Post
+            url("api/recipe/find-recipes-by-materials?recipeName=$searchText")
+            setBody(searchRecipeWithIncludedMaterialsRequest)
         }
     }
 }

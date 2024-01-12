@@ -25,7 +25,7 @@ data class Recipe(
     @SerialName("photoUrl")
     val photoUrl: String?,
     @SerialName("photoUrls")
-    val photoUrls: List<String>?,
+    val photoUrls: List<Photo?>?,
     @SerialName("portions")
     val portions: Int?,
     @SerialName("preparitionTime")

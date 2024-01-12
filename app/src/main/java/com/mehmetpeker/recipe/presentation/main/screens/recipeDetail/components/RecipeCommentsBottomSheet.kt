@@ -138,10 +138,14 @@ fun RecipeCommentsBottomSheetContent(
             .fillMaxWidth()
             .background(Color(0xffF1F1F1))
             .navigationBarsPadding()
-            .heightIn(min = 60.dp), verticalAlignment = Alignment.CenterVertically
+            .heightIn(min = 60.dp)
+            .padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            modifier = Modifier.size(32.dp),
+            modifier = Modifier
+                .size(32.dp)
+                .clip(CircleShape),
             model = sessionManager.user.profilePhotoUrl,
             contentDescription = null
         )
@@ -188,9 +192,10 @@ fun RecipeCommentsBottomSheetContent(
 
 @Composable
 fun CommentItem(comment: RecipeCommentsResponseItem) {
+    val profileImageUrl = comment.user?.profilePhoto
     Row(Modifier.padding(top = 8.dp)) {
         AsyncImage(
-            model = comment.user?.profilePhoto,
+            model = profileImageUrl,
             contentDescription = null,
             modifier = Modifier
                 .size(32.dp)

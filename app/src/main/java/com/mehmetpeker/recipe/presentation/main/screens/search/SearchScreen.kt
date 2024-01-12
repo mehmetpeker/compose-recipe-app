@@ -62,7 +62,7 @@ import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
 import com.mehmetpeker.recipe.common.SearchBar
-import com.mehmetpeker.recipe.data.entity.recipe.SearchRecipeResponseItem
+import com.mehmetpeker.recipe.data.entity.recipe.getRecipe.Recipe
 import com.mehmetpeker.recipe.designsystem.theme.RecipeTheme
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.uiModel.MaterialsUiModel
@@ -79,10 +79,11 @@ fun SearchScreen(
     searchViewModel: SearchViewModel = koinViewModel()
 ) {
     val uiState by searchViewModel.searchUiState.collectAsState()
-    val radioOptions = listOf("Malzemeleri içersin", "Malzemeleri içermesin")
-    var selectedOption by remember { mutableStateOf(radioOptions[0]) }
+
     val materials by searchViewModel.materials.collectAsStateWithLifecycle()
     val selectedMaterials by searchViewModel.selectedMaterials.collectAsStateWithLifecycle()
+    val radioOptions = searchViewModel.radioOptions
+    val selectedOption = searchViewModel.selectedOption
     BaseScreen(viewModel = searchViewModel, navController = navController) {
         SearchScreenContent(
             uiState = uiState,
@@ -107,7 +108,7 @@ fun SearchScreen(
             filterOptions = radioOptions,
             selectedOption = selectedOption,
             onClick = {
-                selectedOption = it
+                searchViewModel.updateSelectedOption(it)
             },
             materials = materials,
             selectedMaterials = selectedMaterials,
@@ -128,7 +129,7 @@ fun SearchScreenContent(
     onSearchTextFieldValueChange: ((textFieldValue: TextFieldValue) -> Unit)? = null,
     onSearchClick: ((searchText: String) -> Unit)? = null,
     onNavigationClick: (() -> Unit)? = null,
-    onRecipeDetailClick: ((SearchRecipeResponseItem) -> Unit)? = null,
+    onRecipeDetailClick: ((Recipe) -> Unit)? = null,
     filterOptions: List<String>,
     selectedOption: String,
     onClick: ((String) -> Unit)?,
@@ -212,9 +213,9 @@ fun SearchScreenContent(
                                         1.dp, md_theme_light_primary,
                                         CircleShape
                                     )
-                                    .padding(horizontal = 4.dp),
+                                    .padding(horizontal = 16.dp),
                                 verticalAlignment = CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.SpaceAround
                             ) {
                                 Text(
                                     text = it.name ?: "-",
@@ -281,8 +282,8 @@ fun SearchScreenContent(
 @Composable
 fun SearchScreenSuccessContent(
     modifier: Modifier,
-    searchRecipeResponse: List<SearchRecipeResponseItem>,
-    onRecipeDetailClick: ((SearchRecipeResponseItem) -> Unit)? = null
+    searchRecipeResponse: List<Recipe>,
+    onRecipeDetailClick: ((Recipe) -> Unit)? = null
 ) {
     Column(
         modifier = modifier
@@ -305,8 +306,8 @@ fun SearchScreenSuccessContent(
 @Composable
 fun SearchRecipeItem(
     modifier: Modifier,
-    item: SearchRecipeResponseItem,
-    onRecipeDetailClick: ((SearchRecipeResponseItem) -> Unit)? = null
+    item: Recipe,
+    onRecipeDetailClick: ((Recipe) -> Unit)? = null
 ) {
     Row(
         modifier = modifier

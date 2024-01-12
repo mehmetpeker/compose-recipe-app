@@ -34,14 +34,16 @@ fun HomeTopBar(
             .padding(8.dp)
             .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape),
-            model = profileImageUrl,
-            contentDescription = null,
-        )
-        4.horizontalSpace()
+        if (profileImageUrl.isNullOrBlank().not()) {
+            AsyncImage(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape),
+                model = profileImageUrl,
+                contentDescription = null,
+            )
+            4.horizontalSpace()
+        }
         Column(verticalArrangement = Arrangement.Center) {
             Text(
                 stringResource(id = R.string.hello_username, username ?: "---"),
@@ -62,3 +64,5 @@ fun HomeTopBar(
         }
     }
 }
+
+

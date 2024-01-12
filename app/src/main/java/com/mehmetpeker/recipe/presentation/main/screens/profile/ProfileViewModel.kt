@@ -11,6 +11,7 @@ import com.mehmetpeker.recipe.data.entity.user.userDetail.Photo
 import com.mehmetpeker.recipe.util.ApiError
 import com.mehmetpeker.recipe.util.ApiSuccess
 import com.mehmetpeker.recipe.util.RecipeDispatchers
+import com.mehmetpeker.recipe.util.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,8 @@ val emptyProfileUiState = ProfileViewModel.UiState()
 
 class ProfileViewModel(
     private val recipeDispatchers: RecipeDispatchers,
-    private val userRepositoryImpl: UserRepositoryImpl
+    private val userRepositoryImpl: UserRepositoryImpl,
+    private val sessionManager: SessionManager,
 ) : BaseViewModel() {
     enum class ImageUploadStatus {
         IDLE,
@@ -88,6 +90,8 @@ class ProfileViewModel(
             is ApiSuccess -> {
                 uploadedImageUrl = response.data.url ?: ""
                 imageUploadStatus = ImageUploadStatus.SUCCESS
+                userRepositoryImpl.setProfilePhotoUrl(response.data.url ?: "")
+                sessionManager.setProfilePhotoUrl(response.data.url ?: "")
                 _uiState.update {
                     it.copy(
                         profilePhotoUrls = listOf(
@@ -115,6 +119,12 @@ class ProfileViewModel(
                 uploadedImageUrl = ""
                 imageUploadStatus = ImageUploadStatus.IDLE
                 userRepositoryImpl.setProfilePhotoUrl("")
+                sessionManager.setProfilePhotoUrl("")
+                _uiState.update {
+                    it.copy(
+                        profilePhotoUrls = emptyList()
+                    )
+                }
             }
 
             else -> Unit

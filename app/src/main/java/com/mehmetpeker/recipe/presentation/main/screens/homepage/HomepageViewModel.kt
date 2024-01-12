@@ -37,12 +37,11 @@ class HomepageViewModel(
 
 
     init {
-        getUserData()
         getAllCategories()
         getAllRecipe()
     }
 
-    private fun getUserData() = viewModelScope.launch {
+    fun getUserData() = viewModelScope.launch {
         _uiState.update {
             val newUser = sessionManager.retrieveUserData()
             it.copy(user = newUser)
