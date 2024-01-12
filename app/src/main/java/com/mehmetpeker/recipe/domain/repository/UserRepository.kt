@@ -1,8 +1,10 @@
 package com.mehmetpeker.recipe.domain.repository
 
+import com.mehmetpeker.recipe.data.entity.user.uploadProfilePhoto.UploadProfilePhotoResponse
 import com.mehmetpeker.recipe.data.entity.user.userDetail.UserDetailResponse
 import com.mehmetpeker.recipe.util.ApiResult
 import com.mehmetpeker.recipe.util.User
+import java.io.File
 
 interface UserRepository {
     suspend fun setAccessToken(token: String)
@@ -19,4 +21,5 @@ interface UserRepository {
     suspend fun logOut()
 
     suspend fun getProfileInformation(): ApiResult<UserDetailResponse>
+    suspend fun uploadProfilePhoto(file: File): ApiResult<UploadProfilePhotoResponse>
 }

@@ -1,6 +1,8 @@
 package com.mehmetpeker.recipe.presentation.main.screens.homepage
 
 import androidx.lifecycle.viewModelScope
+import com.mehmetpeker.recipe.R
+import com.mehmetpeker.recipe.RecipeApplication
 import com.mehmetpeker.recipe.base.BaseViewModel
 import com.mehmetpeker.recipe.data.repository.recipe.RecipeRepositoryImpl
 import com.mehmetpeker.recipe.domain.uimodel.recipe.RecipeItemUiModel
@@ -22,7 +24,7 @@ import org.koin.core.component.inject
 data class HomeUiState(
     val user: User? = null,
     val categories: List<CategoriesUiModel> = emptyList(),
-    val recipes: List<RecipeItemUiModel> = emptyList()
+    val recipes: List<RecipeItemUiModel>? = null
 )
 
 class HomepageViewModel(
@@ -48,6 +50,10 @@ class HomepageViewModel(
     }
 
     private fun getAllCategories() = viewModelScope.launch {
+        val allCategoriesItem = CategoriesUiModel(
+            id = Int.MAX_VALUE,
+            name = RecipeApplication.getAppContext().getString(R.string.all)
+        )
         showProgress()
         val response = withContext(recipeDispatcher.io) {
             recipeRepositoryImpl.getAllCategories()
@@ -58,7 +64,8 @@ class HomepageViewModel(
                     id = it.id,
                     name = it.name
                 )
-            }
+            }.toMutableList()
+            categoriesUiModelList.add(0, allCategoriesItem)
             _uiState.update {
                 it.copy(categories = categoriesUiModelList)
             }
@@ -66,10 +73,24 @@ class HomepageViewModel(
         hideProgress()
     }
 
-    private fun getAllRecipe() = viewModelScope.launch {
+    fun getAllRecipe() = viewModelScope.launch {
         showProgress()
         val response = withContext(recipeDispatcher.io) {
             recipeRepositoryImpl.getAllRecipes()
+        }
+        if (response is ApiSuccess) {
+            val recipesUiModelList = response.data.map { it.toRecipeItemUiModel() }
+            _uiState.update {
+                it.copy(recipes = recipesUiModelList)
+            }
+        }
+        hideProgress()
+    }
+
+    fun getAllRecipeByCategory(categoryId: String) = viewModelScope.launch {
+        showProgress()
+        val response = withContext(recipeDispatcher.io) {
+            recipeRepositoryImpl.getAllRecipesByCategory(categoryId)
         }
         if (response is ApiSuccess) {
             val recipesUiModelList = response.data.map { it.toRecipeItemUiModel() }

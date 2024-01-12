@@ -1,6 +1,7 @@
 package com.mehmetpeker.recipe.data.entity.recipe.getRecipe
 
 
+import com.mehmetpeker.recipe.data.entity.user.userDetail.Photo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -15,7 +16,7 @@ data class User(
     @SerialName("likedRecipes")
     val likedRecipes: List<LikedRecipe>?,
     @SerialName("photos")
-    val photos: List<String>?,
+    val photos: List<Photo>?,
     @SerialName("profilePhoto")
     val profilePhoto: List<String>?,
     @SerialName("recipes")

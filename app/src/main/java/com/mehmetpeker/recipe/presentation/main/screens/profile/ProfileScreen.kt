@@ -1,5 +1,8 @@
 package com.mehmetpeker.recipe.presentation.main.screens.profile
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,9 +34,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,7 +44,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.mehmetpeker.recipe.R
@@ -53,24 +59,37 @@ import com.mehmetpeker.recipe.designsystem.theme.RoundedCornerShape10Percent
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.util.NavArgumentConstants
 import com.mehmetpeker.recipe.util.RouteConstants
+import com.mehmetpeker.recipe.util.SessionManager
+import com.mehmetpeker.recipe.util.extension.toFile
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
+import java.io.File
 
 @Composable
 fun ProfileScreen(
     mainNavController: NavController,
     nestedNavController: NavController,
-    profileViewModel: ProfileViewModel = koinViewModel()
+    profileViewModel: ProfileViewModel = koinViewModel(),
+    sessionManager: SessionManager = koinInject(),
 ) {
+    val context = LocalContext.current
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            val selectedFile = uri?.toFile(context.contentResolver)
+            profileViewModel.onImageSelected(selectedFile)
 
-    val profileUiState by produceState(
-        initialValue = emptyProfileUiState
-    ) {
+        }
+
+    val profileUiState by profileViewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect("GetUserInformation") {
         profileViewModel.getProfileInformation()
-        value = profileViewModel.uiState.value
     }
     BaseScreen(profileViewModel, mainNavController) {
         ProfileScreenContent(
             profileUiState,
+            onNavigationClick = {
+                nestedNavController.popBackStack()
+            },
             onUpdatePasswordClick = {
                 mainNavController.navigate(RouteConstants.ROUTE_UPDATE_PASSWORD)
             },
@@ -83,9 +102,24 @@ fun ProfileScreen(
                         )
                     )
                 }
+            },
+            onUploadPhotoClick = {
+                launcher.launch(
+                    PickVisualMediaRequest(
+                        mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                    )
+                )
+            },
+            onChangePhotoClick = {
+                launcher.launch(
+                    PickVisualMediaRequest(
+                        mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                    )
+                )
             }
         )
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,7 +128,9 @@ fun ProfileScreenContent(
     uiState: ProfileViewModel.UiState,
     onNavigationClick: () -> Unit = {},
     onRecipeClick: (Recipe?) -> Unit = {},
-    onUpdatePasswordClick: () -> Unit = {}
+    onUpdatePasswordClick: () -> Unit = {},
+    onUploadPhotoClick: () -> Unit = {},
+    onChangePhotoClick: () -> Unit = {},
 ) {
     EdgeToEdgeScaffold(
         topBar = {
@@ -115,14 +151,18 @@ fun ProfileScreenContent(
                     modifier = Modifier.fillMaxSize(),
                     uiState = uiState,
                     onRecipeClick = onRecipeClick,
-                    onUpdatePasswordClick = onUpdatePasswordClick
+                    onUpdatePasswordClick = onUpdatePasswordClick,
+                    onUploadPhotoClick = onUploadPhotoClick,
+                    onChangePhotoClick = onChangePhotoClick
                 )
 
                 else -> ProfileSuccessContent(
                     modifier = Modifier.fillMaxSize(),
                     uiState = uiState,
                     onRecipeClick = onRecipeClick,
-                    onUpdatePasswordClick = onUpdatePasswordClick
+                    onUpdatePasswordClick = onUpdatePasswordClick,
+                    onUploadPhotoClick = onUploadPhotoClick,
+                    onChangePhotoClick = onChangePhotoClick
                 )
             }
         }
@@ -154,8 +194,7 @@ private fun ProfileSuccessContent(
             modifier = Modifier
                 .size(120.dp)
                 .align(Alignment.CenterHorizontally),
-            //profilePhotoUrl = uiState.profilePhotoUrl,
-            profilePhotoUrl = "https://pbs.twimg.com/profile_images/1423037075264315404/9Tyzo0Lw_400x400.jpg",
+            profilePhotoUrl = uiState.profilePhotoUrl,
             onUploadPhotoClick = onUploadPhotoClick,
             onChangePhotoClick = onChangePhotoClick
         )
@@ -164,9 +203,9 @@ private fun ProfileSuccessContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Kullanıcı Adı", style = MaterialTheme.typography.titleMedium)
-            Text(text = "memoli")
+            Text(text = uiState.userName)
             Text(text = "Mail Adresi", style = MaterialTheme.typography.titleMedium)
-            Text(text = "mehmetpeker41@gmail.com")
+            Text(text = uiState.userEmail)
         }
 
         TabRow(selectedTabIndex = tabIndex) {
@@ -178,19 +217,42 @@ private fun ProfileSuccessContent(
                 )
             }
         }
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(all = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(space = 12.dp),
-            verticalItemSpacing = 8.dp
-        ) {
-            items(uiState.userRecipes) {
-                ProfileRecipeItem(it) {
-                    onRecipeClick(it)
+        if (uiState.userRecipes.isEmpty()) {
+            Column(
+                Modifier
+                    .padding(horizontal = 24.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Henüz hiçbir tarif paylaşmadınız :(",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "Tariflerinizi görüntüleyebilmek için en az 1 tarif paylaşmalısınız",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(top = 8.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(all = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(space = 12.dp),
+                verticalItemSpacing = 8.dp
+            ) {
+                items(uiState.userRecipes) {
+                    ProfileRecipeItem(it) {
+                        onRecipeClick(it)
+                    }
                 }
             }
         }
+
     }
 }
 
@@ -235,6 +297,8 @@ private fun ProfileRecipeItem(recipe: Recipe?, onRecipeClick: (Recipe?) -> Unit 
 private fun ProfileImage(
     modifier: Modifier,
     profilePhotoUrl: String,
+    selectedFile: File? = null,
+    uploadedUrl: String? = null,
     onUploadPhotoClick: () -> Unit = {},
     onChangePhotoClick: () -> Unit = {},
 ) {

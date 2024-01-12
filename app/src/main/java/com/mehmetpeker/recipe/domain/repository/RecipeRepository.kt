@@ -26,6 +26,7 @@ interface RecipeRepository {
     suspend fun getAllMaterials(): ApiResult<List<GetAllMaterialsResponseItem>>
     suspend fun createRecipe(createRecipeRequest: CreateRecipeRequest): ApiResult<CreateRecipeResponse>
     suspend fun getAllRecipes(): ApiResult<List<GetAllRecipeResponseItem>>
+    suspend fun getAllRecipesByCategory(categoryId: String): ApiResult<List<GetAllRecipeResponseItem>>
     suspend fun getRecipe(recipeId: String): ApiResult<GetRecipeResponse>
     suspend fun getLikedRecipes(): ApiResult<List<GetLikedRecipesItem>>
     suspend fun likeRecipe(recipeId: String): ApiResult<LikeRecipeResponse>

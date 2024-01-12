@@ -106,6 +106,7 @@ Eğer sorun devam ederse, destek ekibimizle iletişime geçmekten çekinmeyin.</
     <string name="update_password_title">Parolamı Güncelle</string>
     <string name="update_password_success">Parolan başarıyla güncellendi</string>
     <string name="current_password">Mevcut Parola</string>
+    <string name="all">Tümü</string>
     <string-array name="measurement_unit">
         <item>Gram</item>
         <item>Kilogram</item>

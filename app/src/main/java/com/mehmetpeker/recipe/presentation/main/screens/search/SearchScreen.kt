@@ -4,6 +4,7 @@ package com.mehmetpeker.recipe.presentation.main.screens.search
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -62,6 +64,7 @@ import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
 import com.mehmetpeker.recipe.common.SearchBar
 import com.mehmetpeker.recipe.data.entity.recipe.SearchRecipeResponseItem
 import com.mehmetpeker.recipe.designsystem.theme.RecipeTheme
+import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.uiModel.MaterialsUiModel
 import com.mehmetpeker.recipe.util.NavArgumentConstants
 import com.mehmetpeker.recipe.util.RouteConstants
@@ -107,7 +110,13 @@ fun SearchScreen(
                 selectedOption = it
             },
             materials = materials,
-            selectedMaterials = selectedMaterials
+            selectedMaterials = selectedMaterials,
+            onAddMaterialClick = {
+                searchViewModel.addMaterialToFilter(it)
+            },
+            onRemoveMaterialClick = {
+                searchViewModel.removeMaterialToFilter(it)
+            }
         )
     }
 }
@@ -161,39 +170,63 @@ fun SearchScreenContent(
                 }
             )
             4.verticalSpace()
-            Text(text = "Malzemeye Göre Filtrele", style = MaterialTheme.typography.titleMedium)
-            filterOptions.forEach { filterName ->
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = (filterName == selectedOption),
-                        onClick = { onClick?.invoke(filterName) }
-                    )
-                    Text(
-                        text = filterName,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(start = 4.dp)
-                    )
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Malzemeye göre filtreleyebilirsiniz",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    maxLines = 3
+                )
+                TextButton(onClick = { isDialogExpanded = true }) {
+                    Text(text = "Malzeme Seç", style = MaterialTheme.typography.titleMedium)
                 }
             }
-            Row(Modifier.fillMaxWidth()) {
-                LazyRow(modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)) {
-                    items(selectedMaterials) {
-                        Row {
-                            Text(
-                                text = it.name ?: "-",
-                                style = MaterialTheme.typography.labelMedium
-                            )
-                            2.horizontalSpace()
-                            IconButton(onClick = { onRemoveMaterialClick(it) }) {
-                                Icon(Icons.Default.Clear, contentDescription = null)
+            if (selectedMaterials.isNotEmpty()) {
+                Text(text = "Malzemeye Göre Filtrele", style = MaterialTheme.typography.titleMedium)
+                filterOptions.forEach { filterName ->
+                    Row(verticalAlignment = CenterVertically) {
+                        RadioButton(
+                            selected = (filterName == selectedOption),
+                            onClick = { onClick?.invoke(filterName) }
+                        )
+                        Text(
+                            text = filterName,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(start = 4.dp)
+                        )
+                    }
+                }
+                Row(Modifier.fillMaxWidth()) {
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        horizontalArrangement = Arrangement.spacedBy(space = 4.dp)
+                    ) {
+                        items(selectedMaterials) {
+                            Row(
+                                Modifier
+                                    .border(
+                                        1.dp, md_theme_light_primary,
+                                        CircleShape
+                                    )
+                                    .padding(horizontal = 4.dp),
+                                verticalAlignment = CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = it.name ?: "-",
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                                2.horizontalSpace()
+                                IconButton(onClick = { onRemoveMaterialClick(it) }) {
+                                    Icon(Icons.Default.Clear, contentDescription = null)
+                                }
                             }
                         }
                     }
-                }
-                TextButton(onClick = { isDialogExpanded = true }) {
-                    Text(text = "Malzeme Seç", style = MaterialTheme.typography.titleMedium)
                 }
             }
             if (isDialogExpanded) {
@@ -243,6 +276,7 @@ fun SearchScreenContent(
         }
     }
 }
+
 
 @Composable
 fun SearchScreenSuccessContent(

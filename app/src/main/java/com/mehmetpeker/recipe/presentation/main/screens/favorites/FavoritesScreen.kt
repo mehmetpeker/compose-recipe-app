@@ -62,7 +62,7 @@ fun FavoritesScreen(
                 )
             },
             onBackToHome = {
-                nestedNavController.navigate(RouteConstants.ROUTE_HOME) {
+                navController.navigate(RouteConstants.ROUTE_HOME) {
                     launchSingleTop = true
                     popUpTo(RouteConstants.ROUTE_HOME) {
                         inclusive = true

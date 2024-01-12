@@ -46,11 +46,13 @@ import coil.compose.SubcomposeAsyncImage
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
+import com.mehmetpeker.recipe.common.CircularProgressScreen
 import com.mehmetpeker.recipe.designsystem.theme.RoundedCornerShape10Percent
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.domain.uimodel.recipe.RecipeItemUiModel
 import com.mehmetpeker.recipe.presentation.main.component.HomeTopBar
 import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.uiModel.CategoriesUiModel
+import com.mehmetpeker.recipe.presentation.main.screens.search.EmptySearchScreenContent
 import com.mehmetpeker.recipe.util.NavArgumentConstants
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_RECIPE_DETAIL
 import org.koin.androidx.compose.koinViewModel
@@ -70,6 +72,13 @@ fun HomepageScreen(
                     it.recipeId
                 )
             )
+        }, onCategorySelected = {
+            it.id?.let { selectedId ->
+                when (selectedId) {
+                    Int.MAX_VALUE -> viewModel.getAllRecipe()
+                    else -> viewModel.getAllRecipeByCategory(selectedId.toString())
+                }
+            }
         })
     }
 }
@@ -77,7 +86,8 @@ fun HomepageScreen(
 @Composable
 fun HomepageScreenContent(
     uiState: HomeUiState,
-    onRecipeClick: (recipe: RecipeItemUiModel) -> Unit = {}
+    onRecipeClick: (recipe: RecipeItemUiModel) -> Unit = {},
+    onCategorySelected: (CategoriesUiModel) -> Unit = {}
 ) {
     EdgeToEdgeScaffold {
         Column(modifier = Modifier.padding(it)) {
@@ -106,7 +116,8 @@ fun HomepageScreenContent(
                 CategoryListSection(
                     modifier = Modifier
                         .height(200.dp),
-                    uiState.categories
+                    uiState.categories,
+                    onCategorySelected = onCategorySelected
                 )
             }
 
@@ -119,7 +130,11 @@ fun HomepageScreenContent(
 }
 
 @Composable
-fun CategoryListSection(modifier: Modifier, categories: List<CategoriesUiModel>) {
+fun CategoryListSection(
+    modifier: Modifier,
+    categories: List<CategoriesUiModel>,
+    onCategorySelected: (CategoriesUiModel) -> Unit = {}
+) {
     var selectedItem by remember {
         mutableStateOf(categories.first()) // initially, first item is selected
     }
@@ -137,6 +152,7 @@ fun CategoryListSection(modifier: Modifier, categories: List<CategoriesUiModel>)
                 selected = isSelected,
                 onClick = {
                     selectedItem = item
+                    onCategorySelected(item)
                 },
                 label = {
                     Text(
@@ -160,28 +176,32 @@ fun CategoryListSection(modifier: Modifier, categories: List<CategoriesUiModel>)
 
 @Composable
 fun RecipeListSection(
-    recipes: List<RecipeItemUiModel>,
+    recipes: List<RecipeItemUiModel>? = null,
     onRecipeClick: (recipe: RecipeItemUiModel) -> Unit = {}
 ) {
-    Column {
-        if (recipes.isNotEmpty()) {
+    when {
+        recipes == null -> CircularProgressScreen()
+        recipes.isEmpty() -> EmptySearchScreenContent(modifier = Modifier.fillMaxSize())
+        else -> Column {
             Text(
                 modifier = Modifier.padding(start = 12.dp, top = 12.dp),
                 text = stringResource(R.string.recipes),
                 style = MaterialTheme.typography.titleMedium
             )
-        }
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(all = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(space = 12.dp),
-            verticalItemSpacing = 8.dp
-        ) {
-            itemsIndexed(recipes) { index, item ->
-                RecipeItem(recipe = item, onRecipeClick = onRecipeClick)
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(all = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(space = 12.dp),
+                verticalItemSpacing = 8.dp
+            ) {
+                itemsIndexed(recipes) { index, item ->
+                    RecipeItem(recipe = item, onRecipeClick = onRecipeClick)
+                }
             }
         }
+
+
     }
 }
 

@@ -98,6 +98,13 @@ class RecipeRepositoryImpl(private val client: HttpClient) : RecipeRepository {
         }
     }
 
+    override suspend fun getAllRecipesByCategory(categoryId: String): ApiResult<List<GetAllRecipeResponseItem>> {
+        return client.safeRequest {
+            method = HttpMethod.Get
+            url("api/recipe/find-recipes-by-categories/$categoryId")
+        }
+    }
+
     override suspend fun getRecipe(recipeId: String): ApiResult<GetRecipeResponse> {
         return client.safeRequest {
             method = HttpMethod.Get

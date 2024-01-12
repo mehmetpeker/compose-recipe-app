@@ -43,6 +43,7 @@ class SearchViewModel(
     }
 
     fun searchRecipe(searchText: String) = viewModelScope.launch {
+        if (searchText.isBlank()) return@launch
         showProgress()
         val response = withContext(recipeDispatcher.io) {
             recipeRepository.searchRecipe(searchText)
