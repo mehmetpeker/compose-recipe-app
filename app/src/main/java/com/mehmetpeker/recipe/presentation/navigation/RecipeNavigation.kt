@@ -13,6 +13,7 @@ import com.mehmetpeker.recipe.presentation.authentication.forgotPassword.ForgotP
 import com.mehmetpeker.recipe.presentation.authentication.login.LoginScreen
 import com.mehmetpeker.recipe.presentation.authentication.register.RegisterScreen
 import com.mehmetpeker.recipe.presentation.authentication.resetPassword.ResetPasswordScreen
+import com.mehmetpeker.recipe.presentation.authentication.updatePassword.UpdatePasswordScreen
 import com.mehmetpeker.recipe.presentation.main.HomeScreen
 import com.mehmetpeker.recipe.presentation.main.screens.addRecipe.CreateRecipeScreen
 import com.mehmetpeker.recipe.presentation.main.screens.recipeDetail.RecipeDetailScreen
@@ -56,6 +57,9 @@ fun RecipeNavigation(navController: NavHostController) {
         composable(RouteConstants.ROUTE_RECIPE_DETAIL) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getString(NavArgumentConstants.RECIPE_ID) ?: ""
             RecipeDetailScreen(navController = navController, recipeId = recipeId)
+        }
+        composable(RouteConstants.ROUTE_UPDATE_PASSWORD) { backStackEntry ->
+            UpdatePasswordScreen(navController = navController)
         }
         composable(
             route = ROUTE_RESET_PASSWORD,

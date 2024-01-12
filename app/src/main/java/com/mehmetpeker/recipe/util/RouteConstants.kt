@@ -12,5 +12,6 @@ object RouteConstants {
     const val ROUTE_ADD_RECIPE = "addRecipe"
     const val ROUTE_FAVORITES = "favorites"
     const val ROUTE_PROFILE = "profile"
+    const val ROUTE_UPDATE_PASSWORD = "updatePassword"
     const val ROUTE_RECIPE_DETAIL = "recipeDetail/{${NavArgumentConstants.RECIPE_ID}}"
 }
