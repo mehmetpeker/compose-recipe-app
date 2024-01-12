@@ -114,7 +114,7 @@ fun RecipeDetailScreen(
             onShare = {
                 (context as? Activity)?.let {
                     val sendIntent: Intent = Intent().apply {
-                        val destination = "https://lezzet-tarifleri.com/recipes/$recipeId"
+                        val destination = "https://lezzet-tarifleri.com/recipeDetail/$recipeId"
                         action = Intent.ACTION_SEND
                         putExtra(
                             Intent.EXTRA_TEXT,

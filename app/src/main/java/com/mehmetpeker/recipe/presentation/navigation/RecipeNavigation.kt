@@ -24,6 +24,7 @@ import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_FORGOT_PASSWORD
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_HOME
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_LOGIN
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_ONBOARDING
+import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_RECIPE_DETAIL
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_REGISTER
 import com.mehmetpeker.recipe.util.RouteConstants.ROUTE_RESET_PASSWORD
 
@@ -54,7 +55,17 @@ fun RecipeNavigation(navController: NavHostController) {
         composable(RouteConstants.ROUTE_ADD_RECIPE) {
             CreateRecipeScreen(navController)
         }
-        composable(RouteConstants.ROUTE_RECIPE_DETAIL) { backStackEntry ->
+        composable(
+            ROUTE_RECIPE_DETAIL, deepLinks = listOf(navDeepLink {
+                uriPattern = "${BuildConfig.BASE_URL}$ROUTE_RECIPE_DETAIL"
+                action = Intent.ACTION_VIEW
+            }),
+            arguments = listOf(
+                navArgument(NavArgumentConstants.RECIPE_ID) {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getString(NavArgumentConstants.RECIPE_ID) ?: ""
             RecipeDetailScreen(navController = navController, recipeId = recipeId)
         }
