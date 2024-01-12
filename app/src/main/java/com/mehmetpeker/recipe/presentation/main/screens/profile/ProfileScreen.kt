@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -45,16 +46,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.navOptions
 import coil.compose.SubcomposeAsyncImage
 import com.mehmetpeker.recipe.R
 import com.mehmetpeker.recipe.base.BaseScreen
 import com.mehmetpeker.recipe.base.EdgeToEdgeScaffold
+import com.mehmetpeker.recipe.common.CircularProgressScreen
+import com.mehmetpeker.recipe.common.RecipeRoundedButton
+import com.mehmetpeker.recipe.common.RecipeRoundedButtonType
 import com.mehmetpeker.recipe.data.entity.recipe.getRecipe.Recipe
 import com.mehmetpeker.recipe.designsystem.RecipeTopAppBar
+import com.mehmetpeker.recipe.designsystem.theme.RecipeFontFamily
 import com.mehmetpeker.recipe.designsystem.theme.RoundedCornerShape10Percent
 import com.mehmetpeker.recipe.designsystem.theme.md_theme_light_primary
 import com.mehmetpeker.recipe.util.NavArgumentConstants
@@ -109,6 +118,16 @@ fun ProfileScreen(
             },
             onDeletePhotoClick = {
                 profileViewModel.deleteUserPhoto()
+            }, onLogOutClick = {
+                profileViewModel.logOut()
+                mainNavController.navigate(
+                    RouteConstants.ROUTE_ONBOARDING,
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                        popUpTo(RouteConstants.ROUTE_ONBOARDING) {
+                            inclusive = true
+                        }
+                    })
             }
         )
     }
@@ -124,6 +143,7 @@ fun ProfileScreenContent(
     onUpdatePasswordClick: () -> Unit = {},
     onUploadPhotoClick: () -> Unit = {},
     onDeletePhotoClick: () -> Unit = {},
+    onLogOutClick: () -> Unit = {},
 ) {
     EdgeToEdgeScaffold(
         topBar = {
@@ -140,14 +160,7 @@ fun ProfileScreenContent(
     ) {
         Surface(modifier = Modifier.padding(it)) {
             when (uiState) {
-                emptyProfileUiState -> ProfileSuccessContent(
-                    modifier = Modifier.fillMaxSize(),
-                    uiState = uiState,
-                    onRecipeClick = onRecipeClick,
-                    onUpdatePasswordClick = onUpdatePasswordClick,
-                    onUploadPhotoClick = onUploadPhotoClick,
-                    onDeletePhotoClick = onDeletePhotoClick
-                )
+                emptyProfileUiState -> CircularProgressScreen()
 
                 else -> ProfileSuccessContent(
                     modifier = Modifier.fillMaxSize(),
@@ -155,7 +168,8 @@ fun ProfileScreenContent(
                     onRecipeClick = onRecipeClick,
                     onUpdatePasswordClick = onUpdatePasswordClick,
                     onUploadPhotoClick = onUploadPhotoClick,
-                    onDeletePhotoClick = onDeletePhotoClick
+                    onDeletePhotoClick = onDeletePhotoClick,
+                    onLogOutClick = onLogOutClick
                 )
             }
         }
@@ -169,7 +183,8 @@ private fun ProfileSuccessContent(
     onUploadPhotoClick: () -> Unit = {},
     onDeletePhotoClick: () -> Unit = {},
     onRecipeClick: (Recipe?) -> Unit = {},
-    onUpdatePasswordClick: () -> Unit = {}
+    onUpdatePasswordClick: () -> Unit = {},
+    onLogOutClick: () -> Unit = {}
 
 ) {
     val titles = listOf("Tariflerim")
@@ -199,6 +214,24 @@ private fun ProfileSuccessContent(
             Text(text = uiState.userName)
             Text(text = "Mail Adresi", style = MaterialTheme.typography.titleMedium)
             Text(text = uiState.userEmail)
+            RecipeRoundedButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .padding(horizontal = 16.dp),
+                type = RecipeRoundedButtonType.Primary,
+                onClick = onLogOutClick,
+            ) {
+                Text(
+                    text = "Çıkış Yap",
+                    style = TextStyle(
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        fontFamily = RecipeFontFamily.poppinsFamily
+                    )
+                )
+            }
         }
 
         TabRow(selectedTabIndex = tabIndex) {
@@ -290,8 +323,6 @@ private fun ProfileRecipeItem(recipe: Recipe?, onRecipeClick: (Recipe?) -> Unit 
 private fun ProfileImage(
     modifier: Modifier,
     profilePhotoUrl: String,
-    selectedFile: File? = null,
-    uploadedUrl: String? = null,
     onUploadPhotoClick: () -> Unit = {},
     onDeletePhotoClick: () -> Unit = {},
 ) {

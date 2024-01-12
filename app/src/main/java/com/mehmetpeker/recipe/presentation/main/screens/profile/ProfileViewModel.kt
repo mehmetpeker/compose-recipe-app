@@ -130,4 +130,7 @@ class ProfileViewModel(
             else -> Unit
         }
     }
+    fun logOut() = viewModelScope.launch {
+        userRepositoryImpl.logOut()
+    }
 }
