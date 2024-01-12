@@ -44,8 +44,8 @@ class ProfileViewModel(
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     var selectedFile by mutableStateOf<File?>(null)
-    var uploadedImageUrl by mutableStateOf<String>("")
-    var imageUploadStatus by mutableStateOf<ImageUploadStatus>(
+    var uploadedImageUrl by mutableStateOf("")
+    var imageUploadStatus by mutableStateOf(
         ImageUploadStatus.IDLE
     )
 
